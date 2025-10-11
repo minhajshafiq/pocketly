@@ -1,0 +1,87 @@
+{
+  "@@locale": "en",
+  "appTitle": "Pocketly",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "welcome": "Welcome to Pocketly",
+  "@welcome": {
+    "description": "Welcome message displayed to users"
+  },
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button text"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  "transactions": "Transactions",
+  "@transactions": {
+    "description": "Transactions section title"
+  },
+  "balance": "Balance",
+  "@balance": {
+    "description": "Balance label"
+  },
+  "amount": "Amount",
+  "@amount": {
+    "description": "Amount field label"
+  },
+  "date": "Date",
+  "@date": {
+    "description": "Date field label"
+  },
+  "description": "Description",
+  "@description": {
+    "description": "Description field label"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit button text"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Add button text"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Error message title"
+  },
+  "success": "Success",
+  "@success": {
+    "description": "Success message title"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading indicator text"
+  },
+  "noData": "No data available",
+  "@noData": {
+    "description": "Message when no data is available"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button text"
+  }
+}
