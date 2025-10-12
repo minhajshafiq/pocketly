@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketly/core/constants/app_constants.dart';
-import 'package:pocketly/core/providers/theme_provider.dart';
+import 'package:pocketly/features/themes/presentation/providers/theme_providers.dart';
+import 'package:pocketly/features/themes/domain/entities/theme_entity.dart';
 import 'package:pocketly/core/widgets/app_button.dart';
 
 /// Widget pour sélectionner le thème de l'application.
 /// 
 /// Affiche les options Light, Dark et System avec des icônes et descriptions.
+/// Utilise la nouvelle architecture Clean Architecture avec les providers themes.
 class ThemeSelector extends ConsumerWidget {
   /// Style du sélecteur
   final ThemeSelectorStyle style;
@@ -30,15 +32,30 @@ class ThemeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeInfo = ref.watch(themeInfoProvider);
+    final currentTheme = ref.watch(themeNotifierProvider);
+    final availableThemes = ref.watch(availableThemesProvider);
 
+    return availableThemes.when(
+      data: (themes) => _buildSelector(context, ref, currentTheme, themes),
+      loading: () => _buildLoadingSelector(context),
+      error: (error, stack) => _buildErrorSelector(context, error.toString()),
+    );
+  }
+
+  /// Construit le sélecteur selon le style
+  Widget _buildSelector(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeEntity currentTheme,
+    List<ThemeEntity> themes,
+  ) {
     switch (style) {
       case ThemeSelectorStyle.card:
-        return _buildCardSelector(context, ref, themeInfo);
+        return _buildCardSelector(context, ref, currentTheme, themes);
       case ThemeSelectorStyle.list:
-        return _buildListSelector(context, ref, themeInfo);
+        return _buildListSelector(context, ref, currentTheme, themes);
       case ThemeSelectorStyle.buttons:
-        return _buildButtonSelector(context, ref, themeInfo);
+        return _buildButtonSelector(context, ref, currentTheme, themes);
     }
   }
 
@@ -46,40 +63,18 @@ class ThemeSelector extends ConsumerWidget {
   Widget _buildCardSelector(
     BuildContext context,
     WidgetRef ref,
-    ThemeInfo themeInfo,
+    ThemeEntity currentTheme,
+    List<ThemeEntity> themes,
   ) {
     return Column(
-      children: [
-        _buildThemeCard(
-          context,
-          ref,
-          ThemeMode.light,
-          'Light Mode',
-          'Always use light theme',
-          Icons.light_mode,
-          themeInfo,
-        ),
-        SizedBox(height: AppDimensions.paddingM),
-        _buildThemeCard(
-          context,
-          ref,
-          ThemeMode.dark,
-          'Dark Mode',
-          'Always use dark theme',
-          Icons.dark_mode,
-          themeInfo,
-        ),
-        SizedBox(height: AppDimensions.paddingM),
-        _buildThemeCard(
-          context,
-          ref,
-          ThemeMode.system,
-          'System Mode',
-          'Follow system settings',
-          Icons.brightness_auto,
-          themeInfo,
-        ),
-      ],
+      children: themes.map((theme) {
+        return Column(
+          children: [
+            _buildThemeCard(context, ref, theme, currentTheme),
+            if (theme != themes.last) SizedBox(height: AppDimensions.paddingM),
+          ],
+        );
+      }).toList(),
     );
   }
 
@@ -87,38 +82,13 @@ class ThemeSelector extends ConsumerWidget {
   Widget _buildListSelector(
     BuildContext context,
     WidgetRef ref,
-    ThemeInfo themeInfo,
+    ThemeEntity currentTheme,
+    List<ThemeEntity> themes,
   ) {
     return Column(
-      children: [
-        _buildThemeListTile(
-          context,
-          ref,
-          ThemeMode.light,
-          'Light Mode',
-          'Always use light theme',
-          Icons.light_mode,
-          themeInfo,
-        ),
-        _buildThemeListTile(
-          context,
-          ref,
-          ThemeMode.dark,
-          'Dark Mode',
-          'Always use dark theme',
-          Icons.dark_mode,
-          themeInfo,
-        ),
-        _buildThemeListTile(
-          context,
-          ref,
-          ThemeMode.system,
-          'System Mode',
-          'Follow system settings',
-          Icons.brightness_auto,
-          themeInfo,
-        ),
-      ],
+      children: themes.map((theme) {
+        return _buildThemeListTile(context, ref, theme, currentTheme);
+      }).toList(),
     );
   }
 
@@ -126,43 +96,20 @@ class ThemeSelector extends ConsumerWidget {
   Widget _buildButtonSelector(
     BuildContext context,
     WidgetRef ref,
-    ThemeInfo themeInfo,
+    ThemeEntity currentTheme,
+    List<ThemeEntity> themes,
   ) {
     return Row(
-      children: [
-        Expanded(
-          child: _buildThemeButton(
-            context,
-            ref,
-            ThemeMode.light,
-            'Light',
-            Icons.light_mode,
-            themeInfo,
+      children: themes.map((theme) {
+        return Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(
+              right: theme != themes.last ? AppDimensions.paddingS : 0,
+            ),
+            child: _buildThemeButton(context, ref, theme, currentTheme),
           ),
-        ),
-        SizedBox(width: AppDimensions.paddingS),
-        Expanded(
-          child: _buildThemeButton(
-            context,
-            ref,
-            ThemeMode.dark,
-            'Dark',
-            Icons.dark_mode,
-            themeInfo,
-          ),
-        ),
-        SizedBox(width: AppDimensions.paddingS),
-        Expanded(
-          child: _buildThemeButton(
-            context,
-            ref,
-            ThemeMode.system,
-            'System',
-            Icons.brightness_auto,
-            themeInfo,
-          ),
-        ),
-      ],
+        );
+      }).toList(),
     );
   }
 
@@ -170,20 +117,17 @@ class ThemeSelector extends ConsumerWidget {
   Widget _buildThemeCard(
     BuildContext context,
     WidgetRef ref,
-    ThemeMode mode,
-    String title,
-    String description,
-    IconData icon,
-    ThemeInfo themeInfo,
+    ThemeEntity theme,
+    ThemeEntity currentTheme,
   ) {
-    final isSelected = themeInfo.mode == mode;
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isSelected = currentTheme.mode == theme.mode;
+    final themeData = Theme.of(context);
+    final isDark = themeData.brightness == Brightness.dark;
     
     return GestureDetector(
       onTap: () {
         // Animation de transition douce lors du changement de thème
-        ref.read(themeModeProvider.notifier).setThemeMode(mode);
+        ref.read(themeNotifierProvider.notifier).setTheme(theme);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
@@ -208,7 +152,7 @@ class ThemeSelector extends ConsumerWidget {
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
                 child: Icon(
-                  icon,
+                  _getThemeIcon(theme),
                   size: _getIconSize(),
                   color: isSelected 
                     ? AppColors.primary 
@@ -230,7 +174,7 @@ class ThemeSelector extends ConsumerWidget {
                         : (isDark ? AppColors.textOnDark : AppColors.textPrimary),
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     ),
-                    child: Text(title),
+                    child: Text(theme.displayName),
                   ),
                   if (showDescriptions) ...[
                     SizedBox(height: AppDimensions.paddingXS),
@@ -240,7 +184,7 @@ class ThemeSelector extends ConsumerWidget {
                       style: AppTypography.caption.copyWith(
                         color: isDark ? AppColors.textSecondaryOnDark : AppColors.textSecondary,
                       ),
-                      child: Text(description),
+                      child: Text(_getThemeDescription(theme)),
                     ),
                   ],
                 ],
@@ -267,30 +211,27 @@ class ThemeSelector extends ConsumerWidget {
   Widget _buildThemeListTile(
     BuildContext context,
     WidgetRef ref,
-    ThemeMode mode,
-    String title,
-    String description,
-    IconData icon,
-    ThemeInfo themeInfo,
+    ThemeEntity theme,
+    ThemeEntity currentTheme,
   ) {
-    final isSelected = themeInfo.mode == mode;
+    final isSelected = currentTheme.mode == theme.mode;
     
     return ListTile(
-      onTap: () => ref.read(themeModeProvider.notifier).setThemeMode(mode),
+      onTap: () => ref.read(themeNotifierProvider.notifier).setTheme(theme),
       leading: showIcons ? Icon(
-        icon,
+        _getThemeIcon(theme),
         size: _getIconSize(),
         color: isSelected ? AppColors.primary : AppColors.textSecondary,
       ) : null,
       title: Text(
-        title,
+        theme.displayName,
         style: AppTypography.body.copyWith(
           color: isSelected ? AppColors.primary : AppColors.textPrimary,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
         ),
       ),
       subtitle: showDescriptions ? Text(
-        description,
+        _getThemeDescription(theme),
         style: AppTypography.caption.copyWith(
           color: AppColors.textSecondary,
         ),
@@ -310,20 +251,32 @@ class ThemeSelector extends ConsumerWidget {
   Widget _buildThemeButton(
     BuildContext context,
     WidgetRef ref,
-    ThemeMode mode,
-    String title,
-    IconData icon,
-    ThemeInfo themeInfo,
+    ThemeEntity theme,
+    ThemeEntity currentTheme,
   ) {
-    final isSelected = themeInfo.mode == mode;
+    final isSelected = currentTheme.mode == theme.mode;
     
     return AppButton(
-      text: title,
-      icon: showIcons ? icon : null,
-      onPressed: () => ref.read(themeModeProvider.notifier).setThemeMode(mode),
+      text: theme.displayName,
+      icon: showIcons ? _getThemeIcon(theme) : null,
+      onPressed: () => ref.read(themeNotifierProvider.notifier).setTheme(theme),
       style: isSelected ? AppButtonStyle.primary : AppButtonStyle.outline,
       size: _getButtonSize(),
     );
+  }
+
+  /// Obtient l'icône du thème
+  IconData _getThemeIcon(ThemeEntity theme) {
+    if (theme.isLight) return Icons.light_mode;
+    if (theme.isDark) return Icons.dark_mode;
+    return Icons.brightness_auto;
+  }
+
+  /// Obtient la description du thème
+  String _getThemeDescription(ThemeEntity theme) {
+    if (theme.isLight) return 'Always use light theme';
+    if (theme.isDark) return 'Always use dark theme';
+    return 'Follow system settings';
   }
 
   /// Obtient la taille de l'icône selon la taille du sélecteur
@@ -348,6 +301,47 @@ class ThemeSelector extends ConsumerWidget {
       case ThemeSelectorSize.large:
         return AppButtonSize.large;
     }
+  }
+
+  /// Construit le sélecteur en mode chargement
+  Widget _buildLoadingSelector(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: AppDimensions.paddingM),
+          Text(
+            'Loading themes...',
+            style: AppTypography.body.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Construit le sélecteur en mode erreur
+  Widget _buildErrorSelector(BuildContext context, String error) {
+    return Center(
+      child: Column(
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: AppDimensions.iconL,
+            color: AppColors.error,
+          ),
+          SizedBox(height: AppDimensions.paddingM),
+          Text(
+            'Error loading themes: $error',
+            style: AppTypography.body.copyWith(
+              color: AppColors.error,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -385,23 +379,23 @@ class ThemeToggleButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeInfo = ref.watch(themeInfoProvider);
+    final currentTheme = ref.watch(themeNotifierProvider);
 
     return AppButton(
-      text: 'Theme',
-      icon: _getToggleIcon(themeInfo),
-      onPressed: () => ref.read(themeModeProvider.notifier).toggleTheme(),
+      text: showLabel ? 'Theme' : '',
+      icon: showIcon ? _getToggleIcon(currentTheme) : null,
+      onPressed: () => ref.read(themeNotifierProvider.notifier).toggleTheme(),
       style: AppButtonStyle.secondary,
       tooltip: 'Toggle theme',
     );
   }
 
   /// Obtient l'icône de basculement selon le thème actuel
-  IconData _getToggleIcon(ThemeInfo themeInfo) {
-    if (themeInfo.isSystem) {
+  IconData _getToggleIcon(ThemeEntity theme) {
+    if (theme.isSystem) {
       return Icons.brightness_auto;
     }
-    return themeInfo.isLight ? Icons.dark_mode : Icons.light_mode;
+    return theme.isLight ? Icons.dark_mode : Icons.light_mode;
   }
 }
 

@@ -6,3 +6,6 @@ export 'app_colors.dart';
 
 // Typographie et textes
 export 'app_typography.dart';
+
+// Widgets
+export '../widgets/app_container.dart';

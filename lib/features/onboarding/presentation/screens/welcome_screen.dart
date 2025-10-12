@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:async';
 import 'package:pocketly/core/constants/app_constants.dart';
+import 'package:pocketly/core/router/app_route_paths.dart';
 import 'package:pocketly/core/widgets/app_button.dart';
 import 'package:pocketly/generated/l10n/app_localizations.dart';
-import 'package:pocketly/main.dart';
 
 /// Écran de bienvenue pour l'application Pocketly.
 /// 
@@ -89,21 +90,13 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 
 
   void _getStarted() {
-    // Navigation vers l'écran principal
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => const MyHomePage(),
-      ),
-    );
+    // Navigation vers l'écran principal avec GoRouter
+    context.go(AppRoutePaths.home);
   }
 
   void _login() {
-    // Navigation vers l'écran de connexion (pour l'instant, redirige vers l'écran principal)
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => const MyHomePage(),
-      ),
-    );
+    // Navigation vers l'écran de connexion avec GoRouter
+    context.push(AppRoutePaths.login);
   }
 
   @override
