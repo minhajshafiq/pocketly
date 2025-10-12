@@ -83,5 +83,41 @@
   "retry": "Retry",
   "@retry": {
     "description": "Retry button text"
+  },
+  "welcomeTitle": "Welcome to Pocketly",
+  "@welcomeTitle": {
+    "description": "Welcome screen title"
+  },
+  "welcomeDescription": "Your personal finance companion that helps you track expenses, manage budgets, and achieve your financial goals.",
+  "@welcomeDescription": {
+    "description": "Welcome screen description"
+  },
+  "trackSpendingTitle": "Track Your Spending",
+  "@trackSpendingTitle": {
+    "description": "Track spending feature title"
+  },
+  "trackSpendingDescription": "Get insights into your spending patterns with beautiful charts and detailed analytics to make informed financial decisions.",
+  "@trackSpendingDescription": {
+    "description": "Track spending feature description"
+  },
+  "saveSmartTitle": "Save Smart",
+  "@saveSmartTitle": {
+    "description": "Save smart feature title"
+  },
+  "saveSmartDescription": "Set savings goals, track your progress, and get personalized tips to help you save more money every month.",
+  "@saveSmartDescription": {
+    "description": "Save smart feature description"
+  },
+  "secureTitle": "Secure & Private",
+  "@secureTitle": {
+    "description": "Security feature title"
+  },
+  "secureDescription": "Your financial data is encrypted and stored securely. We never share your information with third parties.",
+  "@secureDescription": {
+    "description": "Security feature description"
+  },
+  "getStarted": "Get Started",
+  "@getStarted": {
+    "description": "Get started button text"
   }
 }

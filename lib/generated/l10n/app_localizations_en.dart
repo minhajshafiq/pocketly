@@ -70,4 +70,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get welcomeTitle => 'Welcome to Pocketly';
+
+  @override
+  String get welcomeDescription =>
+      'Your personal finance companion that helps you track expenses, manage budgets, and achieve your financial goals.';
+
+  @override
+  String get trackSpendingTitle => 'Track Your Spending';
+
+  @override
+  String get trackSpendingDescription =>
+      'Get insights into your spending patterns with beautiful charts and detailed analytics to make informed financial decisions.';
+
+  @override
+  String get saveSmartTitle => 'Save Smart';
+
+  @override
+  String get saveSmartDescription =>
+      'Set savings goals, track your progress, and get personalized tips to help you save more money every month.';
+
+  @override
+  String get secureTitle => 'Secure & Private';
+
+  @override
+  String get secureDescription =>
+      'Your financial data is encrypted and stored securely. We never share your information with third parties.';
+
+  @override
+  String get getStarted => 'Get Started';
 }

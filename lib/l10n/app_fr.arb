@@ -20,5 +20,14 @@
   "success": "Succès",
   "loading": "Chargement...",
   "noData": "Aucune donnée disponible",
-  "retry": "Réessayer"
+  "retry": "Réessayer",
+  "welcomeTitle": "Bienvenue sur Pocketly",
+  "welcomeDescription": "Votre compagnon financier personnel qui vous aide à suivre vos dépenses, gérer vos budgets et atteindre vos objectifs financiers.",
+  "trackSpendingTitle": "Suivez Vos Dépenses",
+  "trackSpendingDescription": "Obtenez des insights sur vos habitudes de dépenses avec de beaux graphiques et des analyses détaillées pour prendre des décisions financières éclairées.",
+  "saveSmartTitle": "Économisez Intelligemment",
+  "saveSmartDescription": "Définissez des objectifs d'épargne, suivez vos progrès et obtenez des conseils personnalisés pour vous aider à économiser plus d'argent chaque mois.",
+  "secureTitle": "Sécurisé et Privé",
+  "secureDescription": "Vos données financières sont chiffrées et stockées en toute sécurité. Nous ne partageons jamais vos informations avec des tiers.",
+  "getStarted": "Commencer"
 }

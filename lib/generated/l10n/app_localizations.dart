@@ -223,6 +223,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// Welcome screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Pocketly'**
+  String get welcomeTitle;
+
+  /// Welcome screen description
+  ///
+  /// In en, this message translates to:
+  /// **'Your personal finance companion that helps you track expenses, manage budgets, and achieve your financial goals.'**
+  String get welcomeDescription;
+
+  /// Track spending feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Track Your Spending'**
+  String get trackSpendingTitle;
+
+  /// Track spending feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Get insights into your spending patterns with beautiful charts and detailed analytics to make informed financial decisions.'**
+  String get trackSpendingDescription;
+
+  /// Save smart feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Save Smart'**
+  String get saveSmartTitle;
+
+  /// Save smart feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Set savings goals, track your progress, and get personalized tips to help you save more money every month.'**
+  String get saveSmartDescription;
+
+  /// Security feature title
+  ///
+  /// In en, this message translates to:
+  /// **'Secure & Private'**
+  String get secureTitle;
+
+  /// Security feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial data is encrypted and stored securely. We never share your information with third parties.'**
+  String get secureDescription;
+
+  /// Get started button text
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
 }
 
 class _AppLocalizationsDelegate

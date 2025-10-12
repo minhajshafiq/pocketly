@@ -6,24 +6,25 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:pocketly/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('App loads and displays welcome screen', (WidgetTester tester) async {
+    // Build our app with ProviderScope and trigger a frame.
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MyApp(),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Wait for the splash screen to be removed
+    await tester.pumpAndSettle();
 
-    // Tap the 'Add' button and trigger a frame.
-    await tester.tap(find.text('Add'));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that the app loads and shows the welcome screen
+    expect(find.text('Welcome to Pocketly'), findsOneWidget);
+    // Le bouton Cancel a été supprimé, on vérifie seulement le titre
+    
   });
 }
