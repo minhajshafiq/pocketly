@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:pocketly/core/router/app_page.dart';
 import 'package:pocketly/core/router/app_route_paths.dart';
 import 'package:pocketly/features/onboarding/presentation/screens/welcome_screen.dart';
-import 'package:pocketly/features/auth/presentation/screens/login_screen.dart';
+import 'package:pocketly/features/auth/presentation/screens/signin_screen.dart';
+import 'package:pocketly/features/auth/presentation/screens/signup_screen.dart';
 import 'package:pocketly/features/themes/presentation/widgets/theme_selector.dart';
 import 'package:pocketly/core/constants/app_constants.dart';
 
@@ -55,30 +56,22 @@ class AppRouter {
 
         // ==================== ROUTES D'AUTHENTIFICATION ====================
         GoRoute(
-          path: AppRoutePaths.login,
-          name: 'login',
+          path: AppRoutePaths.signin,
+          name: 'signin',
           pageBuilder: (context, state) => AppPage.adaptive(
             key: state.pageKey,
             name: state.name,
-            child: const LoginScreen(),
+            child: const SigninScreen(),
           ),
         ),
 
         GoRoute(
-          path: AppRoutePaths.register,
-          name: 'register',
+          path: AppRoutePaths.signup,
+          name: 'signup',
           pageBuilder: (context, state) => AppPage.adaptive(
             key: state.pageKey,
             name: state.name,
-            child: const Scaffold(
-              body: Center(
-                child: Text(
-                  'Register Screen\n(À implémenter)',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 24),
-                ),
-              ),
-            ),
+            child: const SignupScreen(),
           ),
         ),
 

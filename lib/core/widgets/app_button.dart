@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io' show Platform;
 import 'package:pocketly/core/constants/app_constants.dart';
+import 'package:pocketly/core/constants/app_colors.dart';
+import 'package:pocketly/core/constants/app_dimensions.dart';
+import 'package:pocketly/core/constants/app_typography.dart';
 
 /// Styles de bouton disponibles
 enum AppButtonStyle {
@@ -11,6 +14,7 @@ enum AppButtonStyle {
   text,
   success,
   error,
+  gradient,
 }
 
 /// Tailles de bouton disponibles
@@ -152,40 +156,43 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
   Widget _buildIOS(BuildContext context) {
     final bool isEnabled = widget.onPressed != null && !widget.isLoading && !widget.isDisabled;
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color backgroundColor = _getBackgroundColor(isDark);
     final Color textColor = _getTextColor();
     final BorderRadius borderRadius = BorderRadius.circular(widget.customBorderRadius ?? _getBorderRadius());
-    final EdgeInsetsGeometry padding = _getPadding();
 
-    // Utilisation du même design que Android pour une apparence uniforme
-    return GestureDetector(
-      onTapDown: isEnabled ? _onTapDown : null,
-      onTapUp: isEnabled ? _onTapUp : null,
-      onTapCancel: isEnabled ? _onTapCancel : null,
-      onTap: isEnabled ? widget.onPressed : null,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: Container(
-              width: _getButtonWidth(),
-              height: _getButtonHeight(),
-              decoration: _getButtonDecoration(isDark, backgroundColor),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: isEnabled ? widget.onPressed : null,
-                  borderRadius: borderRadius,
-                  child: Container(
-                    padding: padding,
-                    child: _buildButtonContent(textColor),
+    return Semantics(
+      label: widget.tooltip ?? widget.text,
+      button: true,
+      enabled: isEnabled,
+      child: GestureDetector(
+        onTapDown: isEnabled ? _onTapDown : null,
+        onTapUp: isEnabled ? _onTapUp : null,
+        onTapCancel: isEnabled ? _onTapCancel : null,
+        onTap: isEnabled ? widget.onPressed : null,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Container(
+                key: widget.key,
+                width: _getButtonWidth(),
+                height: _getButtonHeight(),
+                decoration: _getButtonDecoration(isDark),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: isEnabled ? widget.onPressed : null,
+                    borderRadius: borderRadius,
+                    child: Container(
+                      padding: _getPadding(),
+                      child: _buildButtonContent(textColor),
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -194,12 +201,11 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
   Widget _buildAndroid(BuildContext context) {
     final bool isEnabled = widget.onPressed != null && !widget.isLoading && !widget.isDisabled;
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color backgroundColor = _getBackgroundColor(isDark);
     final Color textColor = _getTextColor();
 
     Widget button = widget.isLoading
-      ? _buildLoadingButton(context, backgroundColor, textColor)
-      : _buildNormalButton(context, isEnabled, backgroundColor, textColor, isDark);
+      ? _buildLoadingButton(context, textColor)
+      : _buildNormalButton(context, isEnabled, textColor, isDark);
 
     // Ajout de l'accessibilité
     Widget accessibleButton = Semantics(
@@ -220,7 +226,7 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
   }
 
   /// Construction du bouton normal pour Android
-  Widget _buildNormalButton(BuildContext context, bool isEnabled, Color backgroundColor, Color textColor, bool isDark) {
+  Widget _buildNormalButton(BuildContext context, bool isEnabled, Color textColor, bool isDark) {
     return GestureDetector(
       onTapDown: isEnabled ? _onTapDown : null,
       onTapUp: isEnabled ? _onTapUp : null,
@@ -232,9 +238,10 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
           return Transform.scale(
             scale: _scaleAnimation.value,
             child: Container(
+              key: widget.key,
               width: _getButtonWidth(),
               height: _getButtonHeight(),
-              decoration: _getButtonDecoration(isDark, backgroundColor),
+              decoration: _getButtonDecoration(isDark),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -254,11 +261,12 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
   }
 
   /// Construction du bouton de chargement pour Android
-  Widget _buildLoadingButton(BuildContext context, Color backgroundColor, Color textColor) {
+  Widget _buildLoadingButton(BuildContext context, Color textColor) {
     return Container(
+      key: widget.key,
       width: _getButtonWidth(),
       height: _getButtonHeight(),
-      decoration: _getButtonDecoration(Theme.of(context).brightness == Brightness.dark, backgroundColor),
+      decoration: _getButtonDecoration(Theme.of(context).brightness == Brightness.dark),
       child: Container(
         padding: _getPadding(),
         child: _buildLoadingContent(textColor),
@@ -322,7 +330,7 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
         width: _getIconSize(),
         height: _getIconSize(),
         child: CircularProgressIndicator(
-          strokeWidth: 2.0,
+          strokeWidth: 2.5,
           valueColor: AlwaysStoppedAnimation<Color>(textColor ?? _getTextColor()),
         ),
       ),
@@ -343,11 +351,11 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
     
     switch (widget.size) {
       case AppButtonSize.small:
-        return AppDimensions.buttonHeight * 0.75;
+        return AppDimensions.buttonHeight;
       case AppButtonSize.medium:
         return AppDimensions.buttonHeight;
       case AppButtonSize.large:
-        return AppDimensions.buttonHeight * 1.25;
+        return AppDimensions.buttonHeightLarge;
     }
   }
 
@@ -355,11 +363,11 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
   double _getIconSize() {
     switch (widget.size) {
       case AppButtonSize.small:
-        return AppDimensions.iconS;
+        return 16;
       case AppButtonSize.medium:
-        return AppDimensions.iconM;
+        return 18;
       case AppButtonSize.large:
-        return AppDimensions.iconM;
+        return 20;
     }
   }
 
@@ -367,33 +375,30 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
   double _getIconSpacing() {
     switch (widget.size) {
       case AppButtonSize.small:
-        return AppDimensions.paddingXS;
+        return 4;
       case AppButtonSize.medium:
-        return AppDimensions.paddingS;
+        return 6;
       case AppButtonSize.large:
-        return AppDimensions.paddingS;
+        return 8;
     }
   }
 
   /// Obtient le style du texte selon la taille
   TextStyle _getTextStyle() {
-    TextStyle baseStyle;
-    
     switch (widget.size) {
       case AppButtonSize.small:
-        baseStyle = AppTypography.caption;
-        break;
+        return AppTypography.caption.copyWith(
+          fontWeight: FontWeight.w600,
+        );
       case AppButtonSize.medium:
-        baseStyle = AppTypography.button;
-        break;
+        return AppTypography.button.copyWith(
+          fontWeight: FontWeight.w600,
+        );
       case AppButtonSize.large:
-        baseStyle = AppTypography.button.copyWith(fontSize: 16);
-        break;
+        return AppTypography.button.copyWith(
+          fontWeight: FontWeight.w600,
+        );
     }
-    
-    return baseStyle.copyWith(
-      fontWeight: FontWeight.w600,
-    );
   }
 
   /// Obtient la couleur du texte selon le style
@@ -402,6 +407,7 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
     
     switch (widget.style) {
       case AppButtonStyle.primary:
+      case AppButtonStyle.gradient:
       case AppButtonStyle.success:
       case AppButtonStyle.error:
         return Colors.white;
@@ -419,6 +425,8 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
     switch (widget.style) {
       case AppButtonStyle.primary:
         return AppColors.primary;
+      case AppButtonStyle.gradient:
+        return AppColors.primary; // Fallback pour le gradient
       case AppButtonStyle.secondary:
         return isDark 
           ? AppColors.primary.withValues(alpha: 0.2)
@@ -437,11 +445,11 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
   double _getBorderRadius() {
     switch (widget.size) {
       case AppButtonSize.small:
-        return AppDimensions.radiusS;
+        return 12;
       case AppButtonSize.medium:
-        return AppDimensions.radiusM;
+        return 16;
       case AppButtonSize.large:
-        return AppDimensions.radiusL;
+        return 28;
     }
   }
 
@@ -451,20 +459,11 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
     
     switch (widget.size) {
       case AppButtonSize.small:
-        return EdgeInsets.symmetric(
-          horizontal: AppDimensions.paddingM,
-          vertical: AppDimensions.paddingS,
-        );
+        return const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
       case AppButtonSize.medium:
-        return EdgeInsets.symmetric(
-          horizontal: AppDimensions.paddingL,
-          vertical: AppDimensions.paddingM,
-        );
+        return const EdgeInsets.symmetric(horizontal: 20, vertical: 12);
       case AppButtonSize.large:
-        return EdgeInsets.symmetric(
-          horizontal: AppDimensions.paddingXL,
-          vertical: AppDimensions.paddingL,
-        );
+        return const EdgeInsets.symmetric(horizontal: 24, vertical: 16);
     }
   }
 
@@ -477,6 +476,7 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
           width: 1.0,
         );
       case AppButtonStyle.primary:
+      case AppButtonStyle.gradient:
       case AppButtonStyle.secondary:
       case AppButtonStyle.text:
       case AppButtonStyle.success:
@@ -485,33 +485,20 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
     }
   }
 
-  /// Obtient l'ombre selon le style
-  List<BoxShadow>? _getBoxShadow() {
-    switch (widget.style) {
-      case AppButtonStyle.primary:
-      case AppButtonStyle.success:
-      case AppButtonStyle.error:
-        return [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.3),
-            blurRadius: 4.0,
-            offset: Offset(0, 2),
-          ),
-        ];
-      case AppButtonStyle.secondary:
-      case AppButtonStyle.outline:
-      case AppButtonStyle.text:
-        return null;
-    }
-  }
 
   /// Obtient la décoration du bouton
-  BoxDecoration _getButtonDecoration(bool isDark, [Color? backgroundColor]) {
+  BoxDecoration _getButtonDecoration(bool isDark) {
+    if (widget.style == AppButtonStyle.gradient) {
+      return BoxDecoration(
+        gradient: AppColors.primaryGradient,
+        borderRadius: BorderRadius.circular(widget.customBorderRadius ?? _getBorderRadius()),
+      );
+    }
+    
     return BoxDecoration(
-      color: backgroundColor ?? _getBackgroundColor(isDark),
+      color: _getBackgroundColor(isDark),
       borderRadius: BorderRadius.circular(widget.customBorderRadius ?? _getBorderRadius()),
       border: _getBorder(),
-      boxShadow: _getBoxShadow(),
     );
   }
 

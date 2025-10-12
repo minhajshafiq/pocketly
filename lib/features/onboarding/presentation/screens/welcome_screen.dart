@@ -90,13 +90,13 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 
 
   void _getStarted() {
-    // Navigation vers l'écran principal avec GoRouter
-    context.go(AppRoutePaths.home);
+    // Navigation vers l'écran d'inscription avec GoRouter
+    context.push(AppRoutePaths.signup);
   }
 
   void _login() {
     // Navigation vers l'écran de connexion avec GoRouter
-    context.push(AppRoutePaths.login);
+    context.push(AppRoutePaths.signin);
   }
 
   @override
@@ -318,18 +318,21 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
               // Boutons fixes - toujours visibles en mode vertical
               Column(
                 children: [
-                  // Get Started en haut (bouton principal)
+                  // Get Started en haut (bouton principal avec dégradé)
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: AppDimensions.paddingS),
                     child: SizedBox(
                       width: double.infinity,
-                      height: AppDimensions.buttonHeight,
+                      height: AppDimensions.buttonHeightLarge,
                       child: AppButton(
                         text: l10n.getStarted,
                         icon: Icons.rocket_launch,
                         onPressed: _getStarted,
-                        style: AppButtonStyle.primary,
+                        style: AppButtonStyle.gradient,
                         size: AppButtonSize.large,
+                        isFullWidth: true,
+                        customBorderRadius: 28,
+                        iconPosition: IconPosition.right,
                       )
                         .animate()
                         .fadeIn(duration: 300.ms)
@@ -339,21 +342,24 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                   
                   SizedBox(height: AppDimensions.paddingM),
                   
-                  // Login en bas (bouton secondaire)
+                  // Login en bas (bouton outline avec même taille)
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: AppDimensions.paddingS),
                     child: SizedBox(
                       width: double.infinity,
-                      height: AppDimensions.buttonHeight * 0.8,
+                      height: AppDimensions.buttonHeightLarge,
                       child: AppButton(
                         text: l10n.login,
                         icon: Icons.login,
                         onPressed: _login,
                         style: AppButtonStyle.outline,
-                        size: AppButtonSize.medium,
+                        size: AppButtonSize.large,
+                        isFullWidth: true,
+                        customBorderRadius: 28,
+                        iconPosition: IconPosition.right,
                       )
                         .animate()
-                        .fadeIn(duration: 300.ms)
+                        .fadeIn(duration: 300.ms, delay: 100.ms)
                         .slideY(begin: 0.2, end: 0.0),
                     ),
                   ),

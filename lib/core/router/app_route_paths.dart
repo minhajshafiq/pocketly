@@ -12,7 +12,7 @@ class AppRoutePaths {
   static const String welcome = '/';
   
   /// Route de l'écran de connexion
-  static const String login = '/login';
+  static const String signin = '/signin';
   
   /// Route de l'écran d'accueil principal (après connexion)
   static const String home = '/home';
@@ -23,7 +23,7 @@ class AppRoutePaths {
   // ==================== ROUTES AUTHENTIFICATION ====================
   
   /// Route de l'écran d'inscription
-  static const String register = '/register';
+  static const String signup = '/signup';
   
   /// Route de l'écran de récupération de mot de passe
   static const String forgotPassword = '/forgot-password';
@@ -78,8 +78,8 @@ class AppRoutePaths {
   /// Vérifie si un chemin nécessite une authentification
   static bool requiresAuth(String path) {
     return path != welcome && 
-           path != login && 
-           path != register && 
+           path != signin && 
+           path != signup && 
            path != forgotPassword &&
            path != resetPassword;
   }
