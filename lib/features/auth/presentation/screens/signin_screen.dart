@@ -11,6 +11,7 @@ import 'package:pocketly/core/constants/app_constants.dart';
 import 'package:pocketly/core/router/app_route_paths.dart';
 import 'package:pocketly/core/widgets/app_button.dart';
 import 'package:pocketly/core/widgets/app_text_field.dart';
+import 'package:pocketly/core/widgets/platform_safe_area.dart';
 
 /// Provider pour gérer l'état de connexion
 final signinStateProvider = NotifierProvider<SigninStateNotifier, SigninState>(
@@ -232,60 +233,54 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   }
 
   Widget _buildSigninContent(AppLocalizations l10n, ThemeColors colors, SigninState signinState) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final mediaQuery = MediaQuery.of(context);
-        final topPadding = mediaQuery.padding.top;
-        final bottomPadding = mediaQuery.padding.bottom;
-        
-        return Container(
-          height: constraints.maxHeight,
-          padding: EdgeInsets.only(
-            top: topPadding,
-            bottom: _isIOS ? 0 : bottomPadding, // Sur Android, respecter les boutons de navigation
-            left: AppDimensions.paddingL,
-            right: AppDimensions.paddingL,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: AppDimensions.paddingL),
-              _buildBackButton(colors),
-              SizedBox(height: AppDimensions.paddingL),
-              _buildWelcomeSection(colors),
-              SizedBox(height: AppDimensions.paddingL),
-              Expanded(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildEmailField(colors),
-                      SizedBox(height: AppDimensions.paddingM),
-                      _buildPasswordField(colors, signinState),
-                      SizedBox(height: AppDimensions.paddingS),
-                      _buildForgotPasswordLink(colors),
-                      if (signinState.error != null) ...[
+    return PlatformSafeArea(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingL,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: AppDimensions.paddingL),
+                _buildBackButton(colors),
+                SizedBox(height: AppDimensions.paddingL),
+                _buildWelcomeSection(colors),
+                SizedBox(height: AppDimensions.paddingL),
+                Expanded(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildEmailField(colors),
                         SizedBox(height: AppDimensions.paddingM),
-                        _buildErrorBanner(signinState.error!),
+                        _buildPasswordField(colors, signinState),
+                        SizedBox(height: AppDimensions.paddingS),
+                        _buildForgotPasswordLink(colors),
+                        if (signinState.error != null) ...[
+                          SizedBox(height: AppDimensions.paddingM),
+                          _buildErrorBanner(signinState.error!),
+                        ],
+                        SizedBox(height: AppDimensions.paddingM),
+                        _buildSigninButton(colors, signinState),
+                        SizedBox(height: AppDimensions.paddingM),
+                        _buildSignUpLink(colors),
+                        SizedBox(height: AppDimensions.paddingM),
+                        _buildDivider(colors),
+                        SizedBox(height: AppDimensions.paddingM),
+                        _buildSocialLoginButtons(colors),
+                        SizedBox(height: AppDimensions.paddingL),
                       ],
-                      SizedBox(height: AppDimensions.paddingM),
-                      _buildSigninButton(colors, signinState),
-                      SizedBox(height: AppDimensions.paddingM),
-                      _buildSignUpLink(colors),
-                      SizedBox(height: AppDimensions.paddingM),
-                      _buildDivider(colors),
-                      SizedBox(height: AppDimensions.paddingM),
-                      _buildSocialLoginButtons(colors),
-                      SizedBox(height: AppDimensions.paddingL), // Espacement final
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
