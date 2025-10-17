@@ -101,4 +101,94 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get getStarted => 'Get Started';
+
+  @override
+  String get notificationPermissionTitle => 'Notification Permission';
+
+  @override
+  String get notificationPermissionMessage =>
+      'We need your permission to send you notifications';
+
+  @override
+  String get notificationPermissionDenied => 'Notification permission denied';
+
+  @override
+  String get notificationScheduled => 'Notification scheduled';
+
+  @override
+  String get notificationCancelled => 'Notification cancelled';
+
+  @override
+  String get enableNotifications => 'Enable Notifications';
+
+  @override
+  String get notificationSettings => 'Notification Settings';
+
+  @override
+  String get reminderNotification => 'Reminder';
+
+  @override
+  String get transactionNotification => 'Transaction';
+
+  @override
+  String get notificationErrorTitle => 'Notification Error';
+
+  @override
+  String get notificationPermissionError =>
+      'Notification permission denied. Please enable notifications in your device settings.';
+
+  @override
+  String get notificationScheduleError =>
+      'Failed to schedule notification. Please try again.';
+
+  @override
+  String get notificationShowError =>
+      'Failed to show notification. Please try again.';
+
+  @override
+  String get notificationCancelError =>
+      'Failed to cancel notification. Please try again.';
+
+  @override
+  String get notificationInitializeError =>
+      'Failed to initialize notifications. Please restart the app.';
+
+  @override
+  String get notificationSuccess => 'Success';
+
+  @override
+  String get notificationSuccessMessage => 'Operation completed successfully';
+
+  @override
+  String get notificationError => 'Error';
+
+  @override
+  String get notificationErrorMessage => 'An error occurred';
+
+  @override
+  String get notificationInfo => 'Information';
+
+  @override
+  String get notificationInfoMessage => 'Important information';
+
+  @override
+  String get notificationWarning => 'Warning';
+
+  @override
+  String get notificationWarningMessage => 'Attention required';
+
+  @override
+  String get notificationAction => 'Action Required';
+
+  @override
+  String get notificationActionMessage => 'An action is required';
+
+  @override
+  String get notificationActionButton => 'Action';
+
+  @override
+  String get notificationLoading => 'Loading';
+
+  @override
+  String get notificationLoadingMessage => 'Please wait...';
 }

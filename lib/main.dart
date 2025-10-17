@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pocketly/generated/l10n/app_localizations.dart';
-import 'package:pocketly/core/di/service_locator.dart';
+import 'package:pocketly/core/config/supabase_config.dart';
+import 'package:pocketly/core/router/app_router_config.dart';
+import 'package:pocketly/core/widgets/error_boundary.dart';
+import 'package:pocketly/features/notifications/presentation/providers/notification_providers.dart';
 import 'package:pocketly/features/themes/presentation/providers/theme_providers.dart';
-import 'package:pocketly/features/themes/infrastructure/theme_service.dart';
-import 'package:pocketly/core/router/app_route_providers.dart';
+import 'package:pocketly/generated/l10n/app_localizations.dart';
 
 void main() async {
-  // Preserve the splash screen until the app is ready
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize dependencies with GetIt
-  await initializeDependencies();
+  // Initialize Supabase
+  await SupabaseConfig.initialize();
+  
+  // Create a container for providers that need to be initialized before the app starts
+  final container = ProviderContainer();
+  
+  // Initialize notification service
+  await container.read(notificationServiceInitProvider.future);
   
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    ProviderScope(
+      child: const MyApp(),
     ),
   );
 }
@@ -29,36 +32,47 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
     final currentTheme = ref.watch(themeNotifierProvider);
-    final router = ref.watch(appRouterProvider);
     
-    return ScreenUtilInit(
-      // Design size based on iPhone 12/13/14 (390x844)
-      designSize: const Size(390, 844),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp.router(
-          title: 'Pocketly',
-          debugShowCheckedModeBanner: false,
-          // Router configuration avec GoRouter
-          routerConfig: router,
-          // Localization configuration
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en', ''), // English
-            Locale('fr', ''), // French
-          ],
-          theme: ThemeService.getThemeDataForMode(ThemeMode.light, context),
-          darkTheme: ThemeService.getThemeDataForMode(ThemeMode.dark, context),
-          themeMode: currentTheme.mode,
-        );
-      },
+    // Utiliser ScreenUtilInit pour initialiser ScreenUtil
+    return ErrorBoundary(
+      child: ScreenUtilInit(
+        // Design size basé sur iPhone 14 Pro (393x852)
+        designSize: const Size(393, 852),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return MaterialApp.router(
+            title: 'Pocketly',
+            
+            // Configuration des localisations
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            
+            // Thème dynamique
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+              useMaterial3: true,
+            ),
+            darkTheme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.blue,
+                brightness: Brightness.dark,
+              ),
+              useMaterial3: true,
+            ),
+            themeMode: currentTheme.isSystem 
+              ? ThemeMode.system 
+              : currentTheme.isDark 
+                ? ThemeMode.dark 
+                : ThemeMode.light,
+            
+            // Router
+            routerConfig: router,
+          );
+        },
+      ),
     );
   }
 }

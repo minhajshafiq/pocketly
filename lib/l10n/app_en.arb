@@ -119,5 +119,117 @@
   "getStarted": "Get Started",
   "@getStarted": {
     "description": "Get started button text"
+  },
+  "notificationPermissionTitle": "Notification Permission",
+  "@notificationPermissionTitle": {
+    "description": "Title for notification permission dialog"
+  },
+  "notificationPermissionMessage": "We need your permission to send you notifications",
+  "@notificationPermissionMessage": {
+    "description": "Message for notification permission dialog"
+  },
+  "notificationPermissionDenied": "Notification permission denied",
+  "@notificationPermissionDenied": {
+    "description": "Message when notification permission is denied"
+  },
+  "notificationScheduled": "Notification scheduled",
+  "@notificationScheduled": {
+    "description": "Message when notification is scheduled"
+  },
+  "notificationCancelled": "Notification cancelled",
+  "@notificationCancelled": {
+    "description": "Message when notification is cancelled"
+  },
+  "enableNotifications": "Enable Notifications",
+  "@enableNotifications": {
+    "description": "Button text to enable notifications"
+  },
+  "notificationSettings": "Notification Settings",
+  "@notificationSettings": {
+    "description": "Title for notification settings screen"
+  },
+  "reminderNotification": "Reminder",
+  "@reminderNotification": {
+    "description": "Title for reminder notifications"
+  },
+  "transactionNotification": "Transaction",
+  "@transactionNotification": {
+    "description": "Title for transaction notifications"
+  },
+  "notificationErrorTitle": "Notification Error",
+  "@notificationErrorTitle": {
+    "description": "Title for notification error messages"
+  },
+  "notificationPermissionError": "Notification permission denied. Please enable notifications in your device settings.",
+  "@notificationPermissionError": {
+    "description": "Error message when notification permission is denied"
+  },
+  "notificationScheduleError": "Failed to schedule notification. Please try again.",
+  "@notificationScheduleError": {
+    "description": "Error message when notification scheduling fails"
+  },
+  "notificationShowError": "Failed to show notification. Please try again.",
+  "@notificationShowError": {
+    "description": "Error message when showing notification fails"
+  },
+  "notificationCancelError": "Failed to cancel notification. Please try again.",
+  "@notificationCancelError": {
+    "description": "Error message when canceling notification fails"
+  },
+  "notificationInitializeError": "Failed to initialize notifications. Please restart the app.",
+  "@notificationInitializeError": {
+    "description": "Error message when notification initialization fails"
+  },
+  "notificationSuccess": "Success",
+  "@notificationSuccess": {
+    "description": "Success notification title"
+  },
+  "notificationSuccessMessage": "Operation completed successfully",
+  "@notificationSuccessMessage": {
+    "description": "Success notification message"
+  },
+  "notificationError": "Error",
+  "@notificationError": {
+    "description": "Error notification title"
+  },
+  "notificationErrorMessage": "An error occurred",
+  "@notificationErrorMessage": {
+    "description": "Error notification message"
+  },
+  "notificationInfo": "Information",
+  "@notificationInfo": {
+    "description": "Info notification title"
+  },
+  "notificationInfoMessage": "Important information",
+  "@notificationInfoMessage": {
+    "description": "Info notification message"
+  },
+  "notificationWarning": "Warning",
+  "@notificationWarning": {
+    "description": "Warning notification title"
+  },
+  "notificationWarningMessage": "Attention required",
+  "@notificationWarningMessage": {
+    "description": "Warning notification message"
+  },
+  "notificationAction": "Action Required",
+  "@notificationAction": {
+    "description": "Action notification title"
+  },
+  "notificationActionMessage": "An action is required",
+  "@notificationActionMessage": {
+    "description": "Action notification message"
+  },
+  "notificationActionButton": "Action",
+  "@notificationActionButton": {
+    "description": "Action button text"
+  },
+  "notificationLoading": "Loading",
+  "@notificationLoading": {
+    "description": "Loading notification title"
+  },
+  "notificationLoadingMessage": "Please wait...",
+  "@notificationLoadingMessage": {
+    "description": "Loading notification message"
   }
 }

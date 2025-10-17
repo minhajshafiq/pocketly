@@ -37,11 +37,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   
+  # Lucide Icons - Modern icon library
+  lucide_icons_flutter: ^3.1.4
+  
   # Navigation
   go_router: ^14.2.7
   
-  # Dependency Injection
-  get_it: ^7.7.0
   
   # Internationalization
   intl: ^0.20.2
@@ -57,6 +58,7 @@ dependencies:
   
   # State Management
   flutter_riverpod: ^3.0.3
+  riverpod_annotation: ^3.0.0
   
   # Animations
   flutter_animate: ^4.5.2
@@ -64,6 +66,22 @@ dependencies:
   
   # Local Storage
   shared_preferences: ^2.5.3
+  
+  # Backend & Database
+  supabase_flutter: ^2.10.3
+  
+  # In-App Purchase
+  in_app_purchase: ^3.2.3
+  
+  # Notifications
+  flutter_local_notifications: ^19.5.0
+  permission_handler: ^12.0.1
+  flutter_timezone: ^5.0.0
+  another_flushbar: ^1.12.32
+  timezone: ^0.10.1
+  
+  # Code Generation
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +96,8 @@ dev_dependencies:
   
   # Code Generation
   build_runner: ^2.4.13
+  json_serializable: ^6.8.0
+  riverpod_generator: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

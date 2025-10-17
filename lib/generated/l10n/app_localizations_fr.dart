@@ -101,4 +101,95 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get getStarted => 'Commencer';
+
+  @override
+  String get notificationPermissionTitle => 'Autorisation de notification';
+
+  @override
+  String get notificationPermissionMessage =>
+      'Nous avons besoin de votre autorisation pour vous envoyer des notifications';
+
+  @override
+  String get notificationPermissionDenied =>
+      'Autorisation de notification refusée';
+
+  @override
+  String get notificationScheduled => 'Notification programmée';
+
+  @override
+  String get notificationCancelled => 'Notification annulée';
+
+  @override
+  String get enableNotifications => 'Activer les notifications';
+
+  @override
+  String get notificationSettings => 'Paramètres de notification';
+
+  @override
+  String get reminderNotification => 'Rappel';
+
+  @override
+  String get transactionNotification => 'Transaction';
+
+  @override
+  String get notificationErrorTitle => 'Erreur de notification';
+
+  @override
+  String get notificationPermissionError =>
+      'Autorisation de notification refusée. Veuillez activer les notifications dans les paramètres de votre appareil.';
+
+  @override
+  String get notificationScheduleError =>
+      'Échec de la planification de la notification. Veuillez réessayer.';
+
+  @override
+  String get notificationShowError =>
+      'Échec de l\'affichage de la notification. Veuillez réessayer.';
+
+  @override
+  String get notificationCancelError =>
+      'Échec de l\'annulation de la notification. Veuillez réessayer.';
+
+  @override
+  String get notificationInitializeError =>
+      'Échec de l\'initialisation des notifications. Veuillez redémarrer l\'application.';
+
+  @override
+  String get notificationSuccess => 'Succès';
+
+  @override
+  String get notificationSuccessMessage => 'Opération terminée avec succès';
+
+  @override
+  String get notificationError => 'Erreur';
+
+  @override
+  String get notificationErrorMessage => 'Une erreur est survenue';
+
+  @override
+  String get notificationInfo => 'Information';
+
+  @override
+  String get notificationInfoMessage => 'Information importante';
+
+  @override
+  String get notificationWarning => 'Avertissement';
+
+  @override
+  String get notificationWarningMessage => 'Attention requise';
+
+  @override
+  String get notificationAction => 'Action requise';
+
+  @override
+  String get notificationActionMessage => 'Une action est nécessaire';
+
+  @override
+  String get notificationActionButton => 'Action';
+
+  @override
+  String get notificationLoading => 'Chargement';
+
+  @override
+  String get notificationLoadingMessage => 'Veuillez patienter...';
 }

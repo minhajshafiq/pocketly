@@ -20,6 +20,12 @@ class AppRoutePaths {
   /// Route de l'écran des paramètres
   static const String settings = '/settings';
   
+  /// Route de l'écran des paramètres de notifications
+  static const String notificationSettings = '/settings/notifications';
+  
+  /// Route de la démonstration des notifications
+  static const String notificationDemo = '/notifications/demo';
+  
   // ==================== ROUTES AUTHENTIFICATION ====================
   
   /// Route de l'écran d'inscription
@@ -30,6 +36,17 @@ class AppRoutePaths {
   
   /// Route de l'écran de réinitialisation de mot de passe
   static const String resetPassword = '/reset-password';
+  
+  // ==================== ROUTES ONBOARDING ====================
+  
+  /// Route de l'étape 1 de l'onboarding
+  static const String step1 = '/onboarding/step1';
+  
+  /// Route de l'étape 2 de l'onboarding
+  static const String step2 = '/onboarding/step2';
+  
+  /// Route de l'étape 3 de l'onboarding
+  static const String step3 = '/onboarding/step3';
   
   // ==================== ROUTES TRANSACTIONS ====================
   

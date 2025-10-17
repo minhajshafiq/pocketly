@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
@@ -12,58 +11,8 @@ import 'package:pocketly/core/router/app_route_paths.dart';
 import 'package:pocketly/core/widgets/app_button.dart';
 import 'package:pocketly/core/widgets/app_text_field.dart';
 import 'package:pocketly/core/widgets/platform_safe_area.dart';
-
-/// Provider pour gérer l'état de connexion
-final signinStateProvider = NotifierProvider<SigninStateNotifier, SigninState>(
-  () => SigninStateNotifier(),
-);
-
-/// État de connexion
-class SigninState {
-  final bool isLoading;
-  final String? error;
-  final bool isPasswordVisible;
-
-  const SigninState({
-    this.isLoading = false,
-    this.error,
-    this.isPasswordVisible = false,
-  });
-
-  SigninState copyWith({
-    bool? isLoading,
-    String? error,
-    bool? isPasswordVisible,
-  }) {
-    return SigninState(
-      isLoading: isLoading ?? this.isLoading,
-      error: error,
-      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
-    );
-  }
-}
-
-/// Notifier pour gérer l'état de connexion
-class SigninStateNotifier extends Notifier<SigninState> {
-  @override
-  SigninState build() => const SigninState();
-
-  void setLoading(bool loading) {
-    state = state.copyWith(isLoading: loading);
-  }
-
-  void setError(String? error) {
-    state = state.copyWith(error: error);
-  }
-
-  void togglePasswordVisibility() {
-    state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
-  }
-
-  void clearError() {
-    state = state.copyWith(error: null);
-  }
-}
+import 'package:pocketly/features/auth/presentation/providers/auth_state_provider.dart';
+import 'package:pocketly/features/auth/domain/failures/auth_failures.dart' as auth_failures;
 
 /// Provider pour obtenir les couleurs du thème
 final signinThemeColorsProvider = Provider<ThemeColors>((ref) {
@@ -141,27 +90,98 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
 
   bool get _isIOS => !kIsWeb && Platform.isIOS;
 
+  /// Connexion avec email/password
   Future<void> _handleSignin() async {
     if (!_formKey.currentState!.validate()) return;
 
-    ref.read(signinStateProvider.notifier).setLoading(true);
-    ref.read(signinStateProvider.notifier).clearError();
-
     try {
-      // Simulate signin process
-      await Future.delayed(const Duration(seconds: 2));
-      
+      // Utiliser AuthActions pour se connecter et récupérer directement le UserEntity
+      final user = await ref.read(authActionsProvider).signInWithEmailPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      // Navigation automatique après connexion réussie
       if (mounted) {
         _showSuccessMessage();
+        
+        // Rediriger selon l'état de l'utilisateur
+        Future.delayed(const Duration(seconds: 1), () {
+          if (mounted) {
+            if (!user.hasCompletedOnboarding) {
+              context.go(AppRoutePaths.step1);
+            } else {
+              context.go(AppRoutePaths.home);
+            }
+          }
+        });
       }
+    } on auth_failures.SignInFailure {
+      _showError('Email ou mot de passe incorrect');
+    } on auth_failures.NetworkFailure {
+      _showError('Vérifiez votre connexion Internet');
+    } on auth_failures.SessionExpiredFailure {
+      _showError('Votre session a expiré');
+    } on auth_failures.AuthFailure catch (e) {
+      _showError(e.message);
     } catch (e) {
+      _showError('Une erreur inattendue s\'est produite');
+    }
+  }
+
+  /// Connexion avec Google
+  Future<void> _handleGoogleSignin() async {
+    try {
+      // Utiliser AuthActions pour se connecter avec Google et récupérer directement le UserEntity
+      final user = await ref.read(authActionsProvider).signInWithGoogle();
+
       if (mounted) {
-        ref.read(signinStateProvider.notifier).setError('Erreur de connexion');
+        _showSuccessMessage();
+        
+        Future.delayed(const Duration(seconds: 1), () {
+          if (mounted) {
+            if (!user.hasCompletedOnboarding) {
+              context.go(AppRoutePaths.step1);
+            } else {
+              context.go(AppRoutePaths.home);
+            }
+          }
+        });
       }
-    } finally {
+    } on auth_failures.OAuthFailure {
+      _showError('Connexion Google annulée ou échouée');
+    } on auth_failures.NetworkFailure {
+      _showError('Vérifiez votre connexion Internet');
+    } on auth_failures.AuthFailure catch (e) {
+      _showError(e.message);
+    }
+  }
+
+  /// Connexion avec Apple
+  Future<void> _handleAppleSignin() async {
+    try {
+      // Utiliser AuthActions pour se connecter avec Apple et récupérer directement le UserEntity
+      final user = await ref.read(authActionsProvider).signInWithApple();
+
       if (mounted) {
-        ref.read(signinStateProvider.notifier).setLoading(false);
+        _showSuccessMessage();
+        
+        Future.delayed(const Duration(seconds: 1), () {
+          if (mounted) {
+            if (!user.hasCompletedOnboarding) {
+              context.go(AppRoutePaths.step1);
+            } else {
+              context.go(AppRoutePaths.home);
+            }
+          }
+        });
       }
+    } on auth_failures.OAuthFailure {
+      _showError('Connexion Apple annulée ou échouée');
+    } on auth_failures.NetworkFailure {
+      _showError('Vérifiez votre connexion Internet');
+    } on auth_failures.AuthFailure catch (e) {
+      _showError(e.message);
     }
   }
 
@@ -181,13 +201,25 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
         ),
       );
     }
+  }
+
+  void _showError(String message) {
+    if (!mounted) return;
     
-    // Rediriger vers la page d'accueil après succès
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
-        context.go(AppRoutePaths.home);
-      }
-    });
+    if (_isIOS) {
+      _showCupertinoAlert(
+        title: 'Erreur',
+        content: message,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   void _showCupertinoAlert({required String title, required String content}) {
@@ -211,28 +243,28 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final themeColors = ref.getSigninThemeColors(context);
-    final signinState = ref.watch(signinStateProvider);
+    final authState = ref.watch(authStateProvider);
 
     return _isIOS 
-        ? _buildIOS(context, l10n, themeColors, signinState) 
-        : _buildAndroid(context, l10n, themeColors, signinState);
+        ? _buildIOS(context, l10n, themeColors, authState) 
+        : _buildAndroid(context, l10n, themeColors, authState);
   }
 
-  Widget _buildIOS(BuildContext context, AppLocalizations l10n, ThemeColors colors, SigninState signinState) {
+  Widget _buildIOS(BuildContext context, AppLocalizations l10n, ThemeColors colors, AsyncValue authState) {
     return CupertinoPageScaffold(
       backgroundColor: colors.background,
-      child: _buildSigninContent(l10n, colors, signinState),
+      child: _buildSigninContent(l10n, colors, authState),
     );
   }
 
-  Widget _buildAndroid(BuildContext context, AppLocalizations l10n, ThemeColors colors, SigninState signinState) {
+  Widget _buildAndroid(BuildContext context, AppLocalizations l10n, ThemeColors colors, AsyncValue authState) {
     return Scaffold(
       backgroundColor: colors.background,
-      body: _buildSigninContent(l10n, colors, signinState),
+      body: _buildSigninContent(l10n, colors, authState),
     );
   }
 
-  Widget _buildSigninContent(AppLocalizations l10n, ThemeColors colors, SigninState signinState) {
+  Widget _buildSigninContent(AppLocalizations l10n, ThemeColors colors, AsyncValue authState) {
     return PlatformSafeArea(
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -256,15 +288,11 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                       children: [
                         _buildEmailField(colors),
                         SizedBox(height: AppDimensions.paddingM),
-                        _buildPasswordField(colors, signinState),
+                        _buildPasswordField(colors),
                         SizedBox(height: AppDimensions.paddingS),
                         _buildForgotPasswordLink(colors),
-                        if (signinState.error != null) ...[
-                          SizedBox(height: AppDimensions.paddingM),
-                          _buildErrorBanner(signinState.error!),
-                        ],
                         SizedBox(height: AppDimensions.paddingM),
-                        _buildSigninButton(colors, signinState),
+                        _buildSigninButton(colors, authState),
                         SizedBox(height: AppDimensions.paddingM),
                         _buildSignUpLink(colors),
                         SizedBox(height: AppDimensions.paddingM),
@@ -310,7 +338,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
               borderRadius: BorderRadius.circular(28),
               onTap: () => context.pop(),
               child: Icon(
-                _isIOS ? CupertinoIcons.chevron_left : Icons.arrow_back,
+                AppIcons.back,
                 color: AppColors.primary,
                 size: 24,
               ),
@@ -370,7 +398,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   }
 
 
-  Widget _buildPasswordField(ThemeColors colors, SigninState signinState) {
+  Widget _buildPasswordField(ThemeColors colors) {
     return AppTextField(
       controller: _passwordController,
       label: 'Mot de passe',
@@ -419,45 +447,19 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
         .fadeIn(duration: 600.ms, delay: 350.ms);
   }
 
-  Widget _buildErrorBanner(String error) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.error.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-        border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.error_outline, color: AppColors.error, size: 20),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: Text(
-                error,
-                style: AppTypography.error.copyWith(color: AppColors.error),
-              ),
-            ),
-          ),
-        ],
-      ),
-    )
-        .animate()
-        .fadeIn(duration: 300.ms)
-        .slideY(begin: -0.1, end: 0.0);
-  }
 
-  Widget _buildSigninButton(ThemeColors colors, SigninState signinState) {
+  Widget _buildSigninButton(ThemeColors colors, AsyncValue authState) {
+    final isLoading = authState.isLoading;
+    
     return AppButton(
       text: 'Se connecter',
-      onPressed: signinState.isLoading ? null : _handleSignin,
+      onPressed: isLoading ? null : _handleSignin,
       style: AppButtonStyle.gradient,
       size: AppButtonSize.large,
       isFullWidth: true,
-      isLoading: signinState.isLoading,
+      isLoading: isLoading,
       customBorderRadius: 28,
-      icon: Icons.arrow_forward,
+      icon: AppIcons.add,
       iconPosition: IconPosition.right,
     )
         .animate()
@@ -470,7 +472,7 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          _isIOS ? CupertinoIcons.person : Icons.person_outline,
+          AppIcons.profile,
           size: 18,
           color: colors.textSecondary,
         ),
@@ -561,32 +563,28 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
   Widget _buildGoogleButton(ThemeColors colors) {
     return AppButton(
       text: 'Google',
-      onPressed: () {
-        // TODO: Implement Google sign in
-      },
+      onPressed: _handleGoogleSignin,
       style: AppButtonStyle.outline,
       size: AppButtonSize.large,
       isFullWidth: true,
       customBorderRadius: 28,
       customColor: colors.surface,
       customTextColor: colors.textPrimary,
-      icon: Icons.g_mobiledata,
+      icon: AppIcons.google,
     );
   }
 
   Widget _buildAppleButton(ThemeColors colors) {
     return AppButton(
       text: 'Apple',
-      onPressed: () {
-        // TODO: Implement Apple sign in
-      },
+      onPressed: _handleAppleSignin,
       style: AppButtonStyle.primary,
       size: AppButtonSize.large,
       isFullWidth: true,
       customBorderRadius: 28,
       customColor: colors.isDark ? Colors.white : Colors.black,
       customTextColor: colors.isDark ? Colors.black : Colors.white,
-      icon: CupertinoIcons.app_badge_fill,
+      icon: AppIcons.apple,
     );
   }
 
@@ -594,7 +592,8 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
     if (value == null || value.isEmpty) {
       return 'Veuillez saisir votre email';
     }
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+    // Regex plus permissive et standard pour les emails
+    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
       return 'Veuillez saisir un email valide';
     }
     return null;

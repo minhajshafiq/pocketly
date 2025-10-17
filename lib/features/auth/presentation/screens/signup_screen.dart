@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
@@ -12,66 +11,8 @@ import 'package:pocketly/core/router/app_route_paths.dart';
 import 'package:pocketly/core/widgets/app_button.dart';
 import 'package:pocketly/core/widgets/app_text_field.dart';
 import 'package:pocketly/core/widgets/platform_safe_area.dart';
-
-/// Provider pour gérer l'état d'inscription
-final signupStateProvider = NotifierProvider<SignupStateNotifier, SignupState>(
-  () => SignupStateNotifier(),
-);
-
-/// État d'inscription
-class SignupState {
-  final bool isLoading;
-  final String? error;
-  final bool isPasswordVisible;
-  final bool isConfirmPasswordVisible;
-
-  const SignupState({
-    this.isLoading = false,
-    this.error,
-    this.isPasswordVisible = false,
-    this.isConfirmPasswordVisible = false,
-  });
-
-  SignupState copyWith({
-    bool? isLoading,
-    String? error,
-    bool? isPasswordVisible,
-    bool? isConfirmPasswordVisible,
-  }) {
-    return SignupState(
-      isLoading: isLoading ?? this.isLoading,
-      error: error,
-      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
-      isConfirmPasswordVisible: isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
-    );
-  }
-}
-
-/// Notifier pour gérer l'état d'inscription
-class SignupStateNotifier extends Notifier<SignupState> {
-  @override
-  SignupState build() => const SignupState();
-
-  void setLoading(bool loading) {
-    state = state.copyWith(isLoading: loading);
-  }
-
-  void setError(String? error) {
-    state = state.copyWith(error: error);
-  }
-
-  void togglePasswordVisibility() {
-    state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
-  }
-
-  void toggleConfirmPasswordVisibility() {
-    state = state.copyWith(isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
-  }
-
-  void clearError() {
-    state = state.copyWith(error: null);
-  }
-}
+import 'package:pocketly/features/auth/presentation/providers/auth_state_provider.dart';
+import 'package:pocketly/features/auth/domain/failures/auth_failures.dart' as auth_failures;
 
 /// Provider pour obtenir les couleurs du thème
 final signupThemeColorsProvider = Provider<ThemeColors>((ref) {
@@ -134,13 +75,16 @@ class SignupScreen extends ConsumerStatefulWidget {
 }
 
 class _SignupScreenState extends ConsumerState<SignupScreen> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _hasBeenSubmitted = false;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -149,44 +93,93 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   bool get _isIOS => !kIsWeb && Platform.isIOS;
 
+  /// Inscription avec email/password
   Future<void> _handleSignup() async {
+    setState(() {
+      _hasBeenSubmitted = true;
+    });
+    
     if (!_formKey.currentState!.validate()) return;
 
-    ref.read(signupStateProvider.notifier).setLoading(true);
-    ref.read(signupStateProvider.notifier).clearError();
-
     try {
-      // Simulate signup process
-      await Future.delayed(const Duration(seconds: 2));
-      
+      // Utiliser AuthActions pour s'inscrire et récupérer directement le UserEntity
+      await ref.read(authActionsProvider).signUpWithEmailPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        name: _nameController.text.trim().isNotEmpty ? _nameController.text.trim() : null,
+      );
+
+      // Afficher la modal de bienvenue après inscription réussie
       if (mounted) {
-        _showSuccessMessage();
+        await _showWelcomeModal();
+        
+        // Rediriger vers l'onboarding
+        if (mounted) {
+          context.go(AppRoutePaths.step1);
+        }
       }
+    } on auth_failures.SignUpFailure {
+      _showError('Impossible de créer le compte');
+    } on auth_failures.EmailAlreadyInUseFailure {
+      _showError('Cet email est déjà utilisé');
+    } on auth_failures.WeakPasswordFailure {
+      _showError('Le mot de passe doit contenir au moins 8 caractères');
+    } on auth_failures.InvalidEmailFailure {
+      _showError('Adresse email invalide');
+    } on auth_failures.NetworkFailure {
+      _showError('Vérifiez votre connexion Internet');
+    } on auth_failures.AuthFailure catch (e) {
+      _showError(e.message);
     } catch (e) {
-      if (mounted) {
-        ref.read(signupStateProvider.notifier).setError('Erreur lors de l\'inscription');
-      }
-    } finally {
-      if (mounted) {
-        ref.read(signupStateProvider.notifier).setLoading(false);
-      }
+      _showError('Une erreur inattendue s\'est produite');
     }
   }
 
-  void _showSuccessMessage() {
-    _showWelcomeModal();
-  }
-
-  void _showWelcomeModal() {
+  void _showError(String message) {
+    if (!mounted) return;
+    
     if (_isIOS) {
-      _showCupertinoWelcomeModal();
+      _showCupertinoAlert(
+        title: 'Erreur',
+        content: message,
+      );
     } else {
-      _showMaterialWelcomeModal();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 
-  void _showCupertinoWelcomeModal() {
+  void _showCupertinoAlert({required String title, required String content}) {
     showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          CupertinoDialogAction(
+            child: const Text('OK'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showWelcomeModal() async {
+    if (_isIOS) {
+      await _showCupertinoWelcomeModal();
+    } else {
+      await _showMaterialWelcomeModal();
+    }
+  }
+
+  Future<void> _showCupertinoWelcomeModal() async {
+    return showCupertinoDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => CupertinoAlertDialog(
@@ -238,7 +231,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   Navigator.of(context).pop();
-                  context.go(AppRoutePaths.home);
                 },
                 child: Text(
                   'Commencer >',
@@ -255,8 +247,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     );
   }
 
-  void _showMaterialWelcomeModal() {
-    showDialog(
+  Future<void> _showMaterialWelcomeModal() async {
+    return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
@@ -314,7 +306,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   borderRadius: BorderRadius.circular(28),
                   onTap: () {
                     Navigator.of(context).pop();
-                    context.go(AppRoutePaths.home);
                   },
                   child: Center(
                     child: Text(
@@ -334,49 +325,33 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     );
   }
 
-  void _showCupertinoAlert({required String title, required String content}) {
-    showCupertinoDialog(
-      context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('OK'),
-            onPressed: () => context.pop(),
-          ),
-        ],
-      ),
-    );
-  }
-
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final themeColors = ref.getSignupThemeColors(context);
-    final signupState = ref.watch(signupStateProvider);
+    final authState = ref.watch(authStateProvider);
 
     return _isIOS 
-        ? _buildIOS(context, l10n, themeColors, signupState) 
-        : _buildAndroid(context, l10n, themeColors, signupState);
+        ? _buildIOS(context, l10n, themeColors, authState) 
+        : _buildAndroid(context, l10n, themeColors, authState);
   }
 
-  Widget _buildIOS(BuildContext context, AppLocalizations l10n, ThemeColors colors, SignupState signupState) {
+  Widget _buildIOS(BuildContext context, AppLocalizations l10n, ThemeColors colors, AsyncValue authState) {
     return CupertinoPageScaffold(
       backgroundColor: colors.background,
-      child: _buildSignupContent(l10n, colors, signupState),
+      child: _buildSignupContent(l10n, colors, authState),
     );
   }
 
-  Widget _buildAndroid(BuildContext context, AppLocalizations l10n, ThemeColors colors, SignupState signupState) {
+  Widget _buildAndroid(BuildContext context, AppLocalizations l10n, ThemeColors colors, AsyncValue authState) {
     return Scaffold(
       backgroundColor: colors.background,
-      body: _buildSignupContent(l10n, colors, signupState),
+      body: _buildSignupContent(l10n, colors, authState),
     );
   }
 
-  Widget _buildSignupContent(AppLocalizations l10n, ThemeColors colors, SignupState signupState) {
+  Widget _buildSignupContent(AppLocalizations l10n, ThemeColors colors, AsyncValue authState) {
     return PlatformSafeArea(
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -401,15 +376,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         children: [
                           _buildEmailField(colors),
                           SizedBox(height: AppDimensions.paddingM),
-                          _buildPasswordField(colors, signupState),
+                          _buildPasswordField(colors),
                           SizedBox(height: AppDimensions.paddingM),
-                          _buildConfirmPasswordField(colors, signupState),
-                          if (signupState.error != null) ...[
-                            SizedBox(height: AppDimensions.paddingM),
-                            _buildErrorBanner(signupState.error!),
-                          ],
+                          _buildConfirmPasswordField(colors),
                           SizedBox(height: AppDimensions.paddingM),
-                          _buildSignupButton(colors, signupState),
+                          _buildSignupButton(colors, authState),
                           SizedBox(height: AppDimensions.paddingM),
                           _buildLoginLink(colors),
                           SizedBox(height: AppDimensions.paddingM),
@@ -456,7 +427,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               borderRadius: BorderRadius.circular(28),
               onTap: () => context.pop(),
               child: Icon(
-                _isIOS ? CupertinoIcons.chevron_left : Icons.arrow_back,
+                AppIcons.back,
                 color: AppColors.primary,
                 size: 24,
               ),
@@ -509,6 +480,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       type: AppTextFieldType.email,
       validator: _validateEmail,
       showValidationErrors: true,
+      hasBeenSubmitted: _hasBeenSubmitted,
     )
         .animate()
         .fadeIn(duration: 600.ms, delay: 200.ms)
@@ -516,13 +488,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
 
-  Widget _buildPasswordField(ThemeColors colors, SignupState signupState) {
+  Widget _buildPasswordField(ThemeColors colors) {
     return AppTextField(
       controller: _passwordController,
       label: 'Mot de passe',
       type: AppTextFieldType.password,
       validator: _validatePassword,
       showValidationErrors: true,
+      hasBeenSubmitted: _hasBeenSubmitted,
       showPasswordToggle: true,
     )
         .animate()
@@ -531,13 +504,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
 
-  Widget _buildConfirmPasswordField(ThemeColors colors, SignupState signupState) {
+  Widget _buildConfirmPasswordField(ThemeColors colors) {
     return AppTextField(
       controller: _confirmPasswordController,
       label: 'Confirmer le mot de passe',
       type: AppTextFieldType.password,
       validator: _validateConfirmPassword,
       showValidationErrors: true,
+      hasBeenSubmitted: _hasBeenSubmitted,
       showPasswordToggle: true,
     )
         .animate()
@@ -546,45 +520,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
 
-  Widget _buildErrorBanner(String error) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.error.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-        border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.error_outline, color: AppColors.error, size: 20),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Material(
-              color: Colors.transparent,
-              child: Text(
-                error,
-                style: AppTypography.error.copyWith(color: AppColors.error),
-              ),
-            ),
-          ),
-        ],
-      ),
-    )
-        .animate()
-        .fadeIn(duration: 300.ms)
-        .slideY(begin: -0.1, end: 0.0);
-  }
 
-  Widget _buildSignupButton(ThemeColors colors, SignupState signupState) {
+  Widget _buildSignupButton(ThemeColors colors, AsyncValue authState) {
+    final isLoading = authState.isLoading;
+    
     return AppButton(
       text: 'S\'inscrire',
-      onPressed: signupState.isLoading ? null : _handleSignup,
+      onPressed: isLoading ? null : _handleSignup,
       style: AppButtonStyle.gradient,
       size: AppButtonSize.large,
       isFullWidth: true,
-      isLoading: signupState.isLoading,
+      isLoading: isLoading,
       customBorderRadius: 28,
-      icon: Icons.arrow_forward,
+      icon: AppIcons.add,
       iconPosition: IconPosition.right,
     )
         .animate()
@@ -597,7 +545,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
-          _isIOS ? CupertinoIcons.person : Icons.person_outline,
+          AppIcons.profile,
           size: 18,
           color: colors.textSecondary,
         ),
@@ -697,7 +645,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       customBorderRadius: 28,
       customColor: colors.surface,
       customTextColor: colors.textPrimary,
-      icon: Icons.g_mobiledata,
+      icon: AppIcons.google,
     );
   }
 
@@ -713,7 +661,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       customBorderRadius: 28,
       customColor: colors.isDark ? Colors.white : Colors.black,
       customTextColor: colors.isDark ? Colors.black : Colors.white,
-      icon: CupertinoIcons.app_badge_fill,
+      icon: AppIcons.apple,
     );
   }
 
@@ -721,7 +669,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     if (value == null || value.isEmpty) {
       return 'Veuillez saisir votre email';
     }
-    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+    // Regex plus permissive et standard pour les emails
+    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
       return 'Veuillez saisir un email valide';
     }
     return null;

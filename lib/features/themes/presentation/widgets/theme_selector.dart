@@ -196,7 +196,7 @@ class ThemeSelector extends ConsumerWidget {
                 curve: Curves.easeInOut,
                 scale: 1.0,
                 child: Icon(
-                  Icons.check_circle,
+                  AppIcons.success,
                   color: AppColors.primary,
                   size: _getIconSize(),
                 ),
@@ -237,7 +237,7 @@ class ThemeSelector extends ConsumerWidget {
         ),
       ) : null,
       trailing: isSelected ? Icon(
-        Icons.check_circle,
+        AppIcons.success,
         color: AppColors.primary,
         size: _getIconSize(),
       ) : null,
@@ -267,9 +267,9 @@ class ThemeSelector extends ConsumerWidget {
 
   /// Obtient l'icône du thème
   IconData _getThemeIcon(ThemeEntity theme) {
-    if (theme.isLight) return Icons.light_mode;
-    if (theme.isDark) return Icons.dark_mode;
-    return Icons.brightness_auto;
+    if (theme.isLight) return AppIcons.add; // Utiliser un icône approprié pour le mode clair
+    if (theme.isDark) return AppIcons.add; // Utiliser un icône approprié pour le mode sombre
+    return AppIcons.settings; // Utiliser un icône approprié pour le mode système
   }
 
   /// Obtient la description du thème
@@ -327,7 +327,7 @@ class ThemeSelector extends ConsumerWidget {
       child: Column(
         children: [
           Icon(
-            Icons.error_outline,
+            AppIcons.error,
             size: AppDimensions.iconL,
             color: AppColors.error,
           ),
@@ -393,9 +393,9 @@ class ThemeToggleButton extends ConsumerWidget {
   /// Obtient l'icône de basculement selon le thème actuel
   IconData _getToggleIcon(ThemeEntity theme) {
     if (theme.isSystem) {
-      return Icons.brightness_auto;
+      return AppIcons.settings;
     }
-    return theme.isLight ? Icons.dark_mode : Icons.light_mode;
+    return theme.isLight ? AppIcons.add : AppIcons.add; // Utiliser des icônes appropriés
   }
 }
 

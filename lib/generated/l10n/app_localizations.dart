@@ -277,6 +277,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Get Started'**
   String get getStarted;
+
+  /// Title for notification permission dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Permission'**
+  String get notificationPermissionTitle;
+
+  /// Message for notification permission dialog
+  ///
+  /// In en, this message translates to:
+  /// **'We need your permission to send you notifications'**
+  String get notificationPermissionMessage;
+
+  /// Message when notification permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission denied'**
+  String get notificationPermissionDenied;
+
+  /// Message when notification is scheduled
+  ///
+  /// In en, this message translates to:
+  /// **'Notification scheduled'**
+  String get notificationScheduled;
+
+  /// Message when notification is cancelled
+  ///
+  /// In en, this message translates to:
+  /// **'Notification cancelled'**
+  String get notificationCancelled;
+
+  /// Button text to enable notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Notifications'**
+  String get enableNotifications;
+
+  /// Title for notification settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Settings'**
+  String get notificationSettings;
+
+  /// Title for reminder notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder'**
+  String get reminderNotification;
+
+  /// Title for transaction notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction'**
+  String get transactionNotification;
+
+  /// Title for notification error messages
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Error'**
+  String get notificationErrorTitle;
+
+  /// Error message when notification permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission denied. Please enable notifications in your device settings.'**
+  String get notificationPermissionError;
+
+  /// Error message when notification scheduling fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to schedule notification. Please try again.'**
+  String get notificationScheduleError;
+
+  /// Error message when showing notification fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to show notification. Please try again.'**
+  String get notificationShowError;
+
+  /// Error message when canceling notification fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to cancel notification. Please try again.'**
+  String get notificationCancelError;
+
+  /// Error message when notification initialization fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to initialize notifications. Please restart the app.'**
+  String get notificationInitializeError;
+
+  /// Success notification title
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get notificationSuccess;
+
+  /// Success notification message
+  ///
+  /// In en, this message translates to:
+  /// **'Operation completed successfully'**
+  String get notificationSuccessMessage;
+
+  /// Error notification title
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get notificationError;
+
+  /// Error notification message
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get notificationErrorMessage;
+
+  /// Info notification title
+  ///
+  /// In en, this message translates to:
+  /// **'Information'**
+  String get notificationInfo;
+
+  /// Info notification message
+  ///
+  /// In en, this message translates to:
+  /// **'Important information'**
+  String get notificationInfoMessage;
+
+  /// Warning notification title
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get notificationWarning;
+
+  /// Warning notification message
+  ///
+  /// In en, this message translates to:
+  /// **'Attention required'**
+  String get notificationWarningMessage;
+
+  /// Action notification title
+  ///
+  /// In en, this message translates to:
+  /// **'Action Required'**
+  String get notificationAction;
+
+  /// Action notification message
+  ///
+  /// In en, this message translates to:
+  /// **'An action is required'**
+  String get notificationActionMessage;
+
+  /// Action button text
+  ///
+  /// In en, this message translates to:
+  /// **'Action'**
+  String get notificationActionButton;
+
+  /// Loading notification title
+  ///
+  /// In en, this message translates to:
+  /// **'Loading'**
+  String get notificationLoading;
+
+  /// Loading notification message
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait...'**
+  String get notificationLoadingMessage;
 }
 
 class _AppLocalizationsDelegate

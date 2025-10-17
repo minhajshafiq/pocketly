@@ -33,11 +33,12 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
-    _startAutoSlide();
     
-    // Remove splash screen when welcome screen is ready
+    // Démarrer le timer auto-slide après que le PageView soit construit
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FlutterNativeSplash.remove();
+      // Démarrer le timer seulement après que le widget soit construit
+      _startAutoSlide();
     });
   }
 
@@ -61,7 +62,16 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   }
 
   void _nextPage() {
-    final l10n = AppLocalizations.of(context)!;
+    // Vérifier si le contexte est disponible
+    if (!mounted) return;
+    
+    final l10n = AppLocalizations.of(context);
+    // Protection contre les appels avant l'initialisation complète
+    if (l10n == null) return;
+    
+    // Vérifier que le PageController est attaché
+    if (!_pageController.hasClients) return;
+    
     final welcomePages = _getWelcomePages(l10n);
     
     if (_currentPage < welcomePages.length - 1) {
@@ -101,7 +111,17 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    // Utilisation sécurisée des localisations
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      // Retourner un widget de chargement si les localisations ne sont pas prêtes
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
@@ -156,7 +176,9 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     );
   }
 
-  Widget _buildHeader(BuildContext context, AppLocalizations l10n, bool isDark, bool isIOS) {
+  Widget _buildHeader(BuildContext context, AppLocalizations? l10n, bool isDark, bool isIOS) {
+    // Protection contre les localisations nulles
+    if (l10n == null) return const SizedBox.shrink();
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: AppDimensions.pageHorizontalPadding,
@@ -177,7 +199,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                   borderRadius: BorderRadius.circular(AppDimensions.radiusM),
                 ),
                 child: Icon(
-                  Icons.account_balance_wallet,
+                  AppIcons.wallet,
                   color: Colors.white,
                   size: AppDimensions.iconM,
                 ),
@@ -201,10 +223,12 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   Widget _buildWelcomePage(
     BuildContext context,
     WelcomePageData pageData,
-    AppLocalizations l10n,
+    AppLocalizations? l10n,
     bool isDark,
     bool isIOS,
   ) {
+    // Protection contre les localisations nulles
+    if (l10n == null) return const SizedBox.shrink();
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
         horizontal: AppDimensions.pageHorizontalPadding,
@@ -278,7 +302,10 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   }
 
   Widget _buildPageIndicators(BuildContext context, bool isDark, bool isIOS) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
+    // Protection contre les localisations nulles
+    if (l10n == null) return const SizedBox.shrink();
+    
     final welcomePages = _getWelcomePages(l10n);
     
     return Padding(
@@ -304,7 +331,9 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     );
   }
 
-  Widget _buildFixedBottomButtons(BuildContext context, AppLocalizations l10n, bool isDark, bool isIOS) {
+  Widget _buildFixedBottomButtons(BuildContext context, AppLocalizations? l10n, bool isDark, bool isIOS) {
+    // Protection contre les localisations nulles
+    if (l10n == null) return const SizedBox.shrink();
     return Positioned(
       bottom: 0,
       left: 0,
@@ -326,7 +355,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                       height: AppDimensions.buttonHeightLarge,
                       child: AppButton(
                         text: l10n.getStarted,
-                        icon: Icons.rocket_launch,
+                        icon: AppIcons.add,
                         onPressed: _getStarted,
                         style: AppButtonStyle.gradient,
                         size: AppButtonSize.large,
@@ -350,7 +379,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                       height: AppDimensions.buttonHeightLarge,
                       child: AppButton(
                         text: l10n.login,
-                        icon: Icons.login,
+                        icon: AppIcons.login,
                         onPressed: _login,
                         style: AppButtonStyle.outline,
                         size: AppButtonSize.large,
@@ -399,25 +428,25 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   List<WelcomePageData> _getWelcomePages(AppLocalizations l10n) {
     return [
       WelcomePageData(
-        icon: Icons.account_balance_wallet,
+        icon: AppIcons.wallet,
         title: l10n.welcomeTitle,
         description: l10n.welcomeDescription,
         gradient: AppColors.primaryGradient,
       ),
       WelcomePageData(
-        icon: Icons.analytics,
+        icon: AppIcons.stats,
         title: l10n.trackSpendingTitle,
         description: l10n.trackSpendingDescription,
         gradient: AppColors.secondaryGradient,
       ),
       WelcomePageData(
-        icon: Icons.savings,
+        icon: AppIcons.savings,
         title: l10n.saveSmartTitle,
         description: l10n.saveSmartDescription,
         gradient: AppColors.successGradient,
       ),
       WelcomePageData(
-        icon: Icons.security,
+        icon: AppIcons.success,
         title: l10n.secureTitle,
         description: l10n.secureDescription,
         gradient: AppColors.primaryGradient,

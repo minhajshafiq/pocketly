@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io' show Platform;
 import 'package:pocketly/core/constants/app_constants.dart';
-import 'package:pocketly/core/constants/app_colors.dart';
-import 'package:pocketly/core/constants/app_dimensions.dart';
-import 'package:pocketly/core/constants/app_typography.dart';
 
 /// Styles de bouton disponibles
 enum AppButtonStyle {
