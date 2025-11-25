@@ -5,9 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
-import 'package:pocketly/core/constants/app_constants.dart';
-import 'package:pocketly/core/router/app_route_paths.dart';
-import 'package:pocketly/core/widgets/app_button.dart';
+import 'package:pocketly/core/core.dart';
 import 'package:pocketly/generated/l10n/app_localizations.dart';
 
 /// Écran de bienvenue pour l'application Pocketly.
@@ -187,21 +185,64 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Logo de l'application
+          // Logo de l'application avec icône 
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: AppDimensions.iconXL,
-                height: AppDimensions.iconXL,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  gradient: AppColors.primaryGradient,
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    'https://bwdqbfromrqpcphcydoq.supabase.co/storage/v1/object/public/Pocketly-files/icon.png',
+                    width: 48,
+                    height: 48,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        decoration: BoxDecoration(
+                          gradient: AppColors.primaryGradient,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      // Fallback si l'image n'existe pas
+                      return Container(
+                        decoration: BoxDecoration(
+                          gradient: AppColors.primaryGradient,
+                          borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   AppIcons.wallet,
                   color: Colors.white,
-                  size: AppDimensions.iconM,
+                          size: 24,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
               SizedBox(width: AppDimensions.paddingS),
@@ -444,12 +485,6 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
         title: l10n.saveSmartTitle,
         description: l10n.saveSmartDescription,
         gradient: AppColors.successGradient,
-      ),
-      WelcomePageData(
-        icon: AppIcons.success,
-        title: l10n.secureTitle,
-        description: l10n.secureDescription,
-        gradient: AppColors.primaryGradient,
       ),
     ];
   }
