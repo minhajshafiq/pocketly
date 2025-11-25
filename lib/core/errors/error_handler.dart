@@ -6,7 +6,7 @@ import 'package:pocketly/core/errors/app_error.dart';
 import 'package:pocketly/core/errors/common_errors.dart';
 
 /// Gestionnaire centralisé des erreurs.
-/// 
+///
 /// Convertit les exceptions système/framework en AppError
 /// pour une gestion cohérente dans toute l'application.
 class ErrorHandler {
@@ -185,7 +185,9 @@ class ErrorHandler {
   /// Logs une erreur pour le monitoring (à intégrer avec Sentry/Firebase Crashlytics)
   static Future<void> logError(AppError error) async {
     if (kDebugMode) {
-      debugPrint('📝 Logging error: ${error.errorCode} - ${error.technicalMessage}');
+      debugPrint(
+        '📝 Logging error: ${error.errorCode} - ${error.technicalMessage}',
+      );
     }
 
     // TODO: Intégrer avec un service de monitoring en production
@@ -193,7 +195,7 @@ class ErrorHandler {
     // - Firebase Crashlytics
     // - Sentry
     // - Custom logging service
-    
+
     // await FirebaseCrashlytics.instance.recordError(
     //   error.originalError ?? error,
     //   error.stackTrace,
@@ -207,4 +209,3 @@ class ErrorHandler {
     return error.severity.shouldShowToUser;
   }
 }
-

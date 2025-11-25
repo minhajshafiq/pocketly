@@ -14,8 +14,8 @@ class NetworkError extends AppError {
     String? technicalMessage,
     this.originalError,
     this.stackTrace,
-  })  : _userMessage = userMessage,
-        _technicalMessage = technicalMessage;
+  }) : _userMessage = userMessage,
+       _technicalMessage = technicalMessage;
 
   @override
   String get userMessage =>
@@ -46,8 +46,8 @@ class AuthenticationError extends AppError {
     String? technicalMessage,
     this.originalError,
     this.stackTrace,
-  })  : _userMessage = userMessage,
-        _technicalMessage = technicalMessage;
+  }) : _userMessage = userMessage,
+       _technicalMessage = technicalMessage;
 
   @override
   String get userMessage =>
@@ -80,8 +80,8 @@ class ValidationError extends AppError {
     String? technicalMessage,
     this.originalError,
     this.stackTrace,
-  })  : _userMessage = userMessage,
-        _technicalMessage = technicalMessage;
+  }) : _userMessage = userMessage,
+       _technicalMessage = technicalMessage;
 
   @override
   String get userMessage =>
@@ -114,8 +114,8 @@ class ServerError extends AppError {
     String? technicalMessage,
     this.originalError,
     this.stackTrace,
-  })  : _userMessage = userMessage,
-        _technicalMessage = technicalMessage;
+  }) : _userMessage = userMessage,
+       _technicalMessage = technicalMessage;
 
   @override
   String get userMessage =>
@@ -123,7 +123,8 @@ class ServerError extends AppError {
 
   @override
   String get technicalMessage =>
-      _technicalMessage ?? 'Server error (${statusCode ?? "unknown"}): $originalError';
+      _technicalMessage ??
+      'Server error (${statusCode ?? "unknown"}): $originalError';
 
   @override
   String get errorCode => 'SERVER_ERROR_${statusCode ?? "UNKNOWN"}';
@@ -148,12 +149,11 @@ class NotFoundError extends AppError {
     String? technicalMessage,
     this.originalError,
     this.stackTrace,
-  })  : _userMessage = userMessage,
-        _technicalMessage = technicalMessage;
+  }) : _userMessage = userMessage,
+       _technicalMessage = technicalMessage;
 
   @override
-  String get userMessage =>
-      _userMessage ?? '$resourceType introuvable.';
+  String get userMessage => _userMessage ?? '$resourceType introuvable.';
 
   @override
   String get technicalMessage =>
@@ -182,8 +182,8 @@ class PermissionError extends AppError {
     String? technicalMessage,
     this.originalError,
     this.stackTrace,
-  })  : _userMessage = userMessage,
-        _technicalMessage = technicalMessage;
+  }) : _userMessage = userMessage,
+       _technicalMessage = technicalMessage;
 
   @override
   String get userMessage =>
@@ -216,8 +216,8 @@ class TimeoutError extends AppError {
     String? technicalMessage,
     this.originalError,
     this.stackTrace,
-  })  : _userMessage = userMessage,
-        _technicalMessage = technicalMessage;
+  }) : _userMessage = userMessage,
+       _technicalMessage = technicalMessage;
 
   @override
   String get userMessage =>
@@ -225,7 +225,8 @@ class TimeoutError extends AppError {
 
   @override
   String get technicalMessage =>
-      _technicalMessage ?? 'Operation timed out after ${timeout?.inSeconds ?? "unknown"}s';
+      _technicalMessage ??
+      'Operation timed out after ${timeout?.inSeconds ?? "unknown"}s';
 
   @override
   String get errorCode => 'TIMEOUT';
@@ -248,8 +249,8 @@ class UnknownError extends AppError {
     String? technicalMessage,
     this.originalError,
     this.stackTrace,
-  })  : _userMessage = userMessage,
-        _technicalMessage = technicalMessage;
+  }) : _userMessage = userMessage,
+       _technicalMessage = technicalMessage;
 
   @override
   String get userMessage =>
@@ -282,8 +283,8 @@ class CacheError extends AppError {
     String? technicalMessage,
     this.originalError,
     this.stackTrace,
-  })  : _userMessage = userMessage,
-        _technicalMessage = technicalMessage;
+  }) : _userMessage = userMessage,
+       _technicalMessage = technicalMessage;
 
   @override
   String get userMessage =>
@@ -291,7 +292,8 @@ class CacheError extends AppError {
 
   @override
   String get technicalMessage =>
-      _technicalMessage ?? 'Cache operation failed: $operation - $originalError';
+      _technicalMessage ??
+      'Cache operation failed: $operation - $originalError';
 
   @override
   String get errorCode => 'CACHE_ERROR';
@@ -299,4 +301,3 @@ class CacheError extends AppError {
   @override
   ErrorSeverity get severity => ErrorSeverity.warning;
 }
-

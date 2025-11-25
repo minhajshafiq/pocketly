@@ -3,11 +3,10 @@ import 'package:pocketly/core/errors/app_error.dart';
 import 'package:pocketly/core/errors/error_handler.dart';
 
 /// Provider global pour gérer les erreurs de l'application.
-/// 
+///
 /// Permet de centraliser la gestion et l'affichage des erreurs
 /// depuis n'importe quel provider Riverpod.
-final errorNotifierProvider =
-    NotifierProvider<ErrorNotifier, AppError?>(
+final errorNotifierProvider = NotifierProvider<ErrorNotifier, AppError?>(
   ErrorNotifier.new,
 );
 
@@ -22,7 +21,7 @@ class ErrorNotifier extends Notifier<AppError?> {
   void setError(Object error, [StackTrace? stackTrace]) {
     final appError = ErrorHandler.handleError(error, stackTrace);
     state = appError;
-    
+
     // Log l'erreur pour le monitoring
     ErrorHandler.logError(appError);
   }
@@ -59,10 +58,7 @@ extension ErrorHandlingExtension on Ref {
   }
 
   /// Exécute une fonction synchrone et gère automatiquement les erreurs
-  T? guard<T>(
-    T Function() function, {
-    bool showError = true,
-  }) {
+  T? guard<T>(T Function() function, {bool showError = true}) {
     try {
       return function();
     } catch (error, stackTrace) {
@@ -90,4 +86,3 @@ extension AsyncValueErrorExtension<T> on AsyncValue<T> {
     return error != null && ErrorHandler.shouldShowToUser(error);
   }
 }
-

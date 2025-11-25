@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pocketly/core/constants/app_constants.dart';
+import 'package:pocketly/core/constants/app_colors.dart';
+import 'package:pocketly/core/constants/app_typography.dart';
+import 'package:pocketly/core/constants/app_icons.dart';
 
 /// Types de champs de texte disponibles
-enum AppTextFieldType { 
-  text, 
-  email, 
-  password, 
-  number, 
-  phone, 
+enum AppTextFieldType {
+  text,
+  email,
+  password,
+  number,
+  phone,
   multiline,
   search,
   url,
@@ -32,71 +34,71 @@ class _LabelAnimationConfig {
 class AppTextField extends ConsumerStatefulWidget {
   /// Contrôleur du champ de texte
   final TextEditingController controller;
-  
+
   /// Label du champ
   final String label;
-  
+
   /// Texte d'aide (placeholder)
   final String? hint;
-  
+
   /// Type de champ
   final AppTextFieldType type;
-  
+
   /// Icône personnalisée
   final IconData? icon;
-  
+
   /// Fonction de validation
   final String? Function(String?)? validator;
-  
+
   /// Callback de changement de texte
   final ValueChanged<String>? onChanged;
-  
+
   /// Callback de soumission
   final ValueChanged<String>? onSubmitted;
-  
+
   /// État activé/désactivé
   final bool enabled;
-  
+
   /// État lecture seule
   final bool readOnly;
-  
+
   /// Nombre maximum de lignes
   final int? maxLines;
-  
+
   /// Longueur maximum du texte
   final int? maxLength;
-  
+
   /// Action du clavier
   final TextInputAction? textInputAction;
-  
+
   /// Nœud de focus
   final FocusNode? focusNode;
-  
+
   /// Afficher le toggle de mot de passe
   final bool showPasswordToggle;
-  
+
   /// Icône de suffixe personnalisée
   final Widget? suffixIcon;
-  
+
   /// Padding du contenu
   final EdgeInsetsGeometry? contentPadding;
-  
+
   /// Afficher les erreurs de validation
   final bool showValidationErrors;
   final bool hasBeenSubmitted;
-  
+
   /// Style du texte
   final TextStyle? textStyle;
-  
+
   /// Style du label
   final TextStyle? labelStyle;
-  
+
   /// Couleur de l'icône
   final Color? iconColor;
-  
+
   /// Couleur de la bordure
   final Color? borderColor;
-  
+
   /// Couleur de fond
   final Color? backgroundColor;
 
@@ -134,17 +136,16 @@ class AppTextField extends ConsumerStatefulWidget {
 
 class _AppTextFieldState extends ConsumerState<AppTextField>
     with TickerProviderStateMixin {
-  
   // Animation controllers
   late final AnimationController _animationController;
   late final AnimationController _labelColorController;
-  
+
   // Animations
   late final Animation<double> _labelAnimation;
   Animation<Color?>? _labelColorAnimation;
   late final Animation<double> _labelScaleAnimation;
   late final Animation<Offset> _labelPositionAnimation;
-  
+
   // State variables
   bool _isFocused = false;
   bool _hasText = false;
@@ -239,10 +240,10 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
   void _cleanup() {
     _focusNode.removeListener(_onFocusChange);
     widget.controller.removeListener(_onTextChange);
-    
+
     _animationController.dispose();
     _labelColorController.dispose();
-    
+
     if (widget.focusNode == null) {
       _focusNode.dispose();
     }
@@ -251,24 +252,27 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
   // Animation and state management
   void _updateLabelColorAnimation() {
     if (!mounted) return;
-    
+
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final hasError = _hasError();
     final shouldShowActiveColor = _isFocused;
 
-    _labelColorAnimation = ColorTween(
-      begin: _getDefaultLabelColor(isDark),
-      end: hasError
-          ? AppColors.error
-          : (shouldShowActiveColor
-              ? AppColors.primary
-              : _getDefaultLabelColor(isDark)),
-    ).animate(CurvedAnimation(
-      parent: _labelColorController,
-      curve: _LabelAnimationConfig.curve,
-    ));
-    
+    _labelColorAnimation =
+        ColorTween(
+          begin: _getDefaultLabelColor(isDark),
+          end: hasError
+              ? AppColors.error
+              : (shouldShowActiveColor
+                    ? AppColors.primary
+                    : _getDefaultLabelColor(isDark)),
+        ).animate(
+          CurvedAnimation(
+            parent: _labelColorController,
+            curve: _LabelAnimationConfig.curve,
+          ),
+        );
+
     // Déclencher l'animation de couleur
     if (shouldShowActiveColor) {
       _labelColorController.forward();
@@ -325,7 +329,7 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
   void _updateAnimation() {
     final shouldAnimateUp = _isFocused || _hasText;
     final isCurrentlyUp = _animationController.value > 0.5;
-    
+
     if (shouldAnimateUp && !isCurrentlyUp) {
       _animationController.forward();
     } else if (!shouldAnimateUp && isCurrentlyUp) {
@@ -344,11 +348,28 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+    final hasError = _hasError();
+    final errorMessage = hasError
+        ? widget.validator!(widget.controller.text)
+        : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildTextFieldContainer(theme, isDark),
+        if (errorMessage != null) ...[
+          SizedBox(height: 8),
+          Padding(
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: Text(
+              errorMessage,
+              style: AppTypography.small.copyWith(
+                color: AppColors.error,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -363,7 +384,8 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
       child: Stack(
         children: [
           _buildTextField(hasError, backgroundColor, textColor),
-          if (_isInitialized) _buildAnimatedLabel(hasError, backgroundColor, isDark),
+          if (_isInitialized)
+            _buildAnimatedLabel(hasError, backgroundColor, isDark),
         ],
       ),
     );
@@ -382,7 +404,11 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
     );
   }
 
-  Widget _buildTextField(bool hasError, Color backgroundColor, Color textColor) {
+  Widget _buildTextField(
+    bool hasError,
+    Color backgroundColor,
+    Color textColor,
+  ) {
     return Material(
       color: Colors.transparent,
       child: TextField(
@@ -395,7 +421,8 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
         readOnly: widget.readOnly,
         maxLines: widget.maxLines ?? _getMaxLines(),
         maxLength: widget.maxLength,
-        style: widget.textStyle ?? AppTypography.body.copyWith(color: textColor),
+        style:
+            widget.textStyle ?? AppTypography.body.copyWith(color: textColor),
         onChanged: _handleTextFieldChange,
         onSubmitted: widget.onSubmitted,
         onTap: _handleTextFieldTap,
@@ -444,7 +471,7 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
   OutlineInputBorder _buildEnabledBorder(bool hasError) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(28.r),
       borderSide: BorderSide(
@@ -469,7 +496,7 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
   OutlineInputBorder _buildDisabledBorder() {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(28.r),
       borderSide: BorderSide(
@@ -490,7 +517,11 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
         );
   }
 
-  Widget _buildAnimatedLabel(bool hasError, Color backgroundColor, bool isDark) {
+  Widget _buildAnimatedLabel(
+    bool hasError,
+    Color backgroundColor,
+    bool isDark,
+  ) {
     return Positioned(
       left: _hasIcon() ? 56.w : 20.w,
       top: 0,
@@ -511,17 +542,13 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
                           animation: _labelColorAnimation!,
                           builder: (context, child) {
                             return _buildLabelContainer(
-                              hasError, 
-                              backgroundColor, 
+                              hasError,
+                              backgroundColor,
                               isDark,
                             );
                           },
                         )
-                      : _buildLabelContainer(
-                          hasError, 
-                          backgroundColor, 
-                          isDark,
-                        ),
+                      : _buildLabelContainer(hasError, backgroundColor, isDark),
                 ),
               ),
             );
@@ -531,24 +558,27 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
     );
   }
 
-  Widget _buildLabelContainer(bool hasError, Color backgroundColor, bool isDark) {
+  Widget _buildLabelContainer(
+    bool hasError,
+    Color backgroundColor,
+    bool isDark,
+  ) {
     final isLabelUp = _labelAnimation.value > 0.5;
-    
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: isLabelUp ? _LabelAnimationConfig.horizontalPadding.w : 0,
         vertical: isLabelUp ? _LabelAnimationConfig.verticalPadding.h : 0,
       ),
       decoration: BoxDecoration(
-        color: isLabelUp ? backgroundColor.withValues(alpha: 0.95) : Colors.transparent,
+        color: isLabelUp
+            ? backgroundColor.withValues(alpha: 0.95)
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(6.r),
         border: isLabelUp ? _buildLabelBorder(hasError, isDark) : null,
         boxShadow: isLabelUp ? _buildLabelShadow(isDark) : null,
       ),
-      child: Text(
-        widget.label,
-        style: _getLabelStyle(),
-      ),
+      child: Text(widget.label, style: _getLabelStyle()),
     );
   }
 
@@ -557,9 +587,9 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
       color: hasError
           ? AppColors.error.withValues(alpha: 0.3)
           : (_isFocused
-              ? AppColors.primary.withValues(alpha: 0.3)
-              : (isDark ? AppColors.borderDark : AppColors.borderLight)
-                  .withValues(alpha: 0.2)),
+                ? AppColors.primary.withValues(alpha: 0.3)
+                : (isDark ? AppColors.borderDark : AppColors.borderLight)
+                      .withValues(alpha: 0.2)),
       width: 1,
     );
   }
@@ -567,8 +597,9 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
   List<BoxShadow>? _buildLabelShadow(bool isDark) {
     return [
       BoxShadow(
-        color: (isDark ? AppColors.grey800 : AppColors.grey100)
-            .withValues(alpha: 0.1),
+        color: (isDark ? AppColors.grey800 : AppColors.grey100).withValues(
+          alpha: 0.1,
+        ),
         blurRadius: 4,
         offset: const Offset(0, 2),
       ),
@@ -578,7 +609,7 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
   TextStyle _getLabelStyle() {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return (widget.labelStyle ?? AppTypography.caption).copyWith(
       fontWeight: FontWeight.w600,
       color: _labelColorAnimation?.value ?? _getDefaultLabelColor(isDark),
@@ -595,11 +626,7 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
 
     return Padding(
       padding: EdgeInsets.all(12.w),
-      child: Icon(
-        iconData,
-        color: _getIconColor(hasError),
-        size: 22,
-      ),
+      child: Icon(iconData, color: _getIconColor(hasError), size: 22),
     );
   }
 
@@ -618,15 +645,16 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
   Widget _buildPasswordToggle() {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return GestureDetector(
       onTap: _togglePasswordVisibility,
       child: Padding(
         padding: EdgeInsets.all(12.w),
         child: Icon(
           _obscurePassword ? AppIcons.passwordVisible : AppIcons.passwordHidden,
-          color: (isDark ? AppColors.textSecondaryOnDark : AppColors.textSecondary)
-              .withValues(alpha: 0.7),
+          color:
+              (isDark ? AppColors.textSecondaryOnDark : AppColors.textSecondary)
+                  .withValues(alpha: 0.7),
           size: 20,
         ),
       ),
@@ -659,20 +687,22 @@ class _AppTextFieldState extends ConsumerState<AppTextField>
 
   Color _getIconColor(bool hasError) {
     if (widget.iconColor != null) return widget.iconColor!;
-    
+
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return hasError
         ? AppColors.error
         : (_isFocused
-            ? AppColors.primary
-            : (isDark ? AppColors.textSecondaryOnDark : AppColors.textSecondary));
+              ? AppColors.primary
+              : (isDark
+                    ? AppColors.textSecondaryOnDark
+                    : AppColors.textSecondary));
   }
 
   Color _getBackgroundColor(bool isDark) {
-    return widget.backgroundColor ?? 
-           (isDark ? AppColors.surfaceDark : AppColors.surface);
+    return widget.backgroundColor ??
+        (isDark ? AppColors.surfaceDark : AppColors.surface);
   }
 
   Color _getTextColor(bool isDark) {

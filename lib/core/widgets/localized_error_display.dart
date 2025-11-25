@@ -22,7 +22,7 @@ class LocalizedErrorDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isIOS = Platform.isIOS;
-    
+
     if (isIOS) {
       return _buildIOSError(context);
     } else {
@@ -46,13 +46,15 @@ class LocalizedErrorDisplay extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  customTitle ?? ErrorLocalization.getLocalizedErrorTitle(error, context),
+                  customTitle ??
+                      ErrorLocalization.getLocalizedErrorTitle(error, context),
                   style: CupertinoTheme.of(context).textTheme.navTitleTextStyle,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  customMessage ?? ErrorLocalization.getLocalizedUserMessage(error, context),
+                  customMessage ??
+                      ErrorLocalization.getLocalizedUserMessage(error, context),
                   style: CupertinoTheme.of(context).textTheme.textStyle,
                   textAlign: TextAlign.center,
                 ),
@@ -86,13 +88,15 @@ class LocalizedErrorDisplay extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                customTitle ?? ErrorLocalization.getLocalizedErrorTitle(error, context),
+                customTitle ??
+                    ErrorLocalization.getLocalizedErrorTitle(error, context),
                 style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                customMessage ?? ErrorLocalization.getLocalizedUserMessage(error, context),
+                customMessage ??
+                    ErrorLocalization.getLocalizedUserMessage(error, context),
                 style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
@@ -118,10 +122,7 @@ extension AsyncValueErrorDisplay<T> on AsyncValue<T> {
     return maybeWhen(
       error: (error, stackTrace) {
         final appError = ErrorHandler.handleError(error, stackTrace);
-        return LocalizedErrorDisplay(
-          error: appError,
-          onRetry: onRetry,
-        );
+        return LocalizedErrorDisplay(error: appError, onRetry: onRetry);
       },
       orElse: () => null,
     );

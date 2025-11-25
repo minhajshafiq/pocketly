@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pocketly/core/errors/app_error.dart';
-import 'package:pocketly/core/constants/app_constants.dart';
+import 'package:pocketly/core/constants/app_dimensions.dart';
+import 'package:pocketly/core/constants/app_icons.dart';
+import 'package:pocketly/core/constants/app_typography.dart';
 
 /// Widget adaptatif pour afficher une erreur en plein écran.
-/// 
+///
 /// Respecte les guidelines iOS (Cupertino) et Android (Material).
 /// Utilisé dans les états d'erreur des écrans.
 class ErrorDisplay extends StatelessWidget {
@@ -34,10 +36,7 @@ class ErrorDisplay extends StatelessWidget {
             // Icône d'erreur avec animation
             _buildErrorIcon(context)
                 .animate()
-                .scale(
-                  duration: 400.ms,
-                  curve: Curves.elasticOut,
-                )
+                .scale(duration: 400.ms, curve: Curves.elasticOut)
                 .shake(hz: 2, duration: 400.ms),
 
             SizedBox(height: AppDimensions.paddingL),
@@ -61,10 +60,9 @@ class ErrorDisplay extends StatelessWidget {
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusS),
                   border: Border.all(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .outline
-                        .withValues(alpha: 0.3),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outline.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -94,19 +92,19 @@ class ErrorDisplay extends StatelessWidget {
 
             // Boutons d'action
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (onRetry != null) ...[
-                  _buildRetryButton(context),
-                  if (onDismiss != null) SizedBox(width: AppDimensions.paddingM),
-                ],
-                if (onDismiss != null) _buildDismissButton(context),
-              ],
-            ).animate().fadeIn(delay: 400.ms, duration: 400.ms).slideY(
-                  begin: 0.2,
-                  end: 0,
-                  duration: 400.ms,
-                ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (onRetry != null) ...[
+                      _buildRetryButton(context),
+                      if (onDismiss != null)
+                        SizedBox(width: AppDimensions.paddingM),
+                    ],
+                    if (onDismiss != null) _buildDismissButton(context),
+                  ],
+                )
+                .animate()
+                .fadeIn(delay: 400.ms, duration: 400.ms)
+                .slideY(begin: 0.2, end: 0, duration: 400.ms),
           ],
         ),
       ),
@@ -123,11 +121,7 @@ class ErrorDisplay extends StatelessWidget {
         color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        iconData,
-        size: 64,
-        color: color,
-      ),
+      child: Icon(iconData, size: 64, color: color),
     );
   }
 
@@ -152,7 +146,7 @@ class ErrorDisplay extends StatelessWidget {
 
     return ElevatedButton.icon(
       onPressed: onRetry,
-      icon: Icon(Icons.refresh),
+      icon: Icon(AppIcons.refresh),
       label: Text('Réessayer'),
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(
@@ -202,13 +196,13 @@ class ErrorDisplay extends StatelessWidget {
     } else {
       switch (error.severity) {
         case ErrorSeverity.info:
-          return Icons.info_outline;
+          return AppIcons.infoOutline;
         case ErrorSeverity.warning:
-          return Icons.warning_amber_rounded;
+          return AppIcons.warningOutline;
         case ErrorSeverity.error:
-          return Icons.error_outline;
+          return AppIcons.errorOutline;
         case ErrorSeverity.critical:
-          return Icons.dangerous;
+          return AppIcons.dangerous;
       }
     }
   }
@@ -221,13 +215,9 @@ class ErrorDisplay extends StatelessWidget {
             ? CupertinoColors.systemBlue
             : colorScheme.primary;
       case ErrorSeverity.warning:
-        return Platform.isIOS
-            ? CupertinoColors.systemOrange
-            : Colors.orange;
+        return Platform.isIOS ? CupertinoColors.systemOrange : Colors.orange;
       case ErrorSeverity.error:
-        return Platform.isIOS
-            ? CupertinoColors.systemRed
-            : colorScheme.error;
+        return Platform.isIOS ? CupertinoColors.systemRed : colorScheme.error;
       case ErrorSeverity.critical:
         return Platform.isIOS
             ? CupertinoColors.destructiveRed
@@ -237,17 +227,13 @@ class ErrorDisplay extends StatelessWidget {
 }
 
 /// Widget compact pour afficher une erreur dans un widget existant.
-/// 
+///
 /// Utilisé pour les petits espaces (ex: dans une Card).
 class CompactErrorDisplay extends StatelessWidget {
   final AppError error;
   final VoidCallback? onRetry;
 
-  const CompactErrorDisplay({
-    super.key,
-    required this.error,
-    this.onRetry,
-  });
+  const CompactErrorDisplay({super.key, required this.error, this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -262,11 +248,7 @@ class CompactErrorDisplay extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            _getErrorIcon(),
-            color: _getErrorColor(context),
-            size: 24,
-          ),
+          Icon(_getErrorIcon(), color: _getErrorColor(context), size: 24),
           SizedBox(width: AppDimensions.paddingM),
           Expanded(
             child: Text(
@@ -290,7 +272,7 @@ class CompactErrorDisplay extends StatelessWidget {
               )
             else
               IconButton(
-                icon: Icon(Icons.refresh),
+                icon: Icon(AppIcons.refresh),
                 color: _getErrorColor(context),
                 onPressed: onRetry,
               ),
@@ -315,13 +297,13 @@ class CompactErrorDisplay extends StatelessWidget {
     } else {
       switch (error.severity) {
         case ErrorSeverity.info:
-          return Icons.info;
+          return AppIcons.info;
         case ErrorSeverity.warning:
-          return Icons.warning_amber;
+          return AppIcons.warning;
         case ErrorSeverity.error:
-          return Icons.error;
+          return AppIcons.error;
         case ErrorSeverity.critical:
-          return Icons.dangerous;
+          return AppIcons.dangerous;
       }
     }
   }
@@ -334,13 +316,9 @@ class CompactErrorDisplay extends StatelessWidget {
             ? CupertinoColors.systemBlue
             : colorScheme.primary;
       case ErrorSeverity.warning:
-        return Platform.isIOS
-            ? CupertinoColors.systemOrange
-            : Colors.orange;
+        return Platform.isIOS ? CupertinoColors.systemOrange : Colors.orange;
       case ErrorSeverity.error:
-        return Platform.isIOS
-            ? CupertinoColors.systemRed
-            : colorScheme.error;
+        return Platform.isIOS ? CupertinoColors.systemRed : colorScheme.error;
       case ErrorSeverity.critical:
         return Platform.isIOS
             ? CupertinoColors.destructiveRed
@@ -348,4 +326,3 @@ class CompactErrorDisplay extends StatelessWidget {
     }
   }
 }
-

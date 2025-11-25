@@ -2,7 +2,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 
 /// Widget SafeArea adaptatif qui s'ajuste automatiquement selon la plateforme
-/// 
+///
 /// - iOS : Utilise la barre gestuelle native (bottom: false)
 /// - Android : Respecte les boutons de navigation système (bottom: true)
 class PlatformSafeArea extends StatelessWidget {
@@ -28,10 +28,10 @@ class PlatformSafeArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isIOS = Platform.isIOS;
-    
+
     // Logique adaptative pour le bottom
     final bottomSafeArea = bottom ?? !isIOS; // iOS: false, Android: true
-    
+
     Widget content = SafeArea(
       top: top,
       left: left,
@@ -42,18 +42,12 @@ class PlatformSafeArea extends StatelessWidget {
 
     // Ajouter le padding si spécifié
     if (padding != null) {
-      content = Padding(
-        padding: padding!,
-        child: content,
-      );
+      content = Padding(padding: padding!, child: content);
     }
 
     // Ajouter le background si spécifié
     if (backgroundColor != null) {
-      content = Container(
-        color: backgroundColor,
-        child: content,
-      );
+      content = Container(color: backgroundColor, child: content);
     }
 
     return content;

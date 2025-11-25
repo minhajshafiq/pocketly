@@ -3,16 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Page adaptative qui gère automatiquement les transitions selon la plateforme.
-/// 
+///
 /// - Sur iOS : Utilise CupertinoPage avec swipe back natif
 /// - Sur Android : Utilise MaterialPage avec Material Design 3
-/// 
+///
 /// Utilise les pages natives de Flutter pour garantir le bon fonctionnement
 /// des gestes natifs (swipe back iOS, back button Android, scroll, etc.)
 class AppPage<T> extends Page<T> {
   /// Widget enfant de la page
   final Widget child;
-  
+
   /// Type de transition à utiliser
   final AppPageTransitionType transitionType;
 
@@ -34,16 +34,10 @@ class AppPage<T> extends Page<T> {
 
     // Utiliser les routes natives pour préserver les gestes
     if (effectiveType == AppPageTransitionType.cupertino) {
-      return CupertinoPageRoute<T>(
-        settings: this,
-        builder: (context) => child,
-      );
+      return CupertinoPageRoute<T>(settings: this, builder: (context) => child);
     } else {
       // MaterialPageRoute pour Android avec gestes natifs
-      return MaterialPageRoute<T>(
-        settings: this,
-        builder: (context) => child,
-      );
+      return MaterialPageRoute<T>(settings: this, builder: (context) => child);
     }
   }
 
@@ -115,11 +109,46 @@ class AppPage<T> extends Page<T> {
 enum AppPageTransitionType {
   /// Détection automatique selon la plateforme
   adaptive,
-  
+
   /// Transition iOS native (swipe back activé)
   cupertino,
-  
+
   /// Transition Material (Android)
   material,
 }
 
+/// Page personnalisée pour les transitions modales avec background transparent
+class ModalTransitionPage<T> extends Page<T> {
+  final Widget child;
+  final RouteTransitionsBuilder transitionsBuilder;
+  final Duration transitionDuration;
+  final bool barrierDismissible;
+  final Color? barrierColor;
+  final bool opaque;
+
+  const ModalTransitionPage({
+    required this.child,
+    required this.transitionsBuilder,
+    this.transitionDuration = const Duration(milliseconds: 300),
+    this.barrierDismissible = true,
+    this.barrierColor,
+    this.opaque = true,
+    super.key,
+    super.name,
+    super.arguments,
+    super.restorationId,
+  });
+
+  @override
+  Route<T> createRoute(BuildContext context) {
+    return PageRouteBuilder<T>(
+      settings: this,
+      opaque: opaque,
+      barrierDismissible: barrierDismissible,
+      barrierColor: barrierColor,
+      transitionDuration: transitionDuration,
+      pageBuilder: (context, animation, secondaryAnimation) => child,
+      transitionsBuilder: transitionsBuilder,
+    );
+  }
+}

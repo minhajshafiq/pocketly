@@ -16,16 +16,16 @@ class NotificationError extends AppError {
     String? technicalMessage,
     this.originalError,
     this.stackTrace,
-  })  : _userMessage = userMessage,
-        _technicalMessage = technicalMessage;
+  }) : _userMessage = userMessage,
+       _technicalMessage = technicalMessage;
 
   @override
-  String get userMessage =>
-      _userMessage ?? 'Problème avec les notifications.';
+  String get userMessage => _userMessage ?? 'Problème avec les notifications.';
 
   @override
   String get technicalMessage =>
-      _technicalMessage ?? 'Notification operation failed: $operation - $originalError';
+      _technicalMessage ??
+      'Notification operation failed: $operation - $originalError';
 
   @override
   String get errorCode => 'NOTIFICATION_ERROR';
@@ -41,9 +41,7 @@ class NotificationPermissionError extends NotificationError {
     super.technicalMessage,
     super.originalError,
     super.stackTrace,
-  }) : super(
-          operation: 'permission_request',
-        );
+  }) : super(operation: 'permission_request');
 
   @override
   String get errorCode => 'NOTIFICATION_PERMISSION_DENIED';
@@ -56,9 +54,7 @@ class NotificationScheduleError extends NotificationError {
     super.technicalMessage,
     super.originalError,
     super.stackTrace,
-  }) : super(
-          operation: 'schedule',
-        );
+  }) : super(operation: 'schedule');
 
   @override
   String get errorCode => 'NOTIFICATION_SCHEDULE_ERROR';
@@ -71,9 +67,7 @@ class NotificationShowError extends NotificationError {
     super.technicalMessage,
     super.originalError,
     super.stackTrace,
-  }) : super(
-          operation: 'show',
-        );
+  }) : super(operation: 'show');
 
   @override
   String get errorCode => 'NOTIFICATION_SHOW_ERROR';
@@ -86,9 +80,7 @@ class NotificationCancelError extends NotificationError {
     super.technicalMessage,
     super.originalError,
     super.stackTrace,
-  }) : super(
-          operation: 'cancel',
-        );
+  }) : super(operation: 'cancel');
 
   @override
   String get errorCode => 'NOTIFICATION_CANCEL_ERROR';

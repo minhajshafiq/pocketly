@@ -2,49 +2,50 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pocketly/core/constants/app_constants.dart';
+import 'package:pocketly/core/constants/app_colors.dart';
+import 'package:pocketly/core/constants/app_dimensions.dart';
 
 /// Widget de conteneur adaptatif respectant les HIG et Material Design.
-/// 
+///
 /// Ce widget fournit un conteneur avec élévation qui s'adapte automatiquement
 /// aux plateformes iOS et Android en respectant leurs guidelines respectives.
 class AppContainer extends StatelessWidget {
   /// Contenu du conteneur
   final Widget child;
-  
+
   /// Padding interne du conteneur
   final EdgeInsetsGeometry? padding;
-  
+
   /// Marge externe du conteneur
   final EdgeInsetsGeometry? margin;
-  
+
   /// Couleur de fond du conteneur
   final Color? backgroundColor;
-  
+
   /// Élévation du conteneur (Material Design)
   final double elevation;
-  
+
   /// Indique si le conteneur doit avoir des coins arrondis
   final bool rounded;
-  
+
   /// Rayon de bordure personnalisé
   final BorderRadius? borderRadius;
-  
+
   /// Couleur de bordure
   final Color? borderColor;
-  
+
   /// Épaisseur de la bordure
   final double borderWidth;
-  
+
   /// Callback appelé lors du tap sur le conteneur
   final VoidCallback? onTap;
-  
+
   /// Indique si le conteneur est cliquable
   final bool isClickable;
-  
+
   /// Animation de tap (Material Design)
   final bool enableTapAnimation;
-  
+
   /// Dégradé de fond
   final Gradient? gradient;
 
@@ -139,17 +140,20 @@ class AppContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     // Couleurs adaptatives
-    final defaultBackgroundColor = backgroundColor ?? 
-        (isDark ? AppColors.surfaceDark : AppColors.surface);
-    
+    final defaultBackgroundColor =
+        backgroundColor ?? (isDark ? AppColors.surfaceDark : AppColors.surface);
+
     // Padding par défaut
     final defaultPadding = padding ?? EdgeInsets.all(AppDimensions.paddingL);
-    
+
     // Border radius adaptatif
-    final defaultBorderRadius = borderRadius ?? 
-        (rounded ? BorderRadius.circular(AppDimensions.radiusM) : BorderRadius.zero);
+    final defaultBorderRadius =
+        borderRadius ??
+        (rounded
+            ? BorderRadius.circular(AppDimensions.radiusM)
+            : BorderRadius.zero);
 
     if (_isIOS) {
       return _buildIOSContainer(
@@ -187,15 +191,17 @@ class AppContainer extends StatelessWidget {
             ? Border.all(color: borderColor!, width: borderWidth)
             : null,
         // iOS utilise des ombres subtiles au lieu d'élévation
-        boxShadow: elevation > 0 ? [
-          BoxShadow(
-            color: isDark 
-                ? Colors.black.withValues(alpha: 0.3)
-                : Colors.black.withValues(alpha: 0.1),
-            blurRadius: elevation * 2,
-            offset: Offset(0, elevation),
-          ),
-        ] : null,
+        boxShadow: elevation > 0
+            ? [
+                BoxShadow(
+                  color: isDark
+                      ? Colors.black.withValues(alpha: 0.3)
+                      : Colors.black.withValues(alpha: 0.1),
+                  blurRadius: elevation * 2,
+                  offset: Offset(0, elevation),
+                ),
+              ]
+            : null,
       ),
       child: isClickable && onTap != null
           ? CupertinoButton(

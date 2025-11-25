@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketly/core/constants/app_icons.dart';
 import 'package:pocketly/core/errors/app_error.dart';
 import 'package:pocketly/core/errors/error_notifier.dart';
 import 'package:pocketly/core/widgets/error_snackbar.dart';
 
 /// Widget boundary pour gérer automatiquement les erreurs.
-/// 
+///
 /// Écoute le `errorNotifierProvider` et affiche automatiquement
 /// les notifications d'erreur aux utilisateurs.
 class ErrorBoundary extends ConsumerWidget {
@@ -23,29 +24,26 @@ class ErrorBoundary extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Écouter les changements d'erreur
-    ref.listen<AppError?>(
-      errorNotifierProvider,
-      (previous, next) {
-        if (next != null) {
-          // Callback personnalisé
-          onError?.call(next);
+    ref.listen<AppError?>(errorNotifierProvider, (previous, next) {
+      if (next != null) {
+        // Callback personnalisé
+        onError?.call(next);
 
-          // Afficher la notification si demandé
-          if (showSnackbar) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (context.mounted) {
-                context.showErrorSnackbar(next);
-              }
-            });
-          }
-
-          // Nettoyer l'erreur après l'avoir affichée
-          Future.delayed(Duration(milliseconds: 100), () {
-            ref.read(errorNotifierProvider.notifier).clearError();
+        // Afficher la notification si demandé
+        if (showSnackbar) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              context.showErrorSnackbar(next);
+            }
           });
         }
-      },
-    );
+
+        // Nettoyer l'erreur après l'avoir affichée
+        Future.delayed(Duration(milliseconds: 100), () {
+          ref.read(errorNotifierProvider.notifier).clearError();
+        });
+      }
+    });
 
     return child;
   }
@@ -75,21 +73,14 @@ class AsyncValueBuilder<T> extends StatelessWidget {
       loading: () => loading?.call() ?? _defaultLoading(),
       error: (err, stack) {
         final appError = value.appError!;
-        return error?.call(
-              appError,
-              () => value.maybeWhen(
-                orElse: () {},
-              ),
-            ) ??
+        return error?.call(appError, () => value.maybeWhen(orElse: () {})) ??
             _defaultError(appError);
       },
     );
   }
 
   Widget _defaultLoading() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return Center(child: CircularProgressIndicator());
   }
 
   Widget _defaultError(AppError appError) {
@@ -100,10 +91,7 @@ class AsyncValueBuilder<T> extends StatelessWidget {
           child: Text(
             appError.userMessage,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.red,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.red, fontSize: 14),
           ),
         ),
       );
@@ -113,11 +101,7 @@ class AsyncValueBuilder<T> extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 48,
-            color: Colors.red,
-          ),
+          Icon(AppIcons.errorOutline, size: 48, color: Colors.red),
           SizedBox(height: 16),
           Text(
             appError.userMessage,
@@ -129,4 +113,3 @@ class AsyncValueBuilder<T> extends StatelessWidget {
     );
   }
 }
-

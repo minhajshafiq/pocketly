@@ -1,58 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketly/core/router/app_route_paths.dart';
-import 'package:pocketly/core/router/app_page.dart';
-import 'package:pocketly/core/constants/app_constants.dart';
-import 'package:pocketly/features/auth/presentation/providers/auth_state_provider.dart';
+import 'package:pocketly/core/core.dart';
+import 'package:pocketly/features/auth/presentation/providers/auth_providers.dart';
 import 'package:pocketly/features/auth/presentation/screens/signin_screen.dart';
 import 'package:pocketly/features/auth/presentation/screens/signup_screen.dart';
+import 'package:pocketly/features/auth/presentation/screens/reset_password_screen.dart';
+import 'package:pocketly/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:pocketly/features/notifications/presentation/screens/notification_settings_screen.dart';
 import 'package:pocketly/features/notifications/presentation/widgets/notification_demo.dart';
 import 'package:pocketly/features/onboarding/presentation/screens/welcome_screen.dart';
-import 'package:pocketly/features/themes/presentation/widgets/theme_selector.dart';
+import 'package:pocketly/features/onboarding/presentation/screens/onboarding_step1_screen.dart';
+import 'package:pocketly/features/onboarding/presentation/screens/onboarding_step2_screen.dart';
+import 'package:pocketly/features/onboarding/presentation/screens/onboarding_step3_screen.dart';
+import 'package:pocketly/features/onboarding/presentation/screens/onboarding_step4_screen.dart';
+import 'package:pocketly/features/category/presentation/screens/categories_list_screen.dart';
+import 'package:pocketly/features/category/presentation/screens/add_edit_category_screen.dart';
+import 'package:pocketly/features/category/domain/entities/category_entity.dart';
+import 'package:pocketly/features/transactions/presentation/screens/add_transaction_screen.dart';
+import 'package:pocketly/features/transactions/presentation/screens/add_transaction_amount_screen.dart';
+import 'package:pocketly/features/transactions/presentation/screens/add_transaction_details_screen.dart';
+import 'package:pocketly/features/transactions/domain/entities/transaction_entity.dart';
+import 'package:pocketly/features/transaction_history/presentation/screens/transaction_history_screen.dart';
+import 'package:pocketly/features/settings/settings.dart';
+import 'package:pocketly/features/home/home.dart';
+import 'package:pocketly/features/statistics/statistics.dart';
+import 'package:pocketly/features/pockets/pockets.dart';
+import 'package:pocketly/features/subscription/subscription.dart';
+import 'package:pocketly/features/user/presentation/screens/profile_edit_screen.dart';
+import 'package:pocketly/features/notifications/presentation/screens/notifications_center_screen.dart';
+import 'package:pocketly/features/notifications/presentation/screens/notification_preferences_screen.dart';
+import 'package:pocketly/features/settings/presentation/screens/legal_notice_screen.dart';
+import 'package:pocketly/features/settings/presentation/screens/privacy_policy_screen.dart';
+import 'package:pocketly/features/settings/presentation/screens/terms_of_use_screen.dart';
+
+/// Helper function pour déterminer la route de redirection
+String? _getRedirectRoute(String currentRoute, bool isAuthenticated) {
+  final publicRoutes = [
+    AppRoutePaths.welcome,
+    AppRoutePaths.signin,
+    AppRoutePaths.signup,
+    AppRoutePaths.forgotPassword,
+    AppRoutePaths.resetPassword,
+  ];
+
+  // Si l'utilisateur n'est pas authentifié
+  if (!isAuthenticated) {
+    // Si on est déjà sur une route publique, pas de redirection
+    if (publicRoutes.contains(currentRoute)) {
+      return null;
+    }
+    // Sinon, rediriger vers signin
+    return AppRoutePaths.signin;
+  }
+
+  // Si l'utilisateur est authentifié
+  if (isAuthenticated) {
+    // Si on est sur une route publique, rediriger vers home
+    if (publicRoutes.contains(currentRoute)) {
+      return AppRoutePaths.home;
+    }
+  }
+
+  // Sinon, pas de redirection
+  return null;
+}
 
 /// Fournit la configuration du routeur pour l'application
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
-  
+  // Créer un notifier pour surveiller les changements d'auth
+  final authState = ValueNotifier<bool>(false);
+
+  // Écouter les changements d'état d'authentification
+  ref.listen(isAuthenticatedProvider, (previous, next) {
+    authState.value = next;
+  });
+
   return GoRouter(
     initialLocation: AppRoutePaths.welcome,
     debugLogDiagnostics: true,
+    refreshListenable: authState,
     redirect: (context, state) {
-      // Si l'état d'authentification est en chargement, pas de redirection
-      if (authState.isLoading) {
-        return null;
-      }
-      
-      // Routes publiques accessibles sans authentification
-      final publicRoutes = [
-        AppRoutePaths.welcome,
-        AppRoutePaths.signin,
-        AppRoutePaths.signup,
-      ];
-      
-      // Si l'utilisateur n'est pas authentifié
-      if (authState.value == null) {
-        // Si on est déjà sur une route publique, pas de redirection
-        if (publicRoutes.contains(state.matchedLocation)) {
-          return null;
-        }
-        // Sinon, rediriger vers welcome
-        return AppRoutePaths.welcome;
-      }
-      
-      // Si l'utilisateur est authentifié
-      final user = authState.value;
-      if (user != null) {
-        // Si on est sur une route publique, rediriger vers home
-        if (publicRoutes.contains(state.matchedLocation)) {
-          return AppRoutePaths.home;
-        }
-      }
-      
-      // Sinon, pas de redirection
-      return null;
+      final isAuthenticated = authState.value;
+
+      // Utiliser la fonction helper pour déterminer la redirection
+      return _getRedirectRoute(state.matchedLocation, isAuthenticated);
     },
     routes: [
       // ==================== ROUTE D'ACCUEIL ====================
@@ -93,16 +125,23 @@ final routerProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => AppPage.adaptive(
           key: state.pageKey,
           name: state.name,
-          child: const Scaffold(
-            body: Center(
-              child: Text(
-                'Forgot Password Screen\n(À implémenter)',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-          ),
+          child: const ForgotPasswordScreen(),
         ),
+      ),
+
+      GoRoute(
+        path: AppRoutePaths.resetPassword,
+        name: 'resetPassword',
+        pageBuilder: (context, state) {
+          // Récupérer le token depuis les query parameters (optionnel)
+          final token = state.uri.queryParameters['token'];
+
+          return AppPage.adaptive(
+            key: state.pageKey,
+            name: state.name,
+            child: ResetPasswordScreen(token: token),
+          );
+        },
       ),
 
       // ==================== ROUTES ONBOARDING ====================
@@ -112,178 +151,149 @@ final routerProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => AppPage.adaptive(
           key: state.pageKey,
           name: state.name,
-          child: const Scaffold(
-            body: Center(child: Text('Onboarding - Étape 1')),
-          ),
+          child: const OnboardingStep1Screen(),
         ),
       ),
-      
+
       GoRoute(
         path: AppRoutePaths.step2,
         name: 'step2',
         pageBuilder: (context, state) => AppPage.adaptive(
           key: state.pageKey,
           name: state.name,
-          child: const Scaffold(
-            body: Center(child: Text('Onboarding - Étape 2')),
-          ),
+          child: const OnboardingStep2Screen(),
         ),
       ),
-      
+
       GoRoute(
         path: AppRoutePaths.step3,
         name: 'step3',
         pageBuilder: (context, state) => AppPage.adaptive(
           key: state.pageKey,
           name: state.name,
-          child: const Scaffold(
-            body: Center(child: Text('Onboarding - Étape 3')),
-          ),
+          child: const OnboardingStep3Screen(),
         ),
       ),
 
-      // ==================== ROUTE HOME ====================
       GoRoute(
-        path: AppRoutePaths.home,
-        name: 'home',
+        path: AppRoutePaths.step4,
+        name: 'step4',
+        pageBuilder: (context, state) => AppPage.adaptive(
+          key: state.pageKey,
+          name: state.name,
+          child: const OnboardingStep4Screen(),
+        ),
+      ),
+
+      // ==================== SHELL ROUTE AVEC BOTTOM NAV ====================
+      ShellRoute(
+        builder: (context, state, child) {
+          return MainNavigationScreen(child: child);
+        },
+        routes: [
+          // Route Home
+          GoRoute(
+            path: AppRoutePaths.home,
+            name: 'home',
+            pageBuilder: (context, state) => AppPage.adaptive(
+              key: state.pageKey,
+              name: state.name,
+              child: const HomeScreen(),
+            ),
+          ),
+
+          // Route Transactions (Transaction History)
+          GoRoute(
+            path: AppRoutePaths.transactions,
+            name: 'transactions',
+            pageBuilder: (context, state) => AppPage.adaptive(
+              key: state.pageKey,
+              name: state.name,
+              child: const TransactionHistoryScreen(),
+            ),
+          ),
+
+          // Route Paywall (abonnement Premium)
+          GoRoute(
+            path: AppRoutePaths.paywall,
+            name: 'paywall',
+            pageBuilder: (context, state) => AppPage.adaptive(
+              key: state.pageKey,
+              name: state.name,
+              child: const PaywallScreen(),
+            ),
+          ),
+
+          // Route Settings (dans la bottom nav)
+          GoRoute(
+            path: AppRoutePaths.settings,
+            name: 'settings',
+            pageBuilder: (context, state) => AppPage.adaptive(
+              key: state.pageKey,
+              name: state.name,
+              child: const SettingsScreen(),
+            ),
+          ),
+
+          // Route Pockets (dans la bottom nav)
+          GoRoute(
+            path: AppRoutePaths.pockets,
+            name: 'pockets',
+            pageBuilder: (context, state) => AppPage.adaptive(
+              key: state.pageKey,
+              name: state.name,
+              child: const PocketsListScreen(),
+            ),
+          ),
+        ],
+      ),
+
+      // ==================== ROUTES INDÉPENDANTES (SANS BOTTOM NAV) ====================
+
+      // Statistics (sans bottom nav - accès depuis home)
+      GoRoute(
+        path: AppRoutePaths.statistics,
+        name: 'statistics',
+        pageBuilder: (context, state) => AppPage.adaptive(
+          key: state.pageKey,
+          name: state.name,
+          child: const StatisticsScreen(),
+        ),
+      ),
+
+      // Transaction History (sans bottom nav)
+      GoRoute(
+        path: AppRoutePaths.transactionHistory,
+        name: 'transactionHistory',
+        pageBuilder: (context, state) => AppPage.adaptive(
+          key: state.pageKey,
+          name: state.name,
+          child: const TransactionHistoryScreen(),
+        ),
+      ),
+
+      // Profile (sans bottom nav)
+      GoRoute(
+        path: AppRoutePaths.profile,
+        name: 'profile',
         pageBuilder: (context, state) => AppPage.adaptive(
           key: state.pageKey,
           name: state.name,
           child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Home'),
+            appBar: AdaptiveAppBar(
+              title: 'Profile',
               actions: [
                 IconButton(
-                  icon: Icon(AppIcons.settings),
-                  onPressed: () => context.push(AppRoutePaths.settings),
+                  icon: Icon(AppIcons.edit),
+                  onPressed: () => context.push(AppRoutePaths.editProfile),
                 ),
               ],
             ),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Home Screen',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () => context.push(AppRoutePaths.transactions),
-                    child: const Text('Voir les transactions'),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => context.push(AppRoutePaths.profile),
-                    child: const Text('Voir le profil'),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () => context.push(AppRoutePaths.notificationDemo),
-                    child: const Text('Démonstration Notifications'),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      // Déconnexion
-                      final container = ProviderScope.containerOf(context);
-                      await container.read(authActionsProvider).signOut();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('Se déconnecter'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-
-      // ==================== ROUTE SETTINGS ====================
-      GoRoute(
-        path: AppRoutePaths.settings,
-        name: 'settings',
-        pageBuilder: (context, state) => AppPage.adaptive(
-          key: state.pageKey,
-          name: state.name,
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Settings'),
-            ),
-            body: SingleChildScrollView(
-              padding: EdgeInsets.all(AppDimensions.paddingL),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Section Thème
-                  Text(
-                    'Apparence',
-                    style: AppTypography.title.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: AppDimensions.paddingM),
-                  
-                  // Theme Selector
-                  ThemeSelector(
-                    style: ThemeSelectorStyle.card,
-                    size: ThemeSelectorSize.medium,
-                    showDescriptions: true,
-                    showIcons: true,
-                  ),
-                  
-                  SizedBox(height: AppDimensions.paddingXL),
-                  
-                  // Section Autres paramètres
-                  Text(
-                    'Autres paramètres',
-                    style: AppTypography.title.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: AppDimensions.paddingM),
-                  
-                  // Notification Settings Button
-                  Container(
-                    padding: EdgeInsets.all(AppDimensions.paddingL),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: InkWell(
-                      onTap: () => context.push(AppRoutePaths.notificationSettings),
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.notifications_outlined,
-                            size: 48,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          SizedBox(height: AppDimensions.paddingM),
-                          Text(
-                            'Notifications',
-                            style: AppTypography.title,
-                          ),
-                          SizedBox(height: AppDimensions.paddingS),
-                          Text(
-                            'Gérer les paramètres de notifications',
-                            style: AppTypography.body.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+            body: const Center(
+              child: Text(
+                'Profile Screen\n(À implémenter)',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 24),
               ),
             ),
           ),
@@ -311,133 +321,270 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
 
-      // ==================== ROUTES TRANSACTIONS ====================
+      // Centre de notifications moderne
       GoRoute(
-        path: AppRoutePaths.transactions,
-        name: 'transactions',
+        path: AppRoutePaths.notificationsCenter,
+        name: 'notificationsCenter',
         pageBuilder: (context, state) => AppPage.adaptive(
           key: state.pageKey,
           name: state.name,
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Transactions'),
-              actions: [
-                IconButton(
-                  icon: Icon(AppIcons.add),
-                  onPressed: () => context.push(AppRoutePaths.addTransaction),
-                ),
-              ],
-            ),
-            body: const Center(
-              child: Text(
-                'Transactions List\n(À implémenter)',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-          ),
+          child: const NotificationsCenterScreen(),
         ),
       ),
 
+      // Préférences de notifications
       GoRoute(
-        path: AppRoutePaths.transactionDetail,
-        name: 'transactionDetail',
+        path: AppRoutePaths.notificationPreferences,
+        name: 'notificationPreferences',
+        pageBuilder: (context, state) => AppPage.adaptive(
+          key: state.pageKey,
+          name: state.name,
+          child: const NotificationPreferencesScreen(),
+        ),
+      ),
+
+      // ==================== ROUTES LÉGALES ====================
+
+      // Mentions légales
+      GoRoute(
+        path: AppRoutePaths.legalNotice,
+        name: 'legalNotice',
+        pageBuilder: (context, state) => AppPage.adaptive(
+          key: state.pageKey,
+          name: state.name,
+          child: const LegalNoticeScreen(),
+        ),
+      ),
+
+      // Politique de confidentialité
+      GoRoute(
+        path: AppRoutePaths.privacyPolicy,
+        name: 'privacyPolicy',
+        pageBuilder: (context, state) => AppPage.adaptive(
+          key: state.pageKey,
+          name: state.name,
+          child: const PrivacyPolicyScreen(),
+        ),
+      ),
+
+      // Conditions générales d'utilisation
+      GoRoute(
+        path: AppRoutePaths.termsOfUse,
+        name: 'termsOfUse',
+        pageBuilder: (context, state) => AppPage.adaptive(
+          key: state.pageKey,
+          name: state.name,
+          child: const TermsOfUseScreen(),
+        ),
+      ),
+
+      // IMPORTANT: Routes spécifiques AVANT routes générales pour GoRouter
+      // Les routes /add/amount et /add/details DOIVENT être avant /add
+
+      // NOUVELLE: Ajouter transaction - Étape 1 : Montant
+      GoRoute(
+        path: AppRoutePaths.addTransactionAmount,
+        name: 'addTransactionAmount',
         pageBuilder: (context, state) {
-          final id = state.pathParameters['id'] ?? '';
+          // Récupérer le type de transaction depuis les query parameters
+          final typeParam = state.uri.queryParameters['type'];
+          final transactionType = typeParam == 'income'
+              ? TransactionType.income
+              : TransactionType.expense;
+
           return AppPage.adaptive(
             key: state.pageKey,
             name: state.name,
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text('Transaction #$id'),
-              ),
-              body: Center(
-                child: Text(
-                  'Transaction Detail\nID: $id\n(À implémenter)',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 24),
-                ),
-              ),
+            child: AddTransactionAmountScreen(transactionType: transactionType),
+          );
+        },
+      ),
+
+      // NOUVELLE: Ajouter transaction - Étape 2 : Détails
+      GoRoute(
+        path: AppRoutePaths.addTransactionDetails,
+        name: 'addTransactionDetails',
+        pageBuilder: (context, state) {
+          // Récupérer le type et le montant depuis les query parameters
+          final typeParam = state.uri.queryParameters['type'];
+          final amountParam = state.uri.queryParameters['amount'];
+
+          final transactionType = typeParam == 'income'
+              ? TransactionType.income
+              : TransactionType.expense;
+
+          final amount = double.tryParse(amountParam ?? '0') ?? 0.0;
+
+          return AppPage.adaptive(
+            key: state.pageKey,
+            name: state.name,
+            child: AddTransactionDetailsScreen(
+              transactionType: transactionType,
+              amount: amount,
             ),
           );
         },
       ),
 
+      // ANCIENNE ROUTE (gardée pour compatibilité si besoin)
+      // Ajouter une transaction - Version une seule page
       GoRoute(
         path: AppRoutePaths.addTransaction,
         name: 'addTransaction',
-        pageBuilder: (context, state) => AppPage.adaptive(
-          key: state.pageKey,
-          name: state.name,
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Add Transaction'),
-            ),
-            body: const Center(
-              child: Text(
-                'Add Transaction Screen\n(À implémenter)',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-          ),
-        ),
+        pageBuilder: (context, state) {
+          // Récupérer le type de transaction depuis les query parameters
+          final typeParam = state.uri.queryParameters['type'];
+          final transactionType = typeParam == 'income'
+              ? TransactionType.income
+              : TransactionType.expense;
+
+          return AppPage.adaptive(
+            key: state.pageKey,
+            name: state.name,
+            child: AddTransactionScreen(transactionType: transactionType),
+          );
+        },
       ),
 
-      // ==================== ROUTES PROFIL ====================
+      // Note: Transaction detail modal est désormais appelée directement
+      // via showTransactionDetailModal() depuis les widgets
+      // Si vous avez besoin d'une URL pour les deep links, utilisez:
+      // showTransactionDetailModal(context, transactionId);
+
+      // IMPORTANT: Create Pocket - DOIT être AVANT pocketDetail
+      // pour éviter que "create" soit interprété comme un ID
       GoRoute(
-        path: AppRoutePaths.profile,
-        name: 'profile',
+        path: AppRoutePaths.createPocket,
+        name: 'createPocket',
         pageBuilder: (context, state) => AppPage.adaptive(
           key: state.pageKey,
           name: state.name,
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Profile'),
-              actions: [
-                IconButton(
-                  icon: Icon(AppIcons.edit),
-                  onPressed: () => context.push(AppRoutePaths.editProfile),
-                ),
-              ],
-            ),
-            body: const Center(
-              child: Text(
-                'Profile Screen\n(À implémenter)',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-          ),
+          child: const CreatePocketScreen(),
         ),
       ),
 
+      // Edit Pocket (sans bottom nav)
+      GoRoute(
+        path: AppRoutePaths.editPocket,
+        name: 'editPocket',
+        pageBuilder: (context, state) {
+          final pocketId = state.pathParameters['id'];
+          if (pocketId == null) {
+            return AppPage.adaptive(
+              key: state.pageKey,
+              name: state.name,
+              child: const Scaffold(
+                body: Center(child: Text('ID du pocket manquant')),
+              ),
+            );
+          }
+
+          return AppPage.adaptive(
+            key: state.pageKey,
+            name: state.name,
+            child: EditPocketScreen(pocketId: pocketId),
+          );
+        },
+      ),
+
+      // Pocket Details (sans bottom nav)
+      GoRoute(
+        path: AppRoutePaths.pocketDetail,
+        name: 'pocketDetail',
+        pageBuilder: (context, state) {
+          final pocketId = state.pathParameters['id'];
+          if (pocketId == null) {
+            return AppPage.adaptive(
+              key: state.pageKey,
+              name: state.name,
+              child: const Scaffold(
+                body: Center(child: Text('ID du pocket manquant')),
+              ),
+            );
+          }
+
+          return AppPage.adaptive(
+            key: state.pageKey,
+            name: state.name,
+            child: PocketDetailsScreen(pocketId: pocketId),
+          );
+        },
+      ),
+
+      // ==================== ROUTES CATEGORIES ====================
+
+      // Categories List (sans bottom nav)
+      GoRoute(
+        path: AppRoutePaths.categories,
+        name: 'categories',
+        pageBuilder: (context, state) => AppPage.adaptive(
+          key: state.pageKey,
+          name: state.name,
+          child: const CategoriesListScreen(),
+        ),
+      ),
+
+      // Create Category - DOIT être AVANT editCategory
+      // pour éviter que "create" soit interprété comme un ID
+      GoRoute(
+        path: AppRoutePaths.createCategory,
+        name: 'createCategory',
+        pageBuilder: (context, state) {
+          // Récupérer le type passé via extra
+          final defaultType = state.extra as CategoryType?;
+
+          return AppPage.adaptive(
+            key: state.pageKey,
+            name: state.name,
+            child: AddEditCategoryScreen(defaultType: defaultType),
+          );
+        },
+      ),
+
+      // Edit Category (sans bottom nav)
+      GoRoute(
+        path: AppRoutePaths.editCategory,
+        name: 'editCategory',
+        pageBuilder: (context, state) {
+          final categoryId = state.pathParameters['id'];
+          final category = state.extra as CategoryEntity?;
+
+          if (categoryId == null) {
+            return AppPage.adaptive(
+              key: state.pageKey,
+              name: state.name,
+              child: const Scaffold(
+                body: Center(child: Text('ID de la catégorie manquant')),
+              ),
+            );
+          }
+
+          return AppPage.adaptive(
+            key: state.pageKey,
+            name: state.name,
+            child: AddEditCategoryScreen(category: category),
+          );
+        },
+      ),
+
+      // Éditer le profil
       GoRoute(
         path: AppRoutePaths.editProfile,
         name: 'editProfile',
         pageBuilder: (context, state) => AppPage.adaptive(
           key: state.pageKey,
           name: state.name,
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Edit Profile'),
-            ),
-            body: const Center(
-              child: Text(
-                'Edit Profile Screen\n(À implémenter)',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-          ),
+          child: const ProfileEditScreen(),
         ),
       ),
     ],
-    
+
     // Gestion des erreurs de navigation
     errorBuilder: (context, state) => Scaffold(
       appBar: AppBar(
-        title: const Text('Erreur'),
+        title: const Text('Page non trouvée'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Center(
         child: Padding(
@@ -445,18 +592,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                AppIcons.error,
-                size: 80,
-                color: Colors.red,
-              ),
+              Icon(AppIcons.error, size: 80, color: Colors.red),
               const SizedBox(height: 24),
               const Text(
                 '404 - Page non trouvée',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -466,10 +606,26 @@ final routerProvider = Provider<GoRouter>((ref) {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
-              ElevatedButton.icon(
+              // Bouton principal pour retourner à l'accueil
+              AppButton(
+                text: 'Retour à l\'accueil',
                 onPressed: () => context.go(AppRoutePaths.welcome),
-                icon: Icon(AppIcons.home),
-                label: const Text('Retour à l\'accueil'),
+                style: AppButtonStyle.gradient,
+                size: AppButtonSize.large,
+                isFullWidth: true,
+                icon: AppIcons.home,
+                iconPosition: IconPosition.left,
+              ),
+              const SizedBox(height: 16),
+              // Bouton secondaire pour essayer de se connecter
+              AppButton(
+                text: 'Se connecter',
+                onPressed: () => context.go(AppRoutePaths.signin),
+                style: AppButtonStyle.outline,
+                size: AppButtonSize.medium,
+                isFullWidth: true,
+                icon: AppIcons.login,
+                iconPosition: IconPosition.left,
               ),
             ],
           ),
@@ -482,19 +638,27 @@ final routerProvider = Provider<GoRouter>((ref) {
 /// Extension pour faciliter la navigation
 extension GoRouterExtension on BuildContext {
   /// Navigation avec remplacement de la route actuelle
-  void goNamed(String name, {Map<String, String>? pathParameters, Map<String, dynamic>? queryParameters}) {
+  void goNamed(
+    String name, {
+    Map<String, String>? pathParameters,
+    Map<String, dynamic>? queryParameters,
+  }) {
     GoRouter.of(this).goNamed(
-      name, 
-      pathParameters: pathParameters ?? {}, 
+      name,
+      pathParameters: pathParameters ?? {},
       queryParameters: queryParameters ?? {},
     );
   }
 
   /// Navigation avec ajout à la pile
-  void pushNamed(String name, {Map<String, String>? pathParameters, Map<String, dynamic>? queryParameters}) {
+  void pushNamed(
+    String name, {
+    Map<String, String>? pathParameters,
+    Map<String, dynamic>? queryParameters,
+  }) {
     GoRouter.of(this).pushNamed(
-      name, 
-      pathParameters: pathParameters ?? {}, 
+      name,
+      pathParameters: pathParameters ?? {},
       queryParameters: queryParameters ?? {},
     );
   }

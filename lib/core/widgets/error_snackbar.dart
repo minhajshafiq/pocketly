@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pocketly/core/errors/app_error.dart';
-import 'package:pocketly/core/constants/app_constants.dart';
+import 'package:pocketly/core/constants/app_dimensions.dart';
+import 'package:pocketly/core/constants/app_icons.dart';
 
 /// Service pour afficher des notifications d'erreur adaptatives.
-/// 
+///
 /// Utilise SnackBar sur Android et Toast-like sur iOS.
 class ErrorSnackbar {
   /// Affiche une notification d'erreur
@@ -17,9 +18,19 @@ class ErrorSnackbar {
     Duration duration = const Duration(seconds: 4),
   }) {
     if (Platform.isIOS) {
-      _showIOSNotification(context, error, onRetry: onRetry, duration: duration);
+      _showIOSNotification(
+        context,
+        error,
+        onRetry: onRetry,
+        duration: duration,
+      );
     } else {
-      _showAndroidSnackbar(context, error, onRetry: onRetry, duration: duration);
+      _showAndroidSnackbar(
+        context,
+        error,
+        onRetry: onRetry,
+        duration: duration,
+      );
     }
   }
 
@@ -37,10 +48,7 @@ class ErrorSnackbar {
       SnackBar(
         content: Row(
           children: [
-            Icon(
-              _getMaterialIcon(error.severity),
-              color: Colors.white,
-            ),
+            Icon(_getMaterialIcon(error.severity), color: Colors.white),
             SizedBox(width: AppDimensions.paddingM),
             Expanded(
               child: Text(
@@ -98,13 +106,13 @@ class ErrorSnackbar {
   static IconData _getMaterialIcon(ErrorSeverity severity) {
     switch (severity) {
       case ErrorSeverity.info:
-        return Icons.info_outline;
+        return AppIcons.infoOutline;
       case ErrorSeverity.warning:
-        return Icons.warning_amber;
+        return AppIcons.warning;
       case ErrorSeverity.error:
-        return Icons.error_outline;
+        return AppIcons.errorOutline;
       case ErrorSeverity.critical:
-        return Icons.dangerous;
+        return AppIcons.dangerous;
     }
   }
 
@@ -145,10 +153,7 @@ class _IOSErrorNotificationState extends State<_IOSErrorNotification>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: 300.ms,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: 300.ms, vsync: this);
     _controller.forward();
   }
 
@@ -178,13 +183,10 @@ class _IOSErrorNotificationState extends State<_IOSErrorNotification>
           }
         },
         child: SlideTransition(
-          position: Tween<Offset>(
-            begin: Offset(0, -1),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(
-            parent: _controller,
-            curve: Curves.easeOut,
-          )),
+          position: Tween<Offset>(begin: Offset(0, -1), end: Offset.zero)
+              .animate(
+                CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+              ),
           child: FadeTransition(
             opacity: _controller,
             child: Container(
@@ -239,8 +241,9 @@ class _IOSErrorNotificationState extends State<_IOSErrorNotification>
                         vertical: AppDimensions.paddingS,
                       ),
                       color: CupertinoColors.white.withValues(alpha: 0.2),
-                      borderRadius:
-                          BorderRadius.circular(AppDimensions.radiusM),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusM,
+                      ),
                       onPressed: () {
                         _dismiss();
                         widget.onRetry?.call();
@@ -309,12 +312,6 @@ extension ErrorSnackbarExtension on BuildContext {
     VoidCallback? onRetry,
     Duration duration = const Duration(seconds: 4),
   }) {
-    ErrorSnackbar.show(
-      this,
-      error,
-      onRetry: onRetry,
-      duration: duration,
-    );
+    ErrorSnackbar.show(this, error, onRetry: onRetry, duration: duration);
   }
 }
-
