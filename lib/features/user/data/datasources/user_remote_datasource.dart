@@ -1,32 +1,32 @@
-import '../entities/user_entity.dart';
+import '../models/user_model.dart';
 
-/// Interface du repository utilisateur.
+/// Interface du datasource remote pour les utilisateurs.
 ///
 /// Définit les contrats pour l'accès aux données utilisateur
-/// dans la couche domaine (Clean Architecture).
-abstract class UserRepository {
-  /// Récupère l'utilisateur actuel
+/// depuis une source distante (API, Supabase, etc.).
+abstract class UserRemoteDataSource {
+  /// Récupère l'utilisateur actuel depuis la source distante
   ///
   /// Retourne l'utilisateur connecté ou null si aucun utilisateur n'est connecté.
   ///
   /// Throws [NetworkError] si la connexion réseau échoue.
   /// Throws [ServerError] si le serveur retourne une erreur.
-  Future<UserEntity?> getCurrentUser();
+  Future<UserModel?> getCurrentUser();
 
-  /// Crée un nouvel utilisateur
+  /// Crée un nouvel utilisateur dans la source distante
   ///
-  /// [user] - L'entité utilisateur à créer
+  /// [user] - Le modèle utilisateur à créer
   ///
   /// Retourne l'utilisateur créé avec l'ID généré.
   ///
   /// Throws [ValidationError] si les données utilisateur sont invalides.
   /// Throws [NetworkError] si la connexion réseau échoue.
   /// Throws [ServerError] si le serveur retourne une erreur.
-  Future<UserEntity> createUser(UserEntity user);
+  Future<UserModel> createUser(UserModel user);
 
-  /// Met à jour un utilisateur existant
+  /// Met à jour un utilisateur existant dans la source distante
   ///
-  /// [user] - L'entité utilisateur avec les nouvelles données
+  /// [user] - Le modèle utilisateur avec les nouvelles données
   ///
   /// Retourne l'utilisateur mis à jour.
   ///
@@ -34,9 +34,9 @@ abstract class UserRepository {
   /// Throws [NetworkError] si la connexion réseau échoue.
   /// Throws [ServerError] si le serveur retourne une erreur.
   /// Throws [NotFoundError] si l'utilisateur n'existe pas.
-  Future<UserEntity> updateUser(UserEntity user);
+  Future<UserModel> updateUser(UserModel user);
 
-  /// Supprime un utilisateur
+  /// Supprime un utilisateur de la source distante
   ///
   /// [userId] - L'ID de l'utilisateur à supprimer
   ///
@@ -54,7 +54,7 @@ abstract class UserRepository {
   /// Throws [NetworkError] si la connexion réseau échoue.
   /// Throws [ServerError] si le serveur retourne une erreur.
   /// Throws [NotFoundError] si l'utilisateur n'existe pas.
-  Future<UserEntity> activateTrial(String userId);
+  Future<UserModel> activateTrial(String userId);
 
   /// Active l'abonnement premium pour un utilisateur
   ///
@@ -66,7 +66,7 @@ abstract class UserRepository {
   /// Throws [NetworkError] si la connexion réseau échoue.
   /// Throws [ServerError] si le serveur retourne une erreur.
   /// Throws [NotFoundError] si l'utilisateur n'existe pas.
-  Future<UserEntity> activatePremium(String userId, DateTime expiresAt);
+  Future<UserModel> activatePremium(String userId, DateTime expiresAt);
 
   /// Marque l'onboarding comme complété pour un utilisateur
   ///
@@ -77,7 +77,7 @@ abstract class UserRepository {
   /// Throws [NetworkError] si la connexion réseau échoue.
   /// Throws [ServerError] si le serveur retourne une erreur.
   /// Throws [NotFoundError] si l'utilisateur n'existe pas.
-  Future<UserEntity> completeOnboarding(String userId);
+  Future<UserModel> completeOnboarding(String userId);
 
   /// Met à jour le token de notification push
   ///
@@ -89,7 +89,7 @@ abstract class UserRepository {
   /// Throws [NetworkError] si la connexion réseau échoue.
   /// Throws [ServerError] si le serveur retourne une erreur.
   /// Throws [NotFoundError] si l'utilisateur n'existe pas.
-  Future<UserEntity> updatePushToken(String userId, String pushToken);
+  Future<UserModel> updatePushToken(String userId, String pushToken);
 
   /// Met à jour les préférences de notification
   ///
@@ -101,7 +101,7 @@ abstract class UserRepository {
   /// Throws [NetworkError] si la connexion réseau échoue.
   /// Throws [ServerError] si le serveur retourne une erreur.
   /// Throws [NotFoundError] si l'utilisateur n'existe pas.
-  Future<UserEntity> updateNotificationPreferences(
+  Future<UserModel> updateNotificationPreferences(
     String userId,
     bool notificationsEnabled,
   );
@@ -116,7 +116,7 @@ abstract class UserRepository {
   /// Throws [NetworkError] si la connexion réseau échoue.
   /// Throws [ServerError] si le serveur retourne une erreur.
   /// Throws [NotFoundError] si l'utilisateur n'existe pas.
-  Future<UserEntity> updateUserAvatarUrl({
+  Future<UserModel> updateUserAvatarUrl({
     required String userId,
     required String? avatarUrl,
   });
@@ -128,15 +128,13 @@ abstract class UserRepository {
   /// [wants] - Pourcentage alloué aux envies (0-100)
   /// [savings] - Pourcentage alloué à l'épargne (0-100)
   ///
-  /// La somme needs + wants + savings doit être égale à 100.
-  ///
   /// Retourne l'utilisateur avec la règle budgétaire mise à jour.
   ///
   /// Throws [ValidationError] si la somme n'est pas égale à 100 ou si les valeurs sont invalides.
   /// Throws [NetworkError] si la connexion réseau échoue.
   /// Throws [ServerError] si le serveur retourne une erreur.
   /// Throws [NotFoundError] si l'utilisateur n'existe pas.
-  Future<UserEntity> updateBudgetRule({
+  Future<UserModel> updateBudgetRule({
     required String userId,
     required int needs,
     required int wants,

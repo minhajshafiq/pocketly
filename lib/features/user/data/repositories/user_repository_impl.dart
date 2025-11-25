@@ -1,160 +1,226 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:pocketly/features/user/domain/entities/user_entity.dart';
-import 'package:pocketly/features/user/domain/repositories/user_repository.dart';
+import '../../../../core/services/logger_service.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/repositories/user_repository.dart';
+import '../datasources/user_remote_datasource.dart';
+import '../datasources/user_local_datasource.dart';
+import '../models/user_model.dart';
 
-/// Implémentation du repository utilisateur avec Supabase.
-/// 
-/// Gère la persistance et la récupération des données utilisateur
-/// via Supabase (auth + table users).
+/// Implémentation du repository utilisateur.
+///
+/// Orchestre l'accès aux données entre les datasources remote et local.
+/// Suit le pattern Clean Architecture en implémentant l'interface du domaine.
 class UserRepositoryImpl implements UserRepository {
-  final SupabaseClient _supabase;
+  const UserRepositoryImpl(this._remoteDataSource, this._localDataSource);
 
-  UserRepositoryImpl(this._supabase);
-
-  /// Table Supabase pour les utilisateurs
-  static const String _usersTable = 'users';
+  final UserRemoteDataSource _remoteDataSource;
+  final UserLocalDataSource _localDataSource;
+  final logger = const LoggerService();
 
   @override
   Future<UserEntity?> getCurrentUser() async {
     try {
-      final authUser = _supabase.auth.currentUser;
-      if (authUser == null) return null;
+      // TOUJOURS récupérer depuis le remote pour avoir les données à jour
+      final remoteUser = await _remoteDataSource.getCurrentUser();
+      if (remoteUser != null) {
+        // Sauvegarder en local pour le cache
+        await _localDataSource.saveCurrentUser(remoteUser);
+        return remoteUser.toEntity();
+      }
 
-      final response = await _supabase
-          .from(_usersTable)
-          .select()
-          .eq('id', authUser.id)
-          .maybeSingle();
-
-      if (response == null) return null;
-
-      return UserEntity.fromJson(response);
+      return null;
     } catch (e) {
-      throw Exception('Erreur lors de la récupération de l\'utilisateur: $e');
+      // En cas d'erreur réseau, essayer de récupérer depuis le cache local
+      try {
+        final localUser = await _localDataSource.getCurrentUser();
+        return localUser?.toEntity();
+      } catch (_) {
+        rethrow;
+      }
     }
   }
 
   @override
-  Stream<UserEntity?> watchCurrentUser() {
-    final authUser = _supabase.auth.currentUser;
-    if (authUser == null) {
-      return Stream.value(null);
-    }
+  Future<UserEntity> createUser(UserEntity user) async {
+    try {
+      final userModel = user.toModel();
+      final createdUser = await _remoteDataSource.createUser(userModel);
 
-    return _supabase
-        .from(_usersTable)
-        .stream(primaryKey: ['id'])
-        .eq('id', authUser.id)
-        .map((data) {
-          if (data.isEmpty) return null;
-          return UserEntity.fromJson(data.first);
-        });
+      // Sauvegarder en local
+      await _localDataSource.saveCurrentUser(createdUser);
+
+      return createdUser.toEntity();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
   Future<UserEntity> updateUser(UserEntity user) async {
     try {
-      final response = await _supabase
-          .from(_usersTable)
-          .update({
-            ...user.toJson(),
-            'updated_at': DateTime.now().toIso8601String(),
-          })
-          .eq('id', user.id)
-          .select()
-          .single();
+      final userModel = user.toModel();
+      final updatedUser = await _remoteDataSource.updateUser(userModel);
 
-      return UserEntity.fromJson(response);
+      // Mettre à jour le stockage local
+      await _localDataSource.saveCurrentUser(updatedUser);
+
+      return updatedUser.toEntity();
     } catch (e) {
-      throw Exception('Erreur lors de la mise à jour de l\'utilisateur: $e');
+      rethrow;
     }
   }
 
   @override
   Future<void> deleteUser(String userId) async {
     try {
-      await _supabase.from(_usersTable).delete().eq('id', userId);
+      await _remoteDataSource.deleteUser(userId);
+
+      // Supprimer du stockage local
+      await _localDataSource.clearCurrentUser();
     } catch (e) {
-      throw Exception('Erreur lors de la suppression de l\'utilisateur: $e');
+      rethrow;
     }
   }
 
   @override
   Future<UserEntity> activateTrial(String userId) async {
     try {
-      final now = DateTime.now();
-      final trialEnd = now.add(const Duration(days: 14));
+      final updatedUser = await _remoteDataSource.activateTrial(userId);
 
-      final response = await _supabase
-          .from(_usersTable)
-          .update({
-            'premium_trial_start': now.toIso8601String(),
-            'premium_trial_end': trialEnd.toIso8601String(),
-            'updated_at': now.toIso8601String(),
-          })
-          .eq('id', userId)
-          .select()
-          .single();
+      // Mettre à jour le stockage local
+      await _localDataSource.saveCurrentUser(updatedUser);
 
-      return UserEntity.fromJson(response);
+      return updatedUser.toEntity();
     } catch (e) {
-      throw Exception('Erreur lors de l\'activation du trial: $e');
+      rethrow;
     }
   }
 
   @override
   Future<UserEntity> activatePremium(String userId, DateTime expiresAt) async {
     try {
-      final now = DateTime.now();
+      final updatedUser = await _remoteDataSource.activatePremium(
+        userId,
+        expiresAt,
+      );
 
-      final response = await _supabase
-          .from(_usersTable)
-          .update({
-            'is_premium': true,
-            'premium_expires_at': expiresAt.toIso8601String(),
-            'updated_at': now.toIso8601String(),
-          })
-          .eq('id', userId)
-          .select()
-          .single();
+      // Mettre à jour le stockage local
+      await _localDataSource.saveCurrentUser(updatedUser);
 
-      return UserEntity.fromJson(response);
+      return updatedUser.toEntity();
     } catch (e) {
-      throw Exception('Erreur lors de l\'activation du premium: $e');
-    }
-  }
-
-  @override
-  Future<void> updatePushToken(String userId, String token) async {
-    try {
-      await _supabase.from(_usersTable).update({
-        'push_token': token,
-        'updated_at': DateTime.now().toIso8601String(),
-      }).eq('id', userId);
-    } catch (e) {
-      throw Exception('Erreur lors de la mise à jour du token push: $e');
+      rethrow;
     }
   }
 
   @override
   Future<UserEntity> completeOnboarding(String userId) async {
     try {
-      final now = DateTime.now();
+      final updatedUser = await _remoteDataSource.completeOnboarding(userId);
 
-      final response = await _supabase
-          .from(_usersTable)
-          .update({
-            'has_completed_onboarding': true,
-            'updated_at': now.toIso8601String(),
-          })
-          .eq('id', userId)
-          .select()
-          .single();
+      // Mettre à jour le stockage local
+      await _localDataSource.saveCurrentUser(updatedUser);
 
-      return UserEntity.fromJson(response);
+      return updatedUser.toEntity();
     } catch (e) {
-      throw Exception('Erreur lors de la complétion de l\'onboarding: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UserEntity> updatePushToken(String userId, String pushToken) async {
+    try {
+      final updatedUser = await _remoteDataSource.updatePushToken(
+        userId,
+        pushToken,
+      );
+
+      // Sauvegarder le token localement
+      await _localDataSource.savePushToken(pushToken);
+
+      // Mettre à jour le stockage local
+      await _localDataSource.saveCurrentUser(updatedUser);
+
+      return updatedUser.toEntity();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UserEntity> updateNotificationPreferences(
+    String userId,
+    bool notificationsEnabled,
+  ) async {
+    try {
+      final updatedUser = await _remoteDataSource.updateNotificationPreferences(
+        userId,
+        notificationsEnabled,
+      );
+
+      // Mettre à jour le stockage local
+      await _localDataSource.saveCurrentUser(updatedUser);
+
+      return updatedUser.toEntity();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UserEntity> updateUserAvatarUrl({
+    required String userId,
+    required String? avatarUrl,
+  }) async {
+    try {
+      final updatedUser = await _remoteDataSource.updateUserAvatarUrl(
+        userId: userId,
+        avatarUrl: avatarUrl,
+      );
+
+      // Mettre à jour le stockage local
+      await _localDataSource.saveCurrentUser(updatedUser);
+
+      return updatedUser.toEntity();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UserEntity> updateBudgetRule({
+    required String userId,
+    required int needs,
+    required int wants,
+    required int savings,
+  }) async {
+    try {
+      final updatedUser = await _remoteDataSource.updateBudgetRule(
+        userId: userId,
+        needs: needs,
+        wants: wants,
+        savings: savings,
+      );
+
+      // Debug: Vérifier le modèle avant conversion
+      logger.d('[UserRepository] UserModel avant conversion:');
+      logger.d('   budgetRuleNeeds: ${updatedUser.budgetRuleNeeds}');
+      logger.d('   budgetRuleWants: ${updatedUser.budgetRuleWants}');
+      logger.d('   budgetRuleSavings: ${updatedUser.budgetRuleSavings}');
+
+      // Mettre à jour le stockage local
+      await _localDataSource.saveCurrentUser(updatedUser);
+
+      final entity = updatedUser.toEntity();
+
+      // Debug: Vérifier l'entité après conversion
+      logger.d('[UserRepository] UserEntity après conversion:');
+      logger.d('   budgetRuleNeeds: ${entity.budgetRuleNeeds}');
+      logger.d('   budgetRuleWants: ${entity.budgetRuleWants}');
+      logger.d('   budgetRuleSavings: ${entity.budgetRuleSavings}');
+
+      return entity;
+    } catch (e) {
+      rethrow;
     }
   }
 }
-

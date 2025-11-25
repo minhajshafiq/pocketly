@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_entity.dart';
+part of 'user_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => _UserEntity(
+_UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
   id: json['id'] as String,
   email: json['email'] as String,
   name: json['name'] as String?,
@@ -38,7 +38,7 @@ _UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => _UserEntity(
   role: json['role'] as String? ?? 'user',
 );
 
-Map<String, dynamic> _$UserEntityToJson(_UserEntity instance) =>
+Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'email': instance.email,

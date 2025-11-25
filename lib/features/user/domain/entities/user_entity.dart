@@ -1,226 +1,179 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'user_entity.freezed.dart';
 part 'user_entity.g.dart';
 
 /// Entité utilisateur principale pour Pocketly.
-@JsonSerializable()
-class UserEntity {
-  final String id;
-  final String email;
-  final String? name;
-  
-  @JsonKey(name: 'avatar_url')
-  final String? avatarUrl;
-  
-  @JsonKey(name: 'is_premium')
-  final bool isPremium;
-  
-  @JsonKey(name: 'premium_expires_at')
-  final DateTime? premiumExpiresAt;
-  
-  @JsonKey(name: 'premium_trial_start')
-  final DateTime? premiumTrialStart;
-  
-  @JsonKey(name: 'premium_trial_end')
-  final DateTime? premiumTrialEnd;
-  
-  @JsonKey(name: 'has_completed_onboarding')
-  final bool hasCompletedOnboarding;
-  
-  @JsonKey(name: 'notifications_enabled')
-  final bool notificationsEnabled;
-  
-  @JsonKey(name: 'push_token')
-  final String? pushToken;
-  
-  @JsonKey(name: 'app_version')
-  final String? appVersion;
-  
-  @JsonKey(name: 'marketing_consent')
-  final bool marketingConsent;
-  
-  @JsonKey(name: 'created_at')
-  final DateTime? createdAt;
-  
-  @JsonKey(name: 'updated_at')
-  final DateTime? updatedAt;
-  
-  final String role;
-
-  const UserEntity({
-    required this.id,
-    required this.email,
-    this.name,
-    this.avatarUrl,
-    this.isPremium = false,
-    this.premiumExpiresAt,
-    this.premiumTrialStart,
-    this.premiumTrialEnd,
-    this.hasCompletedOnboarding = false,
-    this.notificationsEnabled = true,
-    this.pushToken,
-    this.appVersion,
-    this.marketingConsent = false,
-    this.createdAt,
-    this.updatedAt,
-    this.role = 'user',
-  });
+///
+/// Représente un utilisateur dans le domaine métier avec toutes ses propriétés.
+/// Utilise Freezed 3.0 pour l'immutabilité et la génération de code.
+@freezed
+sealed class UserEntity with _$UserEntity {
+  const factory UserEntity({
+    required String id,
+    required String email,
+    String? name,
+    @JsonKey(name: 'avatar_url') String? avatarUrl,
+    @JsonKey(name: 'is_premium') @Default(false) bool isPremium,
+    @JsonKey(name: 'premium_expires_at') DateTime? premiumExpiresAt,
+    @JsonKey(name: 'premium_trial_start') DateTime? premiumTrialStart,
+    @JsonKey(name: 'premium_trial_end') DateTime? premiumTrialEnd,
+    @JsonKey(name: 'has_completed_onboarding')
+    @Default(false)
+    bool hasCompletedOnboarding,
+    @JsonKey(name: 'notifications_enabled')
+    @Default(true)
+    bool notificationsEnabled,
+    @JsonKey(name: 'push_token') String? pushToken,
+    @JsonKey(name: 'app_version') String? appVersion,
+    @JsonKey(name: 'marketing_consent') @Default(false) bool marketingConsent,
+    @JsonKey(name: 'budget_rule_needs') @Default(50) int budgetRuleNeeds,
+    @JsonKey(name: 'budget_rule_wants') @Default(30) int budgetRuleWants,
+    @JsonKey(name: 'budget_rule_savings') @Default(20) int budgetRuleSavings,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
+    @Default('user') String role,
+  }) = _UserEntity;
 
   factory UserEntity.fromJson(Map<String, dynamic> json) =>
       _$UserEntityFromJson(json);
-
-  Map<String, dynamic> toJson() => _$UserEntityToJson(this);
-
-  UserEntity copyWith({
-    String? id,
-    String? email,
-    String? name,
-    String? avatarUrl,
-    bool? isPremium,
-    DateTime? premiumExpiresAt,
-    DateTime? premiumTrialStart,
-    DateTime? premiumTrialEnd,
-    bool? hasCompletedOnboarding,
-    bool? notificationsEnabled,
-    String? pushToken,
-    String? appVersion,
-    bool? marketingConsent,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? role,
-  }) {
-    return UserEntity(
-      id: id ?? this.id,
-      email: email ?? this.email,
-      name: name ?? this.name,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      isPremium: isPremium ?? this.isPremium,
-      premiumExpiresAt: premiumExpiresAt ?? this.premiumExpiresAt,
-      premiumTrialStart: premiumTrialStart ?? this.premiumTrialStart,
-      premiumTrialEnd: premiumTrialEnd ?? this.premiumTrialEnd,
-      hasCompletedOnboarding: hasCompletedOnboarding ?? this.hasCompletedOnboarding,
-      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
-      pushToken: pushToken ?? this.pushToken,
-      appVersion: appVersion ?? this.appVersion,
-      marketingConsent: marketingConsent ?? this.marketingConsent,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      role: role ?? this.role,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is UserEntity &&
-        other.id == id &&
-        other.email == email &&
-        other.name == name &&
-        other.avatarUrl == avatarUrl &&
-        other.isPremium == isPremium &&
-        other.premiumExpiresAt == premiumExpiresAt &&
-        other.premiumTrialStart == premiumTrialStart &&
-        other.premiumTrialEnd == premiumTrialEnd &&
-        other.hasCompletedOnboarding == hasCompletedOnboarding &&
-        other.notificationsEnabled == notificationsEnabled &&
-        other.pushToken == pushToken &&
-        other.appVersion == appVersion &&
-        other.marketingConsent == marketingConsent &&
-        other.createdAt == createdAt &&
-        other.updatedAt == updatedAt &&
-        other.role == role;
-  }
-
-  @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      email,
-      name,
-      avatarUrl,
-      isPremium,
-      premiumExpiresAt,
-      premiumTrialStart,
-      premiumTrialEnd,
-      hasCompletedOnboarding,
-      notificationsEnabled,
-      pushToken,
-      appVersion,
-      marketingConsent,
-      createdAt,
-      updatedAt,
-      role,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'UserEntity(id: $id, email: $email, name: $name, avatarUrl: $avatarUrl, isPremium: $isPremium, premiumExpiresAt: $premiumExpiresAt, premiumTrialStart: $premiumTrialStart, premiumTrialEnd: $premiumTrialEnd, hasCompletedOnboarding: $hasCompletedOnboarding, notificationsEnabled: $notificationsEnabled, pushToken: $pushToken, appVersion: $appVersion, marketingConsent: $marketingConsent, createdAt: $createdAt, updatedAt: $updatedAt, role: $role)';
-  }
 }
 
-// ================================
-// 🔍 Extensions pour logique métier
-// ================================
-
+/// Extension pour la logique métier de l'utilisateur
 extension UserEntityX on UserEntity {
-  /// Indique si l'utilisateur est actuellement dans sa période d'essai.
-  bool get isTrialActive {
-    if (premiumTrialStart == null || premiumTrialEnd == null) return false;
-    final now = DateTime.now();
-    return now.isAfter(premiumTrialStart!) && now.isBefore(premiumTrialEnd!);
+  /// Vérifie si l'utilisateur a accès aux fonctionnalités premium
+  ///
+  /// IMPORTANT: Vérifie TOUJOURS les dates d'expiration pour éviter que
+  /// les utilisateurs gardent l'accès premium après expiration
+  bool get canAccessPremium {
+    // Si l'utilisateur a isPremium = true, vérifier la date d'expiration
+    if (isPremium) {
+      // Si premium_expires_at existe, vérifier qu'il n'est pas expiré
+      if (premiumExpiresAt != null) {
+        return !_isPremiumExpired;
+      }
+      // Si pas de premium_expires_at mais isPremium = true,
+      // c'est probablement un utilisateur en trial
+      // Vérifier que le trial n'est pas expiré
+      return _isTrialActive;
+    }
+
+    // Si isPremium = false, vérifier le trial
+    return _isTrialActive;
   }
 
-  /// Indique si l'utilisateur a accès aux fonctionnalités premium.
-  bool get canAccessPremium => isPremium || isTrialActive;
+  /// Vérifie si l'utilisateur est en période d'essai
+  bool get _isTrialActive {
+    if (premiumTrialStart == null || premiumTrialEnd == null) {
+      return false;
+    }
+    // Utiliser UTC pour comparer car les dates sont stockées en UTC
+    final now = DateTime.now().toUtc();
+    final trialStart = premiumTrialStart!.toUtc();
+    final trialEnd = premiumTrialEnd!.toUtc();
 
-  /// Nombre de jours restants avant la fin du trial.
-  int get trialDaysLeft {
-    if (premiumTrialEnd == null) return 0;
-    return premiumTrialEnd!.difference(DateTime.now()).inDays.clamp(0, 14);
+    // Utiliser >= pour le début et < pour la fin (inclut le moment exact de création)
+    return !now.isBefore(trialStart) && now.isBefore(trialEnd);
   }
 
-  /// Vérifie si l'utilisateur peut commencer un essai.
-  bool get canStartTrial {
-    return !isPremium && premiumTrialStart == null && premiumTrialEnd == null;
-  }
-
-  /// Vérifie si l'abonnement premium est expiré.
-  bool get isPremiumExpired {
-    if (!isPremium || premiumExpiresAt == null) return false;
-    return DateTime.now().isAfter(premiumExpiresAt!);
-  }
-
-  /// Statut global de l'utilisateur (premium, trial, free).
+  /// Obtient le statut de l'utilisateur (free/trial/premium)
   String get status {
-    if (isPremium && !isPremiumExpired) return 'premium';
-    if (isTrialActive) return 'trial';
+    if (isPremium && !_isPremiumExpired && premiumExpiresAt != null) {
+      return 'premium';
+    }
+    if (_isTrialActive) {
+      return 'trial';
+    }
     return 'free';
   }
 
-  /// Vérifie si le profil est complet.
-  bool get hasCompleteProfile {
-    return name != null && name!.isNotEmpty;
+  /// Vérifie si l'abonnement premium est expiré
+  bool get _isPremiumExpired {
+    final now = DateTime.now().toUtc();
+
+    if (premiumExpiresAt == null) {
+      // Si pas de date d'expiration mais isPremium = true,
+      // vérifier le trial
+      if (isPremium && premiumTrialEnd != null) {
+        return now.isAfter(premiumTrialEnd!.toUtc());
+      }
+      return false;
+    }
+    return now.isAfter(premiumExpiresAt!.toUtc());
   }
 
-  /// Vérifie si l'utilisateur est administrateur.
+  /// Calcule le nombre de jours restants du trial
+  int get trialDaysLeft {
+    if (premiumTrialEnd == null) {
+      return 0;
+    }
+    final now = DateTime.now().toUtc();
+    return premiumTrialEnd!.toUtc().difference(now).inDays.clamp(0, 14);
+  }
+
+  /// Vérifie si l'utilisateur est actif (créé récemment)
+  bool get isActive {
+    if (createdAt == null) return false;
+    final now = DateTime.now().toUtc();
+    return now.difference(createdAt!.toUtc()).inDays < 30;
+  }
+
+  /// Obtient le nom d'affichage de l'utilisateur
+  String get displayName =>
+      name?.trim().isEmpty == true ? email : (name ?? email);
+
+  /// Vérifie si l'utilisateur peut recevoir des notifications
+  bool get canReceiveNotifications => notificationsEnabled && pushToken != null;
+
+  /// Vérifie si l'utilisateur est en période d'essai (public)
+  bool get isTrialActive => _isTrialActive;
+
+  /// Vérifie si le profil est complet
+  bool get hasCompleteProfile => name != null && name!.trim().isNotEmpty;
+
+  /// Vérifie si l'utilisateur est administrateur
   bool get isAdmin => role == 'admin';
 
-  /// Vérifie si l'utilisateur est un utilisateur normal.
+  /// Vérifie si l'utilisateur est un utilisateur normal
   bool get isUser => role == 'user';
+
+  /// Obtient le pourcentage des besoins dans la règle budgétaire
+  double get budgetRuleNeedsPercentage => budgetRuleNeeds / 100.0;
+
+  /// Obtient le pourcentage des envies dans la règle budgétaire
+  double get budgetRuleWantsPercentage => budgetRuleWants / 100.0;
+
+  /// Obtient le pourcentage de l'épargne dans la règle budgétaire
+  double get budgetRuleSavingsPercentage => budgetRuleSavings / 100.0;
+
+  /// Vérifie si la règle budgétaire est valide (somme = 100%)
+  bool get isBudgetRuleValid =>
+      budgetRuleNeeds + budgetRuleWants + budgetRuleSavings == 100;
+
+  /// Vérifie si la règle budgétaire est la règle par défaut (50/30/20)
+  bool get isDefaultBudgetRule =>
+      budgetRuleNeeds == 50 && budgetRuleWants == 30 && budgetRuleSavings == 20;
 }
 
-// ================================
-// 🏭 Factory methods
-// ================================
-
+/// Factories pour créer des UserEntity avec des configurations prédéfinies
 class UserEntityFactories {
-  /// Crée un utilisateur avec des valeurs par défaut sécurisées.
+  UserEntityFactories._();
+
+  /// Crée un utilisateur avec des valeurs par défaut
   static UserEntity create({
     required String id,
     required String email,
     String? name,
     String? avatarUrl,
+    bool isPremium = false,
+    DateTime? premiumExpiresAt,
+    DateTime? premiumTrialStart,
+    DateTime? premiumTrialEnd,
+    bool hasCompletedOnboarding = false,
+    bool notificationsEnabled = true,
+    String? pushToken,
+    String? appVersion,
+    bool marketingConsent = false,
     String role = 'user',
   }) {
     final now = DateTime.now();
@@ -229,41 +182,53 @@ class UserEntityFactories {
       email: email,
       name: name,
       avatarUrl: avatarUrl,
+      isPremium: isPremium,
+      premiumExpiresAt: premiumExpiresAt,
+      premiumTrialStart: premiumTrialStart,
+      premiumTrialEnd: premiumTrialEnd,
+      hasCompletedOnboarding: hasCompletedOnboarding,
+      notificationsEnabled: notificationsEnabled,
+      pushToken: pushToken,
+      appVersion: appVersion,
+      marketingConsent: marketingConsent,
+      role: role,
       createdAt: now,
       updatedAt: now,
-      isPremium: false,
-      hasCompletedOnboarding: false,
-      notificationsEnabled: true,
-      marketingConsent: false,
-      role: role,
     );
   }
 
-  /// Crée un utilisateur avec un trial actif de 14 jours.
+  /// Crée un utilisateur avec un trial actif
   static UserEntity withTrial({
     required String id,
     required String email,
     String? name,
     String? avatarUrl,
+    bool hasCompletedOnboarding = false,
+    bool notificationsEnabled = true,
+    String? pushToken,
+    String? appVersion,
+    bool marketingConsent = false,
     String role = 'user',
   }) {
     final now = DateTime.now();
     final trialEnd = now.add(const Duration(days: 14));
-    
+
     return UserEntity(
       id: id,
       email: email,
       name: name,
       avatarUrl: avatarUrl,
-      createdAt: now,
-      updatedAt: now,
+      isPremium: false,
       premiumTrialStart: now,
       premiumTrialEnd: trialEnd,
-      isPremium: false,
-      hasCompletedOnboarding: false,
-      notificationsEnabled: true,
-      marketingConsent: false,
+      hasCompletedOnboarding: hasCompletedOnboarding,
+      notificationsEnabled: notificationsEnabled,
+      pushToken: pushToken,
+      appVersion: appVersion,
+      marketingConsent: marketingConsent,
       role: role,
+      createdAt: now,
+      updatedAt: now,
     );
   }
 }
