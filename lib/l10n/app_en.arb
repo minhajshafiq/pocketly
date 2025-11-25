@@ -28,6 +28,14 @@
   "@transactions": {
     "description": "Transactions section title"
   },
+  "transactionHistory": "Transaction History",
+  "@transactionHistory": {
+    "description": "Transaction history screen title"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back button text"
+  },
   "balance": "Balance",
   "@balance": {
     "description": "Balance label"
@@ -51,6 +59,54 @@
   "cancel": "Cancel",
   "@cancel": {
     "description": "Cancel button text"
+  },
+  "skip": "Skip",
+  "@skip": {
+    "description": "Skip button text"
+  },
+  "onboardingStepProgress": "Step {current} of {total}",
+  "@onboardingStepProgress": {
+    "description": "Progress indicator for onboarding steps",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingStep1Title": "Own your money journey",
+  "@onboardingStep1Title": {
+    "description": "Hero title for onboarding step 1"
+  },
+  "onboardingStep1Description": "Pocketly gives you a simple path to follow the 50/30/20 rule, track your expenses and grow your savings.",
+  "@onboardingStep1Description": {
+    "description": "Description for onboarding step 1"
+  },
+  "onboardingHighlightBudgetTitle": "Budget like a pro",
+  "@onboardingHighlightBudgetTitle": {
+    "description": "Highlight title about budgeting"
+  },
+  "onboardingHighlightBudgetDescription": "Group your essentials, wants and savings in one place with smart limits.",
+  "@onboardingHighlightBudgetDescription": {
+    "description": "Highlight description about budgeting"
+  },
+  "onboardingHighlightInsightsTitle": "Instant insights",
+  "@onboardingHighlightInsightsTitle": {
+    "description": "Highlight title for insights"
+  },
+  "onboardingHighlightInsightsDescription": "Understand where every euro goes with live charts and weekly recaps.",
+  "@onboardingHighlightInsightsDescription": {
+    "description": "Highlight description for insights"
+  },
+  "onboardingHighlightAutomationTitle": "Automated guidance",
+  "@onboardingHighlightAutomationTitle": {
+    "description": "Highlight title for automation"
+  },
+  "onboardingHighlightAutomationDescription": "Pocketly nudges you to stay on track and celebrates every milestone.",
+  "@onboardingHighlightAutomationDescription": {
+    "description": "Highlight description for automation"
   },
   "delete": "Delete",
   "@delete": {
@@ -108,17 +164,65 @@
   "@saveSmartDescription": {
     "description": "Save smart feature description"
   },
-  "secureTitle": "Secure & Private",
-  "@secureTitle": {
-    "description": "Security feature title"
-  },
-  "secureDescription": "Your financial data is encrypted and stored securely. We never share your information with third parties.",
-  "@secureDescription": {
-    "description": "Security feature description"
-  },
   "getStarted": "Get Started",
   "@getStarted": {
     "description": "Get started button text"
+  },
+  "onboardingSalaryTitle": "Define your monthly salary",
+  "@onboardingSalaryTitle": {
+    "description": "Title for salary input step"
+  },
+  "onboardingSalarySubtitle": "We apply the 50/30/20 method automatically so you know exactly how much to allocate.",
+  "@onboardingSalarySubtitle": {
+    "description": "Subtitle for salary input step"
+  },
+  "onboardingSalaryFieldLabel": "Monthly net income",
+  "@onboardingSalaryFieldLabel": {
+    "description": "Label for salary text field"
+  },
+  "onboardingSalaryFieldHint": "e.g. 2500",
+  "@onboardingSalaryFieldHint": {
+    "description": "Placeholder for salary text field"
+  },
+  "onboardingSalaryHelper": "You can update this later from your profile settings.",
+  "@onboardingSalaryHelper": {
+    "description": "Helper text for salary input"
+  },
+  "onboardingSalaryBreakdownTitle": "Pocketly splits it for you",
+  "@onboardingSalaryBreakdownTitle": {
+    "description": "Title for salary breakdown cards"
+  },
+  "onboardingSalaryInputError": "Please enter a valid salary amount",
+  "@onboardingSalaryInputError": {
+    "description": "Error message when salary input is invalid"
+  },
+  "onboardingContinue": "Continue",
+  "@onboardingContinue": {
+    "description": "Generic continue button text"
+  },
+  "onboardingNotificationsTitle": "Activate smart notifications",
+  "@onboardingNotificationsTitle": {
+    "description": "Title for onboarding step 3 notifications"
+  },
+  "onboardingNotificationsSubtitle": "Choose the alerts that keep you on track and never miss an important moment.",
+  "@onboardingNotificationsSubtitle": {
+    "description": "Subtitle for onboarding step 3"
+  },
+  "onboardingNotificationsDescription": "Pocketly sends respectful notifications only when they matter: budget alerts, goal celebrations and weekly summaries.",
+  "@onboardingNotificationsDescription": {
+    "description": "Description for notifications step"
+  },
+  "onboardingFinish": "Go to dashboard",
+  "@onboardingFinish": {
+    "description": "Button text to finish onboarding"
+  },
+  "onboardingCongratsTitle": "You’re ready!",
+  "@onboardingCongratsTitle": {
+    "description": "Title displayed with confetti"
+  },
+  "onboardingCongratsSubtitle": "Your finances have a plan. Let’s keep the momentum going in Pocketly.",
+  "@onboardingCongratsSubtitle": {
+    "description": "Subtitle displayed with confetti"
   },
   "notificationPermissionTitle": "Notification Permission",
   "@notificationPermissionTitle": {
@@ -231,5 +335,1517 @@
   "notificationLoadingMessage": "Please wait...",
   "@notificationLoadingMessage": {
     "description": "Loading notification message"
+  },
+  "food": "Food",
+  "@food": {
+    "description": "Food category name"
+  },
+  "housing": "Housing",
+  "@housing": {
+    "description": "Housing category name"
+  },
+  "transport": "Transport",
+  "@transport": {
+    "description": "Transport category name"
+  },
+  "health": "Health",
+  "@health": {
+    "description": "Health category name"
+  },
+  "leisure": "Leisure",
+  "@leisure": {
+    "description": "Leisure category name"
+  },
+  "shopping": "Shopping",
+  "@shopping": {
+    "description": "Shopping category name"
+  },
+  "salary": "Salary",
+  "@salary": {
+    "description": "Salary category name"
+  },
+  "bonus": "Bonus",
+  "@bonus": {
+    "description": "Bonus category name"
+  },
+  "investment": "Investment",
+  "@investment": {
+    "description": "Investment category name"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings screen title"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile section title"
+  },
+  "editProfile": "Edit Profile",
+  "@editProfile": {
+    "description": "Edit profile screen title"
+  },
+  "fullName": "Full Name",
+  "@fullName": {
+    "description": "Full name field label"
+  },
+  "enterFullName": "Enter your full name",
+  "@enterFullName": {
+    "description": "Full name field hint"
+  },
+  "uploadingAvatar": "Uploading avatar...",
+  "@uploadingAvatar": {
+    "description": "Message shown while uploading avatar"
+  },
+  "profileUpdated": "Profile updated successfully",
+  "@profileUpdated": {
+    "description": "Success message after updating profile"
+  },
+  "errorUpdatingProfile": "Error updating profile",
+  "@errorUpdatingProfile": {
+    "description": "Error message when profile update fails"
+  },
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Appearance section title"
+  },
+  "preferences": "Preferences",
+  "@preferences": {
+    "description": "Preferences section title"
+  },
+  "account": "Account",
+  "@account": {
+    "description": "Account section title"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme setting label"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language setting label"
+  },
+  "currency": "Currency",
+  "@currency": {
+    "description": "Currency setting label"
+  },
+  "fullName": "Full Name",
+  "@fullName": {
+    "description": "Full name label"
+  },
+  "notAvailable": "Not available",
+  "@notAvailable": {
+    "description": "Not available placeholder text"
+  },
+  "errorLoadingProfile": "Error loading profile",
+  "@errorLoadingProfile": {
+    "description": "Error message when profile fails to load"
+  },
+  "selectLanguage": "Select Language",
+  "@selectLanguage": {
+    "description": "Language picker title"
+  },
+  "selectCurrency": "Select Currency",
+  "@selectCurrency": {
+    "description": "Currency picker title"
+  },
+  "logoutError": "Failed to logout. Please try again.",
+  "@logoutError": {
+    "description": "Error message when logout fails"
+  },
+  "logoutConfirmation": "Are you sure you want to logout?",
+  "@logoutConfirmation": {
+    "description": "Confirmation message before logout"
+  },
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Welcome greeting"
+  },
+  "currentBalance": "Current Balance",
+  "@currentBalance": {
+    "description": "Current balance label"
+  },
+  "availableBalance": "Available Balance",
+  "@availableBalance": {
+    "description": "Available balance label (total minus savings)"
+  },
+  "last24Hours": "Last 24h",
+  "@last24Hours": {
+    "description": "Last 24 hours label"
+  },
+  "weeklyExpenses": "Spent this week",
+  "@weeklyExpenses": {
+    "description": "Weekly expenses chart title"
+  },
+  "recentTransactions": "Recent Transactions",
+  "@recentTransactions": {
+    "description": "Recent transactions section title"
+  },
+  "incomeLabel": "Income",
+  "@incomeLabel": {"description": "Label for income card"},
+  "expensesLabel": "Expenses",
+  "@expensesLabel": {"description": "Label for expenses card"},
+  "seeAll": "See All",
+  "@seeAll": {
+    "description": "See all button text"
+  },
+  "noTransactionsYet": "No transactions yet",
+  "@noTransactionsYet": {
+    "description": "Empty state message for transactions"
+  },
+  "addTransaction": "Add Transaction",
+  "@addTransaction": {
+    "description": "Add transaction button text"
+  },
+  "statistics": "Statistics",
+  "@statistics": {
+    "description": "Statistics button text"
+  },
+  "yourStatistics": "Your Statistics",
+  "@yourStatistics": {
+    "description": "Statistics screen title"
+  },
+  "noData": "No data",
+  "@noData": {
+    "description": "No data message"
+  },
+  "loadingError": "Loading error",
+  "@loadingError": {
+    "description": "Loading error message"
+  },
+  "noTransaction": "No transaction",
+  "@noTransaction": {
+    "description": "No transaction message"
+  },
+  "forThisDay": "for this day",
+  "@forThisDay": {
+    "description": "For this day message"
+  },
+  "available": "available",
+  "@available": {
+    "description": "Available message"
+  },
+  "failedToLoadBalance": "Failed to load balance",
+  "@failedToLoadBalance": {
+    "description": "Error message for balance loading"
+  },
+  "failedToLoadExpenses": "Failed to load expenses",
+  "@failedToLoadExpenses": {
+    "description": "Error message for expenses loading"
+  },
+  "failedToLoadTransactions": "Failed to load transactions",
+  "@failedToLoadTransactions": {
+    "description": "Error message for transactions loading"
+  },
+  "signinWelcomeTitle": "Welcome\nback!",
+  "@signinWelcomeTitle": {
+    "description": "Signin screen welcome title"
+  },
+  "signinWelcomeDescription": "Sign in to your account",
+  "@signinWelcomeDescription": {
+    "description": "Signin screen welcome description"
+  },
+  "emailAddress": "Email address",
+  "@emailAddress": {
+    "description": "Email address field label"
+  },
+  "forgotPassword": "Forgot password?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "signIn": "Sign in",
+  "@signIn": {
+    "description": "Sign in button text"
+  },
+  "noAccountYet": "No account yet? ",
+  "@noAccountYet": {
+    "description": "No account yet text"
+  },
+  "signUp": "Sign up",
+  "@signUp": {
+    "description": "Sign up button text"
+  },
+  "or": "or",
+  "@or": {
+    "description": "Or text for divider"
+  },
+  "google": "Google",
+  "@google": {
+    "description": "Google button text"
+  },
+  "apple": "Apple",
+  "@apple": {
+    "description": "Apple button text"
+  },
+  "signInSuccess": "Successfully signed in!",
+  "@signInSuccess": {
+    "description": "Sign in success message"
+  },
+  "resetPassword": "Reset Password",
+  "@resetPassword": {
+    "description": "Reset password screen title"
+  },
+  "resetPasswordTitle": "Create new password",
+  "@resetPasswordTitle": {
+    "description": "Reset password form title"
+  },
+  "resetPasswordSubtitle": "Enter your new password to secure your account",
+  "@resetPasswordSubtitle": {
+    "description": "Reset password subtitle"
+  },
+  "newPassword": "New password",
+  "@newPassword": {
+    "description": "New password field label"
+  },
+  "confirmPassword": "Confirm password",
+  "@confirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "passwordMinLength": "Password must be at least 12 characters",
+  "@passwordMinLength": {
+    "description": "Password minimum length validation message"
+  },
+  "passwordsDoNotMatch": "Passwords do not match",
+  "@passwordsDoNotMatch": {
+    "description": "Password mismatch validation message"
+  },
+  "updatePassword": "Update Password",
+  "@updatePassword": {
+    "description": "Update password button text"
+  },
+  "passwordUpdatedSuccess": "Password updated successfully!",
+  "@passwordUpdatedSuccess": {
+    "description": "Password update success message"
+  },
+  "redirectingToSignIn": "Redirecting to sign in...",
+  "@redirectingToSignIn": {
+    "description": "Redirect message after password update"
+  },
+  "passwordResetLinkExpired": "Password reset link has expired. Please request a new one.",
+  "@passwordResetLinkExpired": {
+    "description": "Expired reset link error message"
+  },
+  "forgotPasswordTitle": "Forgot password?",
+  "@forgotPasswordTitle": {
+    "description": "Forgot password screen title"
+  },
+  "forgotPasswordSubtitle": "Enter your email address and we'll send you a link to reset your password",
+  "@forgotPasswordSubtitle": {
+    "description": "Forgot password subtitle"
+  },
+  "sendResetLink": "Send reset link",
+  "@sendResetLink": {
+    "description": "Send reset link button text"
+  },
+  "resetPasswordEmailSent": "Reset link sent!",
+  "@resetPasswordEmailSent": {
+    "description": "Reset email sent success message"
+  },
+  "resetPasswordEmailSentDescription": "We've sent a password reset link to your email. Please check your inbox and follow the instructions.",
+  "@resetPasswordEmailSentDescription": {
+    "description": "Reset email sent description"
+  },
+  "checkYourEmail": "Check your email",
+  "@checkYourEmail": {
+    "description": "Check your email title"
+  },
+  "backToSignIn": "Back to sign in",
+  "@backToSignIn": {
+    "description": "Back to sign in link text"
+  },
+  "resetPasswordEmailInfo": "If you don't receive the email within a few minutes, please check your spam folder.",
+  "@resetPasswordEmailInfo": {
+    "description": "Reset password email info message"
+  },
+  "errorTitle": "Error",
+  "@errorTitle": {
+    "description": "Error dialog title"
+  },
+  "unexpectedError": "An unexpected error occurred",
+  "@unexpectedError": {
+    "description": "Unexpected error message"
+  },
+  "googleSignInCancelled": "Google sign in cancelled or failed",
+  "@googleSignInCancelled": {
+    "description": "Google sign in cancelled message"
+  },
+  "appleSignInCancelled": "Apple sign in cancelled or failed",
+  "@appleSignInCancelled": {
+    "description": "Apple sign in cancelled message"
+  },
+  "emailValidationRequired": "Please enter your email",
+  "@emailValidationRequired": {
+    "description": "Email validation required message"
+  },
+  "emailValidationInvalid": "Please enter a valid email",
+  "@emailValidationInvalid": {
+    "description": "Email validation invalid message"
+  },
+  "passwordValidationRequired": "Please enter your password",
+  "@passwordValidationRequired": {
+    "description": "Password validation required message"
+  },
+  "passwordValidationMinLength": "Password must be at least 12 characters",
+  "@passwordValidationMinLength": {
+    "description": "Password validation min length message"
+  },
+  "tooManyAttempts": "Too many login attempts",
+  "@tooManyAttempts": {
+    "description": "Rate limit error title"
+  },
+  "rateLimitMessage": "Please try again in {minutes} {minutes, plural, =1{minute} other{minutes}}",
+  "@rateLimitMessage": {
+    "description": "Rate limit error message with time remaining",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "backButton": "Back",
+  "@backButton": {
+    "description": "Back button label"
+  },
+  "signupWelcomeTitle": "Create an\naccount",
+  "@signupWelcomeTitle": {
+    "description": "Signup screen welcome title"
+  },
+  "signupWelcomeDescription": "Join us and start your adventure",
+  "@signupWelcomeDescription": {
+    "description": "Signup screen welcome description"
+  },
+  "confirmPassword": "Confirm password",
+  "@confirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "alreadyHaveAccount": "Already have an account? ",
+  "@alreadyHaveAccount": {
+    "description": "Already have account text"
+  },
+  "welcomeModalTitle": "Welcome!",
+  "@welcomeModalTitle": {
+    "description": "Welcome modal title"
+  },
+  "welcomeModalMessage": "Your 14-day Premium trial is activated",
+  "@welcomeModalMessage": {
+    "description": "Welcome modal message"
+  },
+  "getStartedButton": "Get Started >",
+  "@getStartedButton": {
+    "description": "Get started button text"
+  },
+  "passwordsDoNotMatch": "Passwords do not match",
+  "@passwordsDoNotMatch": {
+    "description": "Passwords do not match message"
+  },
+  "confirmPasswordRequired": "Please confirm your password",
+  "@confirmPasswordRequired": {
+    "description": "Confirm password required message"
+  },
+  "errorLoadingUser": "Error loading user",
+  "@errorLoadingUser": {
+    "description": "Error loading user message"
+  },
+  "okButton": "OK",
+  "@okButton": {
+    "description": "OK button text"
+  },
+  "monday": "Mon",
+  "@monday": {
+    "description": "Short day name for Monday"
+  },
+  "tuesday": "Tue",
+  "@tuesday": {
+    "description": "Short day name for Tuesday"
+  },
+  "wednesday": "Wed",
+  "@wednesday": {
+    "description": "Short day name for Wednesday"
+  },
+  "thursday": "Thu",
+  "@thursday": {
+    "description": "Short day name for Thursday"
+  },
+  "friday": "Fri",
+  "@friday": {
+    "description": "Short day name for Friday"
+  },
+  "saturday": "Sat",
+  "@saturday": {
+    "description": "Short day name for Saturday"
+  },
+  "sunday": "Sun",
+  "@sunday": {
+    "description": "Short day name for Sunday"
+  },
+  "activeAccount": "Active Account",
+  "@activeAccount": {
+    "description": "Status badge for active user account"
+  },
+  "statusPremium": "Premium",
+  "@statusPremium": {
+    "description": "Premium account status"
+  },
+  "statusTrial": "Trial",
+  "@statusTrial": {
+    "description": "Trial account status"
+  },
+  "statusFree": "Free",
+  "@statusFree": {
+    "description": "Free account status"
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Today label"
+  },
+  "yesterday": "Yesterday",
+  "@yesterday": {
+    "description": "Yesterday label"
+  },
+  "week": "Week",
+  "@week": {
+    "description": "Week label"
+  },
+  "month": "Month",
+  "@month": {
+    "description": "Month label"
+  },
+  "year": "Year",
+  "@year": {
+    "description": "Year label"
+  },
+  "thisWeek": "This week",
+  "@thisWeek": {
+    "description": "This week label"
+  },
+  "thisMonth": "This month",
+  "@thisMonth": {
+    "description": "This month label"
+  },
+  "thisYear": "This year",
+  "@thisYear": {
+    "description": "This year label"
+  },
+  "transactionDetails": "Transaction Details",
+  "@transactionDetails": {
+    "description": "Transaction details screen title"
+  },
+  "totalSpent": "Total Spent",
+  "@totalSpent": {
+    "description": "Total amount spent label"
+  },
+  "budgetTotal": "Budget total",
+  "@budgetTotal": {
+    "description": "Budget total label"
+  },
+  "remaining": "Remaining",
+  "@remaining": {
+    "description": "Remaining amount label"
+  },
+  "totalReceived": "Total Received",
+  "@totalReceived": {
+    "description": "Total amount received label"
+  },
+  "occurrences": "Occurrences",
+  "@occurrences": {
+    "description": "Number of occurrences label"
+  },
+  "occurrenceHistory": "Occurrence History",
+  "@occurrenceHistory": {
+    "description": "List of transaction occurrences title"
+  },
+  "sinceCreation": "Since creation",
+  "@sinceCreation": {
+    "description": "Since creation date label"
+  },
+  "recurringTransaction": "Recurring Transaction",
+  "@recurringTransaction": {
+    "description": "Recurring transaction label"
+  },
+  "oneTimeTransaction": "One-time Transaction",
+  "@oneTimeTransaction": {
+    "description": "One-time transaction label"
+  },
+  "premiumFeature": "Premium Feature",
+  "@premiumFeature": {
+    "description": "Premium feature title"
+  },
+  "premiumFeatureDescription": "This feature is available for Premium and Trial users",
+  "@premiumFeatureDescription": {
+    "description": "Premium feature description"
+  },
+  "premiumBenefits": "Premium Benefits",
+  "@premiumBenefits": {
+    "description": "Premium benefits title"
+  },
+  "detailedStatistics": "Detailed Statistics",
+  "@detailedStatistics": {
+    "description": "Detailed statistics benefit"
+  },
+  "advancedCharts": "Advanced Charts",
+  "@advancedCharts": {
+    "description": "Advanced charts benefit"
+  },
+  "financialInsights": "Financial Insights",
+  "@financialInsights": {
+    "description": "Financial insights benefit"
+  },
+  "unlimitedHistory": "Unlimited History",
+  "@unlimitedHistory": {
+    "description": "Unlimited history benefit"
+  },
+  "startFreeTrial": "Start 14-Day Free Trial",
+  "@startFreeTrial": {
+    "description": "Start free trial button"
+  },
+  "upgradeToPremium": "Upgrade to Premium",
+  "@upgradeToPremium": {
+    "description": "Upgrade to premium button"
+  },
+  "trialActivated": "Trial successfully activated! Enjoy 14 days of Premium features.",
+  "@trialActivated": {
+    "description": "Trial activated success message"
+  },
+  "errorActivatingTrial": "Error activating trial. Please try again.",
+  "@errorActivatingTrial": {
+    "description": "Error activating trial message"
+  },
+  "comingSoon": "Coming soon! In-app purchases will be available shortly.",
+  "@comingSoon": {
+    "description": "Coming soon message"
+  },
+  "pockets": "Pockets",
+  "@pockets": {
+    "description": "Pockets screen title"
+  },
+  "pocketCategoryNeeds": "Needs",
+  "@pocketCategoryNeeds": {
+    "description": "Pocket category needs"
+  },
+  "pocketCategoryWants": "Wants",
+  "@pocketCategoryWants": {
+    "description": "Pocket category wants"
+  },
+  "pocketCategorySavings": "Savings",
+  "@pocketCategorySavings": {
+    "description": "Pocket category savings"
+  },
+  "pocketHousing": "Housing",
+  "@pocketHousing": {
+    "description": "Default pocket housing"
+  },
+  "pocketFood": "Food",
+  "@pocketFood": {
+    "description": "Default pocket food"
+  },
+  "pocketTransport": "Transport",
+  "@pocketTransport": {
+    "description": "Default pocket transport"
+  },
+  "pocketEntertainment": "Entertainment",
+  "@pocketEntertainment": {
+    "description": "Default pocket entertainment"
+  },
+  "pocketShopping": "Shopping",
+  "@pocketShopping": {
+    "description": "Default pocket shopping"
+  },
+  "pocketEmergencyFund": "Emergency Fund",
+  "@pocketEmergencyFund": {
+    "description": "Default pocket emergency fund"
+  },
+  "pocketVacation": "Vacation",
+  "@pocketVacation": {
+    "description": "Default pocket vacation"
+  },
+  "pocketProjects": "Projects",
+  "@pocketProjects": {
+    "description": "Default pocket projects"
+  },
+  "savingsGoalNone": "No Goal",
+  "@savingsGoalNone": {
+    "description": "Savings goal type none"
+  },
+  "savingsGoalFixedAmount": "Fixed Amount",
+  "@savingsGoalFixedAmount": {
+    "description": "Savings goal type fixed amount"
+  },
+  "savingsGoalTargetDate": "Target with Deadline",
+  "@savingsGoalTargetDate": {
+    "description": "Savings goal type target date"
+  },
+  "badgeBudgetExceeded": "Over Budget",
+  "@badgeBudgetExceeded": {
+    "description": "Badge for budget exceeded"
+  },
+  "badgeGoalReached": "Goal Reached",
+  "@badgeGoalReached": {
+    "description": "Badge for goal reached"
+  },
+  "errorPocketNameRequired": "Name is required",
+  "@errorPocketNameRequired": {
+    "description": "Error pocket name required"
+  },
+  "errorPocketNameTooLong": "Name is too long (max 100 characters)",
+  "@errorPocketNameTooLong": {
+    "description": "Error pocket name too long"
+  },
+  "errorPocketIconRequired": "Icon is required",
+  "@errorPocketIconRequired": {
+    "description": "Error pocket icon required"
+  },
+  "errorPocketInvalidColor": "Invalid color format",
+  "@errorPocketInvalidColor": {
+    "description": "Error pocket invalid color"
+  },
+  "errorPocketBudgetNegative": "Budget cannot be negative",
+  "@errorPocketBudgetNegative": {
+    "description": "Error pocket budget negative"
+  },
+  "errorPocketSpentNegative": "Spent amount cannot be negative",
+  "@errorPocketSpentNegative": {
+    "description": "Error pocket spent negative"
+  },
+  "errorExpensePocketCannotHaveSavings": "Expense pockets cannot have savings",
+  "@errorExpensePocketCannotHaveSavings": {
+    "description": "Error expense pocket cannot have savings"
+  },
+  "errorSavingsPocketCannotHaveBudget": "Savings pockets cannot have budget",
+  "@errorSavingsPocketCannotHaveBudget": {
+    "description": "Error savings pocket cannot have budget"
+  },
+  "errorPocketSavedAmountNegative": "Saved amount cannot be negative",
+  "@errorPocketSavedAmountNegative": {
+    "description": "Error pocket saved amount negative"
+  },
+  "errorPocketMonthlySavingsNegative": "Monthly savings cannot be negative",
+  "@errorPocketMonthlySavingsNegative": {
+    "description": "Error pocket monthly savings negative"
+  },
+  "errorSavingsGoalAmountRequired": "Target amount is required",
+  "@errorSavingsGoalAmountRequired": {
+    "description": "Error savings goal amount required"
+  },
+  "errorSavingsGoalDateRequired": "Target date is required",
+  "@errorSavingsGoalDateRequired": {
+    "description": "Error savings goal date required"
+  },
+  "errorSavingsGoalDatePast": "Target date must be in the future",
+  "@errorSavingsGoalDatePast": {
+    "description": "Error savings goal date past"
+  },
+  "recurrenceNone": "None",
+  "@recurrenceNone": {
+    "description": "Recurrence type none"
+  },
+  "recurrenceDaily": "Daily",
+  "@recurrenceDaily": {
+    "description": "Recurrence type daily"
+  },
+  "recurrenceWeekly": "Weekly",
+  "@recurrenceWeekly": {
+    "description": "Recurrence type weekly"
+  },
+  "recurrenceBiweekly": "Biweekly",
+  "@recurrenceBiweekly": {
+    "description": "Recurrence type biweekly"
+  },
+  "recurrenceMonthly": "Monthly",
+  "@recurrenceMonthly": {
+    "description": "Recurrence type monthly"
+  },
+  "recurrenceQuarterly": "Quarterly",
+  "@recurrenceQuarterly": {
+    "description": "Recurrence type quarterly"
+  },
+  "recurrenceYearly": "Yearly",
+  "@recurrenceYearly": {
+    "description": "Recurrence type yearly"
+  },
+  "subscriptionPremiumTitle": "Premium",
+  "@subscriptionPremiumTitle": {
+    "description": "Premium subscription title"
+  },
+  "subscriptionUnlockFeatures": "Unlock all\nPremium features",
+  "@subscriptionUnlockFeatures": {
+    "description": "Unlock premium features title"
+  },
+  "subscriptionMonthly": "Monthly",
+  "@subscriptionMonthly": {
+    "description": "Monthly subscription type"
+  },
+  "subscriptionYearly": "Yearly",
+  "@subscriptionYearly": {
+    "description": "Yearly subscription type"
+  },
+  "subscriptionPerMonth": "/ month",
+  "@subscriptionPerMonth": {
+    "description": "Per month text"
+  },
+  "subscriptionPerYear": "/ year",
+  "@subscriptionPerYear": {
+    "description": "Per year text"
+  },
+  "subscriptionEquivalent": "Or {price} / month",
+  "@subscriptionEquivalent": {
+    "description": "Equivalent monthly price",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionSavePercent": "Save {percent}%",
+  "@subscriptionSavePercent": {
+    "description": "Savings percentage",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "subscriptionBestValue": "Best value",
+  "@subscriptionBestValue": {
+    "description": "Best value badge"
+  },
+  "subscriptionStartNow": "Start now",
+  "@subscriptionStartNow": {
+    "description": "Start subscription button"
+  },
+  "subscriptionRestore": "Restore purchases",
+  "@subscriptionRestore": {
+    "description": "Restore purchases button"
+  },
+  "subscriptionFeaturesTitle": "Everything you get:",
+  "@subscriptionFeaturesTitle": {
+    "description": "Features list title"
+  },
+  "subscriptionFeatureAdvancedStats": "Advanced statistics",
+  "@subscriptionFeatureAdvancedStats": {
+    "description": "Advanced statistics feature"
+  },
+  "subscriptionFeatureAdvancedStatsDesc": "Analyze your spending in depth",
+  "@subscriptionFeatureAdvancedStatsDesc": {
+    "description": "Advanced statistics feature description"
+  },
+  "subscriptionFeatureUnlimitedPockets": "Unlimited pockets",
+  "@subscriptionFeatureUnlimitedPockets": {
+    "description": "Unlimited pockets feature"
+  },
+  "subscriptionFeatureUnlimitedPocketsDesc": "Create as many pockets as you want",
+  "@subscriptionFeatureUnlimitedPocketsDesc": {
+    "description": "Unlimited pockets feature description"
+  },
+  "subscriptionFeatureDataExport": "Data export",
+  "@subscriptionFeatureDataExport": {
+    "description": "Data export feature"
+  },
+  "subscriptionFeatureDataExportDesc": "Export your data in CSV or PDF",
+  "@subscriptionFeatureDataExportDesc": {
+    "description": "Data export feature description"
+  },
+  "subscriptionFeaturePrioritySupport": "Priority support",
+  "@subscriptionFeaturePrioritySupport": {
+    "description": "Priority support feature"
+  },
+  "subscriptionFeaturePrioritySupportDesc": "Fast and personalized assistance",
+  "@subscriptionFeaturePrioritySupportDesc": {
+    "description": "Priority support feature description"
+  },
+  "subscriptionFeatureCloudSync": "Cloud sync",
+  "@subscriptionFeatureCloudSync": {
+    "description": "Cloud sync feature"
+  },
+  "subscriptionFeatureCloudSyncDesc": "Access your data anywhere",
+  "@subscriptionFeatureCloudSyncDesc": {
+    "description": "Cloud sync feature description"
+  },
+  "subscriptionFeatureSmartReminders": "Smart reminders",
+  "@subscriptionFeatureSmartReminders": {
+    "description": "Smart reminders feature"
+  },
+  "subscriptionFeatureSmartRemindersDesc": "Never exceed your budget again",
+  "@subscriptionFeatureSmartRemindersDesc": {
+    "description": "Smart reminders feature description"
+  },
+  "subscriptionTermsAndConditions": "By continuing, you accept our Terms of Use\nand Privacy Policy",
+  "@subscriptionTermsAndConditions": {
+    "description": "Terms and conditions text"
+  },
+  "subscriptionPurchasing": "Processing your purchase...",
+  "@subscriptionPurchasing": {
+    "description": "Purchasing subscription loading message"
+  },
+  "subscriptionRestoring": "Restoring purchases...",
+  "@subscriptionRestoring": {
+    "description": "Restoring purchases loading message"
+  },
+  "subscriptionPurchaseSuccess": "Subscription activated successfully! 🎉",
+  "@subscriptionPurchaseSuccess": {
+    "description": "Purchase success message"
+  },
+  "subscriptionRestoreSuccess": "Purchases restored successfully!",
+  "@subscriptionRestoreSuccess": {
+    "description": "Restore success message"
+  },
+  "subscriptionPurchaseError": "Error during purchase: {error}",
+  "@subscriptionPurchaseError": {
+    "description": "Purchase error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "subscriptionRestoreError": "Error during restoration: {error}",
+  "@subscriptionRestoreError": {
+    "description": "Restore error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "freeTrialTitle": "Start your Free Trial",
+  "@freeTrialTitle": {
+    "description": "Free trial section title"
+  },
+  "freeTrialDuration": "14 days free",
+  "@freeTrialDuration": {
+    "description": "Free trial duration"
+  },
+  "freeTrialStartButton": "Start 14-Day Free Trial",
+  "@freeTrialStartButton": {
+    "description": "Start free trial button"
+  },
+  "freeTrialDescription": "Try all Premium features\nfor 14 days, no payment required",
+  "@freeTrialDescription": {
+    "description": "Free trial description"
+  },
+  "freeTrialActive": "Trial active",
+  "@freeTrialActive": {
+    "description": "Trial active status"
+  },
+  "freeTrialDaysLeft": "{days} days left",
+  "@freeTrialDaysLeft": {
+    "description": "Days left in trial",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "freeTrialExpired": "Trial expired",
+  "@freeTrialExpired": {
+    "description": "Trial expired status"
+  },
+  "freeTrialActivating": "Activating your free trial...",
+  "@freeTrialActivating": {
+    "description": "Activating trial loading message"
+  },
+  "freeTrialActivationSuccess": "Free trial activated! Enjoy 14 days of Premium 🎉",
+  "@freeTrialActivationSuccess": {
+    "description": "Trial activation success message"
+  },
+  "freeTrialActivationError": "Error activating trial: {error}",
+  "@freeTrialActivationError": {
+    "description": "Trial activation error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "freeTrialAlreadyUsed": "You have already used your free trial",
+  "@freeTrialAlreadyUsed": {
+    "description": "Trial already used message"
+  },
+  "subscriptionAfterTrial": "After trial",
+  "@subscriptionAfterTrial": {
+    "description": "After trial label"
+  },
+  "subscriptionContinueWithPremium": "Continue with Premium",
+  "@subscriptionContinueWithPremium": {
+    "description": "Continue with premium after trial"
+  },
+  "all": "All",
+  "@all": {
+    "description": "All filter tab"
+  },
+  "noPocketsYet": "No pockets yet",
+  "@noPocketsYet": {
+    "description": "Empty state message when no pockets"
+  },
+  "createFirstPocket": "Create your first pocket to get started",
+  "@createFirstPocket": {
+    "description": "Empty state subtitle to create first pocket"
+  },
+  "noPocketsInCategory": "No pockets in this category",
+  "@noPocketsInCategory": {
+    "description": "Empty state message when no pockets in filtered category"
+  },
+  "createDefaultPockets": "Create default pockets",
+  "@createDefaultPockets": {
+    "description": "Button to create default pockets"
+  },
+  "addTransactionLogo": "Add Transaction Logo",
+  "@addTransactionLogo": {
+    "description": "Title for adding logo to transaction"
+  },
+  "chooseLogoSource": "Choose a logo source for your transaction",
+  "@chooseLogoSource": {
+    "description": "Message for logo source selection"
+  },
+  "photoLibrary": "Photo Library",
+  "@photoLibrary": {
+    "description": "Option to choose from photo library"
+  },
+  "searchBrandLogo": "Search Brand Logo",
+  "@searchBrandLogo": {
+    "description": "Option to search for brand logo"
+  },
+  "selectBrand": "Select a Brand",
+  "@selectBrand": {
+    "description": "Title for brand selection modal"
+  },
+  "information": "Information",
+  "type": "Type",
+  "notes": "Notes",
+  "image": "Image",
+  "expense": "Expense",
+  "income": "Income",
+  "assigned": "Assigned",
+  "deleteTransactionTitle": "Delete transaction",
+  "deleteTransactionMessage": "Are you sure you want to delete this transaction? This action is irreversible.",
+  "transactionDeletedSuccess": "Transaction deleted successfully",
+  "transactionDeleteError": "Unable to delete transaction",
+  "recurrence": "Recurrence",
+  "deletePocketTitle": "Delete pocket",
+  "deletePocketMessage": "Are you sure you want to delete this pocket? This action is irreversible.",
+  "pocketDeletedSuccess": "Pocket deleted successfully",
+  "pocketDeleteError": "Unable to delete pocket",
+  "notifications": "Notifications",
+  "notificationsCenter": "Notification Center",
+  "notificationsSettings": "Notification Settings",
+  "notificationType": "Notification Type",
+  "notificationTypes": "Notification Types",
+  "budgetExceededNotif": "Budget Exceeded",
+  "budgetExceededNotifDesc": "Get alerted when a pocket budget is exceeded",
+  "goalReachedNotif": "Goal Reached",
+  "goalReachedNotifDesc": "Receive a notification when a savings goal is reached",
+  "monthEndReminderNotif": "Month-End Reminder",
+  "monthEndReminderNotifDesc": "Receive a reminder at the end of the month",
+  "weeklySummaryNotif": "Weekly Summary",
+  "weeklySummaryNotifDesc": "Receive a summary of your finances every week",
+  "monthlyReportNotif": "Monthly Report",
+  "monthlyReportNotifDesc": "Receive a detailed report every month",
+  "markAsRead": "Mark as read",
+  "markAsUnread": "Mark as unread",
+  "markAllAsRead": "Mark all as read",
+  "deleteNotification": "Delete notification",
+  "deleteAllNotifications": "Delete all",
+  "noNotifications": "No notifications",
+  "noNotificationsMessage": "You have no notifications at the moment",
+  "unreadNotifications": "Unread",
+  "readNotifications": "Read",
+  "allNotifications": "All",
+  "notificationRead": "Read",
+  "notificationUnread": "Unread",
+  "notificationDeletedSuccess": "Notification deleted",
+  "notificationDeleteError": "Unable to delete notification",
+  "notificationsPreferences": "Notification Preferences",
+  "enableNotificationsPrompt": "Enable notifications to stay informed",
+  "createPocket": "Create Pocket",
+  "addNeedsPocket": "Add Needs Pocket",
+  "addWantsPocket": "Add Wants Pocket",
+  "addSavingsPocket": "Add Savings Pocket",
+  "selectPocketCategory": "Select a Category",
+  "selectPocketCategoryDescription": "Choose the type of pocket you want to create according to the 50/30/20 rule",
+  "needsDescription": "Essential expenses like housing, food, and transportation",
+  "wantsDescription": "Discretionary spending like entertainment, hobbies, and shopping",
+  "savingsDescription": "Money set aside for future goals, emergencies, and investments",
+  "pocketName": "Pocket Name",
+  "pocketNameHint": "e.g., Groceries, Rent, Vacation",
+  "savingsPocketNameHint": "e.g., Emergency Fund, Vacation, New Car",
+  "monthlyBudget": "Monthly Budget",
+  "monthlySavingsAmount": "Monthly Savings Amount",
+  "monthlySavingsHint": "Optional automatic monthly savings",
+  "targetAmount": "Target Amount",
+  "targetDate": "Target Date",
+  "selectTargetDate": "Select a target date",
+  "savingsGoalType": "Savings Goal Type",
+  "savingsGoalNoneDescription": "Simple savings without a specific goal",
+  "savingsGoalFixedAmountDescription": "Save until reaching a specific amount",
+  "savingsGoalTargetDateDescription": "Reach a goal by a specific date",
+  "selectIcon": "Select an Icon",
+  "selectColor": "Select a Color",
+  "errorBudgetRequired": "Budget is required",
+  "errorCreatingPocket": "Error creating pocket",
+  "pocketDetails": "Pocket Details",
+  "@pocketDetails": {
+    "description": "Pocket details screen title"
+  },
+  "editPocket": "Edit Pocket",
+  "@editPocket": {
+    "description": "Edit pocket screen title"
+  },
+  "pocketNotFound": "Pocket not found",
+  "@pocketNotFound": {
+    "description": "Pocket not found message"
+  },
+  "pocketNotFoundMessage": "This pocket does not exist or has been deleted",
+  "@pocketNotFoundMessage": {
+    "description": "Pocket not found detailed message"
+  },
+  "defaultPocketNameCannotBeModified": "Default pocket names cannot be modified",
+  "@defaultPocketNameCannotBeModified": {
+    "description": "Message when trying to edit default pocket name"
+  },
+  "savingsGoal": "Savings Goal",
+  "@savingsGoal": {
+    "description": "Savings goal label"
+  },
+  "targetAmountLabel": "Target Amount",
+  "@targetAmountLabel": {
+    "description": "Target amount field label"
+  },
+  "invalidAmount": "Invalid amount",
+  "@invalidAmount": {
+    "description": "Invalid amount error message"
+  },
+  "category": "Category",
+  "@category": {
+    "description": "Category label"
+  },
+  "nonEditable": "(Non editable)",
+  "@nonEditable": {
+    "description": "Non editable indicator"
+  },
+  "saving": "Saving...",
+  "@saving": {
+    "description": "Saving in progress message"
+  },
+  "assignTransactions": "Assign Transactions",
+  "@assignTransactions": {
+    "description": "Assign transactions button label"
+  },
+  "assignTransactionsTo": "Assign to {pocketName}",
+  "@assignTransactionsTo": {
+    "description": "Assign transactions screen title with pocket name",
+    "placeholders": {
+      "pocketName": {
+        "type": "String"
+      }
+    }
+  },
+  "searchTransaction": "Search for a transaction...",
+  "@searchTransaction": {
+    "description": "Search transaction field label and hint"
+  },
+  "noExpensesAvailable": "No expenses available",
+  "@noExpensesAvailable": {
+    "description": "Empty state when no expenses available"
+  },
+  "noExpensesFound": "No expenses found",
+  "@noExpensesFound": {
+    "description": "Empty state when search returns no results"
+  },
+  "createExpenseTransactionsFirst": "Create expense transactions first",
+  "@createExpenseTransactionsFirst": {
+    "description": "Message to create expense transactions first"
+  },
+  "tryOtherKeywords": "Try with other keywords",
+  "@tryOtherKeywords": {
+    "description": "Message when search returns no results"
+  },
+  "alreadyAssignedToOtherPocket": "Already assigned to another pocket",
+  "@alreadyAssignedToOtherPocket": {
+    "description": "Message when transaction is assigned to another pocket"
+  },
+  "assignedToThisPocket": "Assigned to this pocket (uncheck to remove)",
+  "@assignedToThisPocket": {
+    "description": "Message when transaction is assigned to current pocket"
+  },
+  "transactionsToAssignAndRemove": "{toAssign} to assign, {toRemove} to remove",
+  "@transactionsToAssignAndRemove": {
+    "description": "Message showing transactions to assign and remove",
+    "placeholders": {
+      "toAssign": {
+        "type": "int"
+      },
+      "toRemove": {
+        "type": "int"
+      }
+    }
+  },
+  "transactionsToAssign": "{count} transaction{count, plural, =1{} other{s}} to assign",
+  "@transactionsToAssign": {
+    "description": "Message showing transactions to assign",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "transactionsToRemove": "{count} transaction{count, plural, =1{} other{s}} to remove",
+  "@transactionsToRemove": {
+    "description": "Message showing transactions to remove",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "modifyingInProgress": "Modifying...",
+  "@modifyingInProgress": {
+    "description": "Message when modifications are in progress"
+  },
+  "validateModifications": "Validate modifications",
+  "@validateModifications": {
+    "description": "Button to validate modifications"
+  },
+  "pocketNotFound": "Pocket not found",
+  "@pocketNotFound": {
+    "description": "Error message when pocket is not found"
+  },
+  "transactionNotFound": "Transaction not found",
+  "@transactionNotFound": {
+    "description": "Error message when transaction is not found"
+  },
+  "transactionsAssignedAndRemoved": "{assigned} transaction{assigned, plural, =1{ assigned} other{s assigned}}, {removed} removed{removed, plural, =1{} other{s}}",
+  "@transactionsAssignedAndRemoved": {
+    "description": "Success message when transactions are assigned and removed",
+    "placeholders": {
+      "assigned": {
+        "type": "int"
+      },
+      "removed": {
+        "type": "int"
+      }
+    }
+  },
+  "transactionsAssigned": "{count} transaction{count, plural, =1{ assigned} other{s assigned}}",
+  "@transactionsAssigned": {
+    "description": "Success message when transactions are assigned",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "transactionsRemoved": "{count} transaction{count, plural, =1{ removed} other{s removed}}",
+  "@transactionsRemoved": {
+    "description": "Success message when transactions are removed",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "active": "Active",
+  "@active": {
+    "description": "Active status label"
+  },
+  "inactive": "Inactive",
+  "@inactive": {
+    "description": "Inactive status label"
+  },
+  "defaultLabel": "Default",
+  "@defaultLabel": {
+    "description": "Default label"
+  },
+  "budget": "Budget",
+  "@budget": {
+    "description": "Budget label"
+  },
+  "spent": "Spent",
+  "@spent": {
+    "description": "Spent label"
+  },
+  "progress": "Progress",
+  "@progress": {
+    "description": "Progress label"
+  },
+  "savings": "Savings",
+  "@savings": {
+    "description": "Savings label"
+  },
+  "savedAmount": "Saved Amount",
+  "@savedAmount": {
+    "description": "Saved amount label"
+  },
+  "goal": "Goal",
+  "@goal": {
+    "description": "Goal label"
+  },
+  "progression": "Progression",
+  "@progression": {
+    "description": "Progression label"
+  },
+  "addCategory": "Add Category",
+  "@addCategory": {
+    "description": "Option to add a category"
+  },
+  "more": "More",
+  "@more": {
+    "description": "Label for More menu"
+  },
+  "categories": "Categories",
+  "@categories": {
+    "description": "Categories screen title"
+  },
+  "defaultCategories": "Default Categories",
+  "@defaultCategories": {
+    "description": "Section title for default categories"
+  },
+  "customCategories": "Custom Categories",
+  "@customCategories": {
+    "description": "Section title for custom categories"
+  },
+  "custom": "Custom",
+  "@custom": {
+    "description": "Custom label"
+  },
+  "defaultCategory": "Default",
+  "@defaultCategory": {
+    "description": "Default category label"
+  },
+  "createCategory": "Create Category",
+  "@createCategory": {
+    "description": "Create category button text"
+  },
+  "editCategory": "Edit Category",
+  "@editCategory": {
+    "description": "Edit category screen title"
+  },
+  "updateCategory": "Update Category",
+  "@updateCategory": {
+    "description": "Update category button text"
+  },
+  "deleteCategory": "Delete Category",
+  "@deleteCategory": {
+    "description": "Delete category button text"
+  },
+  "categoryName": "Category Name",
+  "@categoryName": {
+    "description": "Category name field label"
+  },
+  "categoryNameHint": "e.g., Groceries, Rent, Utilities",
+  "@categoryNameHint": {
+    "description": "Category name field hint"
+  },
+  "categoryType": "Category Type",
+  "@categoryType": {
+    "description": "Category type field label"
+  },
+  "expenses": "Expenses",
+  "@expenses": {
+    "description": "Expenses label"
+  },
+  "incomes": "Incomes",
+  "@incomes": {
+    "description": "Incomes label"
+  },
+  "expense": "Expense",
+  "@expense": {
+    "description": "Expense label"
+  },
+  "income": "Income",
+  "@income": {
+    "description": "Income label"
+  },
+  "expenseCategory": "Expense Category",
+  "@expenseCategory": {
+    "description": "Expense category label"
+  },
+  "incomeCategory": "Income Category",
+  "@incomeCategory": {
+    "description": "Income category label"
+  },
+  "expenseCategoryDescription": "Track your spending and manage your budget",
+  "@expenseCategoryDescription": {
+    "description": "Expense category description"
+  },
+  "incomeCategoryDescription": "Track your earnings and revenue sources",
+  "@incomeCategoryDescription": {
+    "description": "Income category description"
+  },
+  "noCategoriesFound": "No Categories Found",
+  "@noCategoriesFound": {
+    "description": "Empty state title when no categories found"
+  },
+  "noCategoriesFoundDescription": "Create your first custom category to get started",
+  "@noCategoriesFoundDescription": {
+    "description": "Empty state description when no categories found"
+  },
+  "premiumRequired": "Premium Required",
+  "@premiumRequired": {
+    "description": "Premium required message"
+  },
+  "premiumRequiredForCustomCategories": "Premium subscription required to create custom categories",
+  "@premiumRequiredForCustomCategories": {
+    "description": "Premium required message for custom categories"
+  },
+  "errorCategoryNameRequired": "Category name is required",
+  "@errorCategoryNameRequired": {
+    "description": "Error message when category name is empty"
+  },
+  "errorCategoryNameTooLong": "Category name must be less than 50 characters",
+  "@errorCategoryNameTooLong": {
+    "description": "Error message when category name is too long"
+  },
+  "errorCreatingCategory": "Failed to create category",
+  "@errorCreatingCategory": {
+    "description": "Error message when category creation fails"
+  },
+  "errorUpdatingCategory": "Failed to update category",
+  "@errorUpdatingCategory": {
+    "description": "Error message when category update fails"
+  },
+  "errorDeletingCategory": "Failed to delete category",
+  "@errorDeletingCategory": {
+    "description": "Error message when category deletion fails"
+  },
+  "categoryCreatedSuccess": "Category created successfully",
+  "@categoryCreatedSuccess": {
+    "description": "Success message when category is created"
+  },
+  "categoryUpdatedSuccess": "Category updated successfully",
+  "@categoryUpdatedSuccess": {
+    "description": "Success message when category is updated"
+  },
+  "categoryDeletedSuccess": "Category deleted successfully",
+  "@categoryDeletedSuccess": {
+    "description": "Success message when category is deleted"
+  },
+  "deleteCategoryConfirmation": "Are you sure you want to delete this category? This action cannot be undone.",
+  "@deleteCategoryConfirmation": {
+    "description": "Confirmation message when deleting a category"
+  },
+  "noCustomCategoriesYet": "No Custom Categories Yet",
+  "@noCustomCategoriesYet": {
+    "description": "Title when user has no custom categories (premium user)"
+  },
+  "noCustomCategoriesYetDescription": "Create your first custom category to better organize your finances",
+  "@noCustomCategoriesYetDescription": {
+    "description": "Description when user has no custom categories (premium user)"
+  },
+  "noCustomCategoriesPremium": "Unlock Custom Categories",
+  "@noCustomCategoriesPremium": {
+    "description": "Title when user has no custom categories (free user)"
+  },
+  "noCustomCategoriesPremiumDescription": "Upgrade to Premium to create unlimited custom categories",
+  "@noCustomCategoriesPremiumDescription": {
+    "description": "Description when user has no custom categories (free user)"
+  },
+  "createFirstCategory": "Create First Category",
+  "@createFirstCategory": {
+    "description": "Button text to create first custom category"
+  },
+  "upgradeToPremium": "Upgrade to Premium",
+  "@upgradeToPremium": {
+    "description": "Button text to upgrade to premium"
+  },
+  "deleteAccount": "Delete Account & Data",
+  "@deleteAccount": {
+    "description": "Button text to delete account"
+  },
+  "deleteAccountConfirmTitle": "Delete Account?",
+  "@deleteAccountConfirmTitle": {
+    "description": "Title for delete account confirmation dialog"
+  },
+  "deleteAccountConfirmMessage": "This will permanently delete your account and ALL associated data:\n\n• All transactions\n• All custom categories\n• All pockets\n• All settings\n\nThis action CANNOT be undone.",
+  "@deleteAccountConfirmMessage": {
+    "description": "Message for delete account confirmation dialog"
+  },
+  "deleteAccountConfirmButton": "Yes, Delete Everything",
+  "@deleteAccountConfirmButton": {
+    "description": "Confirm button text for delete account dialog"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "accountDeleted": "Account successfully deleted",
+  "@accountDeleted": {
+    "description": "Success message after account deletion"
+  },
+  "errorDeletingAccount": "Failed to delete account",
+  "@errorDeletingAccount": {
+    "description": "Error message when account deletion fails"
+  },
+  "legalNotice": "Legal Notice",
+  "@legalNotice": {
+    "description": "Legal notice menu item"
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy policy menu item"
+  },
+  "termsOfUse": "Terms of Use",
+  "@termsOfUse": {
+    "description": "Terms of use menu item"
+  },
+  "legal": "Legal",
+  "@legal": {
+    "description": "Legal section title"
+  },
+  "about": "About",
+  "@about": {
+    "description": "About section title"
+  },
+  "aboutApp": "About the app",
+  "@aboutApp": {
+    "description": "About the app button text"
+  },
+  "aboutAppTitle": "Pocketly",
+  "@aboutAppTitle": {
+    "description": "About modal title"
+  },
+  "aboutAppDescription": "A simple and intuitive app to visualize your expenses by week and month, and save smartly with the 50/30/20 method.",
+  "@aboutAppDescription": {
+    "description": "About app description"
+  },
+  "aboutFeatureWeeklyView": "Quick weekly expense visualization",
+  "@aboutFeatureWeeklyView": {
+    "description": "About feature: weekly view"
+  },
+  "aboutFeatureMonthlyTracking": "Detailed monthly tracking",
+  "@aboutFeatureMonthlyTracking": {
+    "description": "About feature: monthly tracking"
+  },
+  "aboutFeature503020": "Save with the 50/30/20 method",
+  "@aboutFeature503020": {
+    "description": "About feature: 50/30/20 method"
+  },
+  "aboutCreator": "Created with ❤️ by Minhaj",
+  "@aboutCreator": {
+    "description": "About creator message"
+  },
+  "visitWebsite": "Visit website",
+  "@visitWebsite": {
+    "description": "Visit website button"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button"
   }
+,
+  "errorEmailRequired": "Email is required",
+  "errorPasswordRequired": "Password is required",
+  "errorPasswordMinLength": "Password must be at least 6 characters",
+  "errorInvalidAmount": "Invalid amount",
+  "errorAmountNegative": "Amount cannot be negative",
+  "errorAmountPositive": "Amount must be positive",
+  "errorTransactionNameRequired": "Transaction name is required",
+  "errorCategoryNameRequired": "Category name is required",
+  "errorUserNotAuthenticated": "User not authenticated",
+  "errorNetworkConnection": "Network connection error",
+  "errorServerError": "Server error",
+  "errorCacheOperation": "Cache operation error",
+  "errorCategoryNotFound": "Category not found",
+  "errorInvalidData": "Invalid data",
+  "errorSaveFailed": "Save failed",
+  "errorLoadFailed": "Load failed",
+  "errorDeleteFailed": "Delete failed",
+  "errorInitializationFailed": "Initialization failed"
 }

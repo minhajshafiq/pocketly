@@ -7,15 +7,38 @@
   "email": "Email",
   "password": "Mot de passe",
   "transactions": "Transactions",
+  "transactionHistory": "Historique",
+  "back": "Retour",
   "balance": "Solde",
   "amount": "Montant",
   "date": "Date",
   "description": "Description",
   "save": "Enregistrer",
   "cancel": "Annuler",
+  "skip": "Passer",
   "delete": "Supprimer",
   "edit": "Modifier",
   "add": "Ajouter",
+  "onboardingStepProgress": "Étape {current} sur {total}",
+  "@onboardingStepProgress": {
+    "description": "Indicateur de progression de l'onboarding",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingStep1Title": "Prenez le contrôle de votre argent",
+  "onboardingStep1Description": "Pocketly vous guide simplement pour appliquer la règle 50/30/20, suivre vos dépenses et faire grandir votre épargne.",
+  "onboardingHighlightBudgetTitle": "Budgeter comme un pro",
+  "onboardingHighlightBudgetDescription": "Rassemblez vos besoins, envies et épargne au même endroit avec des limites intelligentes.",
+  "onboardingHighlightInsightsTitle": "Insights instantanés",
+  "onboardingHighlightInsightsDescription": "Comprenez où va chaque euro avec des graphiques en direct et des résumés hebdomadaires.",
+  "onboardingHighlightAutomationTitle": "Accompagnement automatique",
+  "onboardingHighlightAutomationDescription": "Pocketly vous rappelle de rester sur la bonne trajectoire et célèbre chaque palier.",
   "error": "Erreur",
   "success": "Succès",
   "loading": "Chargement...",
@@ -27,9 +50,21 @@
   "trackSpendingDescription": "Obtenez des insights sur vos habitudes de dépenses avec de beaux graphiques et des analyses détaillées pour prendre des décisions financières éclairées.",
   "saveSmartTitle": "Économisez Intelligemment",
   "saveSmartDescription": "Définissez des objectifs d'épargne, suivez vos progrès et obtenez des conseils personnalisés pour vous aider à économiser plus d'argent chaque mois.",
-  "secureTitle": "Sécurisé et Privé",
-  "secureDescription": "Vos données financières sont chiffrées et stockées en toute sécurité. Nous ne partageons jamais vos informations avec des tiers.",
   "getStarted": "Commencer",
+  "onboardingSalaryTitle": "Définissez votre salaire mensuel",
+  "onboardingSalarySubtitle": "Nous appliquons automatiquement la méthode 50/30/20 pour savoir exactement combien allouer.",
+  "onboardingSalaryFieldLabel": "Revenu net mensuel",
+  "onboardingSalaryFieldHint": "ex: 2500",
+  "onboardingSalaryHelper": "Vous pourrez modifier ce montant plus tard dans vos paramètres.",
+  "onboardingSalaryBreakdownTitle": "Pocketly répartit pour vous",
+  "onboardingSalaryInputError": "Veuillez saisir un salaire valide",
+  "onboardingContinue": "Continuer",
+  "onboardingNotificationsTitle": "Activez les notifications intelligentes",
+  "onboardingNotificationsSubtitle": "Choisissez les alertes qui vous gardent sur la bonne voie et ne manquez rien d'important.",
+  "onboardingNotificationsDescription": "Pocketly envoie uniquement les notifications utiles : alertes budget, célébrations d'objectifs et résumés hebdomadaires.",
+  "onboardingFinish": "Aller au dashboard",
+  "onboardingCongratsTitle": "Vous êtes prêt·e !",
+  "onboardingCongratsSubtitle": "Vos finances ont un plan. Continuons sur Pocketly.",
   "notificationPermissionTitle": "Autorisation de notification",
   "notificationPermissionMessage": "Nous avons besoin de votre autorisation pour vous envoyer des notifications",
   "notificationPermissionDenied": "Autorisation de notification refusée",
@@ -57,5 +92,796 @@
   "notificationActionMessage": "Une action est nécessaire",
   "notificationActionButton": "Action",
   "notificationLoading": "Chargement",
-  "notificationLoadingMessage": "Veuillez patienter..."
+  "notificationLoadingMessage": "Veuillez patienter...",
+  "food": "Nourriture",
+  "housing": "Logement",
+  "transport": "Transport",
+  "health": "Santé",
+  "leisure": "Loisirs",
+  "shopping": "Shopping",
+  "salary": "Salaire",
+  "bonus": "Prime",
+  "investment": "Investissement",
+  "settings": "Paramètres",
+  "profile": "Profil",
+  "editProfile": "Modifier le profil",
+  "enterFullName": "Entrez votre nom complet",
+  "uploadingAvatar": "Envoi de l'avatar...",
+  "profileUpdated": "Profil mis à jour avec succès",
+  "errorUpdatingProfile": "Erreur lors de la mise à jour du profil",
+  "appearance": "Apparence",
+  "preferences": "Préférences",
+  "account": "Compte",
+  "theme": "Thème",
+  "language": "Langue",
+  "currency": "Devise",
+  "fullName": "Nom complet",
+  "notAvailable": "Non disponible",
+  "errorLoadingProfile": "Erreur de chargement du profil",
+  "selectLanguage": "Sélectionner la langue",
+  "selectCurrency": "Sélectionner la devise",
+  "logoutError": "Échec de la déconnexion. Veuillez réessayer.",
+  "logoutConfirmation": "Êtes-vous sûr de vouloir vous déconnecter ?",
+  "welcome": "Bienvenue",
+  "currentBalance": "Solde actuel",
+  "availableBalance": "Solde disponible",
+  "last24Hours": "Dernière 24h",
+  "weeklyExpenses": "Dépensé cette semaine",
+  "recentTransactions": "Transactions récentes",
+  "seeAll": "Voir tout",
+  "incomeLabel": "Revenu",
+  "expensesLabel": "Dépenses",
+  "noTransactionsYet": "Aucune transaction pour le moment",
+  "addTransaction": "Ajouter une transaction",
+  "statistics": "Statistiques",
+  "yourStatistics": "Vos Statistiques",
+  "@yourStatistics": {
+    "description": "Statistics screen title"
+  },
+  "noData": "Aucune donnée",
+  "@noData": {
+    "description": "No data message"
+  },
+  "loadingError": "Erreur de chargement",
+  "@loadingError": {
+    "description": "Loading error message"
+  },
+  "noTransaction": "Aucune transaction",
+  "@noTransaction": {
+    "description": "No transaction message"
+  },
+  "forThisDay": "pour ce jour",
+  "@forThisDay": {
+    "description": "For this day message"
+  },
+  "available": "disponible",
+  "@available": {
+    "description": "Available message"
+  },
+  "failedToLoadBalance": "Échec du chargement du solde",
+  "failedToLoadExpenses": "Échec du chargement des dépenses",
+  "failedToLoadTransactions": "Échec du chargement des transactions",
+  "signinWelcomeTitle": "Bon retour\nparmi nous !",
+  "signinWelcomeDescription": "Connectez-vous à votre compte",
+  "emailAddress": "Adresse email",
+  "forgotPassword": "Mot de passe oublié ?",
+  "signIn": "Se connecter",
+  "noAccountYet": "Pas encore de compte ? ",
+  "signUp": "S'inscrire",
+  "or": "ou",
+  "google": "Google",
+  "apple": "Apple",
+  "signInSuccess": "Connexion réussie !",
+  "resetPassword": "Réinitialiser le mot de passe",
+  "resetPasswordTitle": "Créer un nouveau mot de passe",
+  "resetPasswordSubtitle": "Entrez votre nouveau mot de passe pour sécuriser votre compte",
+  "newPassword": "Nouveau mot de passe",
+  "confirmPassword": "Confirmer le mot de passe",
+  "passwordMinLength": "Le mot de passe doit contenir au moins 12 caractères",
+  "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+  "updatePassword": "Mettre à jour le mot de passe",
+  "passwordUpdatedSuccess": "Mot de passe mis à jour avec succès !",
+  "redirectingToSignIn": "Redirection vers la connexion...",
+  "passwordResetLinkExpired": "Le lien de réinitialisation a expiré. Veuillez en demander un nouveau.",
+  "forgotPasswordTitle": "Mot de passe oublié ?",
+  "forgotPasswordSubtitle": "Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe",
+  "sendResetLink": "Envoyer le lien",
+  "resetPasswordEmailSent": "Lien envoyé !",
+  "resetPasswordEmailSentDescription": "Nous avons envoyé un lien de réinitialisation à votre email. Veuillez vérifier votre boîte de réception et suivre les instructions.",
+  "checkYourEmail": "Vérifiez vos emails",
+  "backToSignIn": "Retour à la connexion",
+  "resetPasswordEmailInfo": "Si vous ne recevez pas l'email dans quelques minutes, veuillez vérifier votre dossier spam.",
+  "errorTitle": "Erreur",
+  "unexpectedError": "Une erreur inattendue s'est produite",
+  "googleSignInCancelled": "Connexion Google annulée ou échouée",
+  "appleSignInCancelled": "Connexion Apple annulée ou échouée",
+  "emailValidationRequired": "Veuillez saisir votre email",
+  "emailValidationInvalid": "Veuillez saisir un email valide",
+  "passwordValidationRequired": "Veuillez saisir votre mot de passe",
+  "passwordValidationMinLength": "Le mot de passe doit contenir au moins 12 caractères",
+  "tooManyAttempts": "Trop de tentatives de connexion",
+  "rateLimitMessage": "Veuillez réessayer dans {minutes} {minutes, plural, =1{minute} other{minutes}}",
+  "@rateLimitMessage": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "backButton": "Retour",
+  "signupWelcomeTitle": "Créer un\ncompte",
+  "signupWelcomeDescription": "Rejoignez-nous et commencez votre aventure",
+  "confirmPassword": "Confirmer le mot de passe",
+  "alreadyHaveAccount": "Déjà un compte ? ",
+  "welcomeModalTitle": "Bienvenue !",
+  "welcomeModalMessage": "Ton essai Premium de 14 jours est activé",
+  "getStartedButton": "Commencer >",
+  "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+  "confirmPasswordRequired": "Veuillez confirmer votre mot de passe",
+  "errorLoadingUser": "Erreur de chargement de l'utilisateur",
+  "okButton": "OK",
+  "monday": "Lun",
+  "tuesday": "Mar",
+  "wednesday": "Mer",
+  "thursday": "Jeu",
+  "friday": "Ven",
+  "saturday": "Sam",
+  "sunday": "Dim",
+  "activeAccount": "Compte actif",
+  "statusPremium": "Premium",
+  "statusTrial": "Essai",
+  "statusFree": "Gratuit",
+  "today": "Aujourd'hui",
+  "yesterday": "Hier",
+  "week": "Semaine",
+  "month": "Mois",
+  "year": "Année",
+  "thisWeek": "Cette semaine",
+  "thisMonth": "Ce mois",
+  "thisYear": "Cette année",
+  "transactionDetails": "Détails de la transaction",
+  "totalSpent": "Total dépensé",
+  "budgetTotal": "Budget total",
+  "@budgetTotal": {
+    "description": "Budget total label"
+  },
+  "remaining": "Restant",
+  "@remaining": {
+    "description": "Remaining amount label"
+  },
+  "totalReceived": "Total reçu",
+  "occurrences": "Occurrences",
+  "occurrenceHistory": "Historique des occurrences",
+  "sinceCreation": "Depuis la création",
+  "recurringTransaction": "Transaction récurrente",
+  "oneTimeTransaction": "Transaction unique",
+  "premiumFeature": "Fonctionnalité Premium",
+  "premiumFeatureDescription": "Cette fonctionnalité est disponible pour les utilisateurs Premium et Essai",
+  "premiumBenefits": "Avantages Premium",
+  "detailedStatistics": "Statistiques détaillées",
+  "advancedCharts": "Graphiques avancés",
+  "financialInsights": "Analyses financières",
+  "unlimitedHistory": "Historique illimité",
+  "startFreeTrial": "Démarrer l'essai gratuit de 14 jours",
+  "upgradeToPremium": "Passer à Premium",
+  "trialActivated": "Essai activé avec succès ! Profitez de 14 jours de fonctionnalités Premium.",
+  "errorActivatingTrial": "Erreur lors de l'activation de l'essai. Veuillez réessayer.",
+  "comingSoon": "Bientôt disponible ! Les achats in-app seront disponibles prochainement.",
+  "pockets": "Pockets",
+  "pocketCategoryNeeds": "Besoins",
+  "pocketCategoryWants": "Envies",
+  "pocketCategorySavings": "Épargne",
+  "pocketHousing": "Logement",
+  "pocketFood": "Alimentation",
+  "pocketTransport": "Transport",
+  "pocketEntertainment": "Loisirs",
+  "pocketShopping": "Shopping",
+  "pocketEmergencyFund": "Fonds d'urgence",
+  "pocketVacation": "Vacances",
+  "pocketProjects": "Projets",
+  "savingsGoalNone": "Aucun objectif",
+  "savingsGoalFixedAmount": "Montant fixe",
+  "savingsGoalTargetDate": "Objectif avec échéance",
+  "badgeBudgetExceeded": "Budget dépassé",
+  "badgeGoalReached": "Objectif atteint",
+  "errorPocketNameRequired": "Le nom est requis",
+  "errorPocketNameTooLong": "Le nom est trop long (max 100 caractères)",
+  "errorPocketIconRequired": "L'icône est requise",
+  "errorPocketInvalidColor": "Format de couleur invalide",
+  "errorPocketBudgetNegative": "Le budget ne peut pas être négatif",
+  "errorPocketSpentNegative": "Le montant dépensé ne peut pas être négatif",
+  "errorExpensePocketCannotHaveSavings": "Les pockets de dépense ne peuvent pas avoir d'épargne",
+  "errorSavingsPocketCannotHaveBudget": "Les pockets d'épargne ne peuvent pas avoir de budget",
+  "errorPocketSavedAmountNegative": "Le montant épargné ne peut pas être négatif",
+  "errorPocketMonthlySavingsNegative": "L'épargne mensuelle ne peut pas être négative",
+  "errorSavingsGoalAmountRequired": "Le montant cible est requis",
+  "errorSavingsGoalDateRequired": "La date cible est requise",
+  "errorSavingsGoalDatePast": "La date cible doit être dans le futur",
+  "recurrenceNone": "Aucune",
+  "recurrenceDaily": "Quotidienne",
+  "recurrenceWeekly": "Hebdomadaire",
+  "recurrenceBiweekly": "Bihebdomadaire",
+  "recurrenceMonthly": "Mensuelle",
+  "recurrenceQuarterly": "Trimestrielle",
+  "recurrenceYearly": "Annuelle",
+  "subscriptionPremiumTitle": "Premium",
+  "subscriptionUnlockFeatures": "Débloquez toutes les\nfonctionnalités Premium",
+  "subscriptionMonthly": "Mensuel",
+  "subscriptionYearly": "Annuel",
+  "subscriptionPerMonth": "/ mois",
+  "subscriptionPerYear": "/ an",
+  "subscriptionEquivalent": "Soit {price} / mois",
+  "subscriptionSavePercent": "Économisez {percent}%",
+  "subscriptionBestValue": "Meilleure valeur",
+  "subscriptionStartNow": "Commencer maintenant",
+  "subscriptionRestore": "Restaurer mes achats",
+  "subscriptionFeaturesTitle": "Tout ce que vous obtenez :",
+  "subscriptionFeatureAdvancedStats": "Statistiques avancées",
+  "subscriptionFeatureAdvancedStatsDesc": "Analysez vos dépenses en profondeur",
+  "subscriptionFeatureUnlimitedPockets": "Pockets illimités",
+  "subscriptionFeatureUnlimitedPocketsDesc": "Créez autant de pockets que vous voulez",
+  "subscriptionFeatureDataExport": "Export de données",
+  "subscriptionFeatureDataExportDesc": "Exportez vos données en CSV ou PDF",
+  "subscriptionFeaturePrioritySupport": "Support prioritaire",
+  "subscriptionFeaturePrioritySupportDesc": "Assistance rapide et personnalisée",
+  "subscriptionFeatureCloudSync": "Synchronisation cloud",
+  "subscriptionFeatureCloudSyncDesc": "Accédez à vos données partout",
+  "subscriptionFeatureSmartReminders": "Rappels intelligents",
+  "subscriptionFeatureSmartRemindersDesc": "Ne dépassez plus jamais votre budget",
+  "subscriptionTermsAndConditions": "En continuant, vous acceptez nos Conditions d'utilisation\net notre Politique de confidentialité",
+  "subscriptionPurchasing": "Traitement de votre achat...",
+  "subscriptionRestoring": "Restauration des achats...",
+  "subscriptionPurchaseSuccess": "Abonnement activé avec succès ! 🎉",
+  "subscriptionRestoreSuccess": "Achats restaurés avec succès !",
+  "subscriptionPurchaseError": "Erreur lors de l'achat : {error}",
+  "subscriptionRestoreError": "Erreur lors de la restauration : {error}",
+  "freeTrialTitle": "Commencez votre essai gratuit",
+  "freeTrialDuration": "14 jours gratuits",
+  "freeTrialStartButton": "Commencer l'essai gratuit de 14 jours",
+  "freeTrialDescription": "Essayez toutes les fonctionnalités Premium\npendant 14 jours, sans paiement",
+  "freeTrialActive": "Essai actif",
+  "freeTrialDaysLeft": "{days} jours restants",
+  "freeTrialExpired": "Essai expiré",
+  "freeTrialActivating": "Activation de votre essai gratuit...",
+  "freeTrialActivationSuccess": "Essai gratuit activé ! Profitez de 14 jours Premium 🎉",
+  "freeTrialActivationError": "Erreur lors de l'activation : {error}",
+  "freeTrialAlreadyUsed": "Vous avez déjà utilisé votre essai gratuit",
+  "subscriptionAfterTrial": "Après l'essai",
+  "subscriptionContinueWithPremium": "Continuer avec Premium",
+  "all": "Tous",
+  "@all": {
+    "description": "All filter tab"
+  },
+  "noPocketsYet": "Aucun pocket pour le moment",
+  "@noPocketsYet": {
+    "description": "Empty state message when no pockets"
+  },
+  "createFirstPocket": "Créez votre premier pocket pour commencer",
+  "@createFirstPocket": {
+    "description": "Empty state subtitle to create first pocket"
+  },
+  "noPocketsInCategory": "Aucun pocket dans cette catégorie",
+  "@noPocketsInCategory": {
+    "description": "Empty state message when no pockets in filtered category"
+  },
+  "createDefaultPockets": "Créer les pockets par défaut",
+  "@createDefaultPockets": {
+    "description": "Button to create default pockets"
+  },
+  "addTransactionLogo": "Ajouter un logo",
+  "chooseLogoSource": "Choisissez une source de logo pour votre transaction",
+  "photoLibrary": "Galerie photo",
+  "searchBrandLogo": "Rechercher un logo de marque",
+  "selectBrand": "Sélectionner une marque",
+  "information": "Informations",
+  "type": "Type",
+  "notes": "Notes",
+  "image": "Image",
+  "expense": "Dépense",
+  "income": "Revenu",
+  "assigned": "Assigné",
+  "deleteTransactionTitle": "Supprimer la transaction",
+  "deleteTransactionMessage": "Êtes-vous sûr de vouloir supprimer cette transaction ? Cette action est irréversible.",
+  "transactionDeletedSuccess": "Transaction supprimée avec succès",
+  "transactionDeleteError": "Impossible de supprimer la transaction",
+  "recurrence": "Récurrence",
+  "deletePocketTitle": "Supprimer le pocket",
+  "deletePocketMessage": "Êtes-vous sûr de vouloir supprimer ce pocket ? Cette action est irréversible.",
+  "pocketDeletedSuccess": "Pocket supprimé avec succès",
+  "pocketDeleteError": "Impossible de supprimer le pocket",
+  "notifications": "Notifications",
+  "notificationsCenter": "Centre de notifications",
+  "notificationsSettings": "Paramètres des notifications",
+  "notificationType": "Type de notification",
+  "notificationTypes": "Types de notifications",
+  "budgetExceededNotif": "Dépassement de budget",
+  "budgetExceededNotifDesc": "Être alerté quand un budget de pocket est dépassé",
+  "goalReachedNotif": "Objectif atteint",
+  "goalReachedNotifDesc": "Recevoir une notification quand un objectif d'épargne est atteint",
+  "monthEndReminderNotif": "Rappel fin de mois",
+  "monthEndReminderNotifDesc": "Recevoir un rappel à la fin du mois",
+  "weeklySummaryNotif": "Résumé hebdomadaire",
+  "weeklySummaryNotifDesc": "Recevoir un résumé de vos finances chaque semaine",
+  "monthlyReportNotif": "Rapport mensuel",
+  "monthlyReportNotifDesc": "Recevoir un rapport détaillé chaque mois",
+  "markAsRead": "Marquer comme lu",
+  "markAsUnread": "Marquer comme non lu",
+  "markAllAsRead": "Tout marquer comme lu",
+  "deleteNotification": "Supprimer la notification",
+  "deleteAllNotifications": "Tout supprimer",
+  "noNotifications": "Aucune notification",
+  "noNotificationsMessage": "Vous n'avez aucune notification pour le moment",
+  "unreadNotifications": "Non lues",
+  "readNotifications": "Lues",
+  "allNotifications": "Toutes",
+  "notificationRead": "Lu",
+  "notificationUnread": "Non lu",
+  "notificationDeletedSuccess": "Notification supprimée",
+  "notificationDeleteError": "Impossible de supprimer la notification",
+  "notificationsPreferences": "Préférences de notifications",
+  "enableNotificationsPrompt": "Activer les notifications pour ne rien manquer",
+  "createPocket": "Créer un Pocket",
+  "addNeedsPocket": "Ajouter un Pocket Besoins",
+  "addWantsPocket": "Ajouter un Pocket Envies",
+  "addSavingsPocket": "Ajouter un Pocket Épargne",
+  "selectPocketCategory": "Sélectionner une Catégorie",
+  "selectPocketCategoryDescription": "Choisissez le type de pocket que vous souhaitez créer selon la règle 50/30/20",
+  "needsDescription": "Dépenses essentielles comme le logement, la nourriture et le transport",
+  "wantsDescription": "Dépenses discrétionnaires comme les loisirs, hobbies et achats plaisir",
+  "savingsDescription": "Argent mis de côté pour les objectifs futurs, urgences et investissements",
+  "pocketName": "Nom du Pocket",
+  "pocketNameHint": "ex: Courses, Loyer, Vacances",
+  "savingsPocketNameHint": "ex: Fonds d'urgence, Vacances, Nouvelle voiture",
+  "monthlyBudget": "Budget Mensuel",
+  "monthlySavingsAmount": "Montant d'Épargne Mensuel",
+  "monthlySavingsHint": "Épargne mensuelle automatique optionnelle",
+  "targetAmount": "Montant Cible",
+  "targetDate": "Date Cible",
+  "selectTargetDate": "Sélectionner une date cible",
+  "savingsGoalType": "Type d'Objectif d'Épargne",
+  "savingsGoalNoneDescription": "Épargne simple sans objectif spécifique",
+  "savingsGoalFixedAmountDescription": "Épargner jusqu'à atteindre un montant spécifique",
+  "savingsGoalTargetDateDescription": "Atteindre un objectif à une date spécifique",
+  "selectIcon": "Sélectionner une Icône",
+  "selectColor": "Sélectionner une Couleur",
+  "errorBudgetRequired": "Le budget est requis",
+  "errorCreatingPocket": "Erreur lors de la création du pocket",
+  "pocketDetails": "Détails du Pocket",
+  "@pocketDetails": {
+    "description": "Titre de l'écran de détails du pocket"
+  },
+  "editPocket": "Modifier le Pocket",
+  "@editPocket": {
+    "description": "Titre de l'écran d'édition du pocket"
+  },
+  "pocketNotFound": "Pocket introuvable",
+  "@pocketNotFound": {
+    "description": "Message lorsque le pocket n'est pas trouvé"
+  },
+  "pocketNotFoundMessage": "Ce pocket n'existe pas ou a été supprimé",
+  "@pocketNotFoundMessage": {
+    "description": "Message détaillé lorsque le pocket n'est pas trouvé"
+  },
+  "defaultPocketNameCannotBeModified": "Le nom des pockets par défaut ne peut pas être modifié",
+  "@defaultPocketNameCannotBeModified": {
+    "description": "Message lors de la tentative de modification du nom d'un pocket par défaut"
+  },
+  "savingsGoal": "Objectif d'épargne",
+  "@savingsGoal": {
+    "description": "Label de l'objectif d'épargne"
+  },
+  "targetAmountLabel": "Montant de l'objectif",
+  "@targetAmountLabel": {
+    "description": "Label du champ montant cible"
+  },
+  "invalidAmount": "Montant invalide",
+  "@invalidAmount": {
+    "description": "Message d'erreur pour montant invalide"
+  },
+  "category": "Catégorie",
+  "@category": {
+    "description": "Label de catégorie"
+  },
+  "nonEditable": "(Non modifiable)",
+  "@nonEditable": {
+    "description": "Indicateur non modifiable"
+  },
+  "saving": "Enregistrement...",
+  "@saving": {
+    "description": "Message d'enregistrement en cours"
+  },
+  "assignTransactions": "Assigner des transactions",
+  "@assignTransactions": {
+    "description": "Label du bouton assigner des transactions"
+  },
+  "assignTransactionsTo": "Assigner à {pocketName}",
+  "@assignTransactionsTo": {
+    "description": "Titre de l'écran d'assignation avec le nom du pocket",
+    "placeholders": {
+      "pocketName": {
+        "type": "String"
+      }
+    }
+  },
+  "searchTransaction": "Rechercher une transaction...",
+  "@searchTransaction": {
+    "description": "Label et hint du champ de recherche de transaction"
+  },
+  "noExpensesAvailable": "Aucune dépense disponible",
+  "@noExpensesAvailable": {
+    "description": "Message d'état vide quand aucune dépense disponible"
+  },
+  "noExpensesFound": "Aucune dépense trouvée",
+  "@noExpensesFound": {
+    "description": "Message d'état vide quand la recherche ne retourne aucun résultat"
+  },
+  "createExpenseTransactionsFirst": "Créez d'abord des transactions de dépenses",
+  "@createExpenseTransactionsFirst": {
+    "description": "Message pour créer d'abord des transactions de dépenses"
+  },
+  "tryOtherKeywords": "Essayez avec d'autres mots-clés",
+  "@tryOtherKeywords": {
+    "description": "Message quand la recherche ne retourne aucun résultat"
+  },
+  "alreadyAssignedToOtherPocket": "Déjà assignée à un autre pocket",
+  "@alreadyAssignedToOtherPocket": {
+    "description": "Message quand une transaction est assignée à un autre pocket"
+  },
+  "assignedToThisPocket": "Assignée à ce pocket (décochez pour retirer)",
+  "@assignedToThisPocket": {
+    "description": "Message quand une transaction est assignée au pocket actuel"
+  },
+  "transactionsToAssignAndRemove": "{toAssign} à assigner, {toRemove} à retirer",
+  "@transactionsToAssignAndRemove": {
+    "description": "Message montrant les transactions à assigner et retirer",
+    "placeholders": {
+      "toAssign": {
+        "type": "int"
+      },
+      "toRemove": {
+        "type": "int"
+      }
+    }
+  },
+  "transactionsToAssign": "{count} transaction{count, plural, =1{} other{s}} à assigner",
+  "@transactionsToAssign": {
+    "description": "Message montrant les transactions à assigner",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "transactionsToRemove": "{count} transaction{count, plural, =1{} other{s}} à retirer",
+  "@transactionsToRemove": {
+    "description": "Message montrant les transactions à retirer",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "modifyingInProgress": "Modification en cours...",
+  "@modifyingInProgress": {
+    "description": "Message quand les modifications sont en cours"
+  },
+  "validateModifications": "Valider les modifications",
+  "@validateModifications": {
+    "description": "Bouton pour valider les modifications"
+  },
+  "pocketNotFound": "Pocket introuvable",
+  "@pocketNotFound": {
+    "description": "Message d'erreur quand le pocket n'est pas trouvé"
+  },
+  "transactionNotFound": "Transaction introuvable",
+  "@transactionNotFound": {
+    "description": "Message d'erreur quand la transaction n'est pas trouvée"
+  },
+  "transactionsAssignedAndRemoved": "{assigned} transaction{assigned, plural, =1{ assignée} other{s assignées}}, {removed} retirée{removed, plural, =1{} other{s}}",
+  "@transactionsAssignedAndRemoved": {
+    "description": "Message de succès quand des transactions sont assignées et retirées",
+    "placeholders": {
+      "assigned": {
+        "type": "int"
+      },
+      "removed": {
+        "type": "int"
+      }
+    }
+  },
+  "transactionsAssigned": "{count} transaction{count, plural, =1{ assignée} other{s assignées}}",
+  "@transactionsAssigned": {
+    "description": "Message de succès quand des transactions sont assignées",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "transactionsRemoved": "{count} transaction{count, plural, =1{ retirée} other{s retirées}}",
+  "@transactionsRemoved": {
+    "description": "Message de succès quand des transactions sont retirées",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "active": "Actif",
+  "@active": {
+    "description": "Label de statut actif"
+  },
+  "inactive": "Inactif",
+  "@inactive": {
+    "description": "Label de statut inactif"
+  },
+  "defaultLabel": "Par défaut",
+  "@defaultLabel": {
+    "description": "Label par défaut"
+  },
+  "budget": "Budget",
+  "@budget": {
+    "description": "Label budget"
+  },
+  "spent": "Dépensé",
+  "@spent": {
+    "description": "Label dépensé"
+  },
+  "progress": "Progression",
+  "@progress": {
+    "description": "Label progression"
+  },
+  "savings": "Épargne",
+  "@savings": {
+    "description": "Label épargne"
+  },
+  "savedAmount": "Montant épargné",
+  "@savedAmount": {
+    "description": "Label montant épargné"
+  },
+  "goal": "Objectif",
+  "@goal": {
+    "description": "Label objectif"
+  },
+  "progression": "Progression",
+  "@progression": {
+    "description": "Label progression"
+  },
+  "addCategory": "Ajouter une catégorie",
+  "@addCategory": {
+    "description": "Option pour ajouter une catégorie"
+  },
+  "more": "Plus",
+  "@more": {
+    "description": "Label pour le menu Plus"
+  },
+  "categories": "Catégories",
+  "@categories": {
+    "description": "Titre de l'écran des catégories"
+  },
+  "defaultCategories": "Catégories par Défaut",
+  "@defaultCategories": {
+    "description": "Titre de section pour les catégories par défaut"
+  },
+  "customCategories": "Catégories Personnalisées",
+  "@customCategories": {
+    "description": "Titre de section pour les catégories personnalisées"
+  },
+  "custom": "Personnalisée",
+  "@custom": {
+    "description": "Label personnalisé"
+  },
+  "defaultCategory": "Par défaut",
+  "@defaultCategory": {
+    "description": "Label catégorie par défaut"
+  },
+  "createCategory": "Créer une Catégorie",
+  "@createCategory": {
+    "description": "Texte du bouton créer une catégorie"
+  },
+  "editCategory": "Modifier la Catégorie",
+  "@editCategory": {
+    "description": "Titre de l'écran de modification de catégorie"
+  },
+  "updateCategory": "Mettre à Jour la Catégorie",
+  "@updateCategory": {
+    "description": "Texte du bouton mettre à jour la catégorie"
+  },
+  "deleteCategory": "Supprimer la Catégorie",
+  "@deleteCategory": {
+    "description": "Texte du bouton supprimer la catégorie"
+  },
+  "categoryName": "Nom de la Catégorie",
+  "@categoryName": {
+    "description": "Label du champ nom de catégorie"
+  },
+  "categoryNameHint": "ex: Épicerie, Loyer, Factures",
+  "@categoryNameHint": {
+    "description": "Indication du champ nom de catégorie"
+  },
+  "categoryType": "Type de Catégorie",
+  "@categoryType": {
+    "description": "Label du champ type de catégorie"
+  },
+  "expenses": "Dépenses",
+  "@expenses": {
+    "description": "Label dépenses"
+  },
+  "incomes": "Revenus",
+  "@incomes": {
+    "description": "Label revenus"
+  },
+  "expense": "Dépense",
+  "@expense": {
+    "description": "Label dépense"
+  },
+  "income": "Revenu",
+  "@income": {
+    "description": "Label revenu"
+  },
+  "expenseCategory": "Catégorie de Dépense",
+  "@expenseCategory": {
+    "description": "Label catégorie de dépense"
+  },
+  "incomeCategory": "Catégorie de Revenu",
+  "@incomeCategory": {
+    "description": "Label catégorie de revenu"
+  },
+  "expenseCategoryDescription": "Suivez vos dépenses et gérez votre budget",
+  "@expenseCategoryDescription": {
+    "description": "Description catégorie de dépense"
+  },
+  "incomeCategoryDescription": "Suivez vos revenus et sources de revenus",
+  "@incomeCategoryDescription": {
+    "description": "Description catégorie de revenu"
+  },
+  "noCategoriesFound": "Aucune Catégorie Trouvée",
+  "@noCategoriesFound": {
+    "description": "Titre d'état vide quand aucune catégorie trouvée"
+  },
+  "noCategoriesFoundDescription": "Créez votre première catégorie personnalisée pour commencer",
+  "@noCategoriesFoundDescription": {
+    "description": "Description d'état vide quand aucune catégorie trouvée"
+  },
+  "premiumRequired": "Premium Requis",
+  "@premiumRequired": {
+    "description": "Message premium requis"
+  },
+  "premiumRequiredForCustomCategories": "Abonnement Premium requis pour créer des catégories personnalisées",
+  "@premiumRequiredForCustomCategories": {
+    "description": "Message premium requis pour catégories personnalisées"
+  },
+  "errorCategoryNameRequired": "Le nom de la catégorie est requis",
+  "@errorCategoryNameRequired": {
+    "description": "Message d'erreur quand le nom de catégorie est vide"
+  },
+  "errorCategoryNameTooLong": "Le nom de la catégorie doit faire moins de 50 caractères",
+  "@errorCategoryNameTooLong": {
+    "description": "Message d'erreur quand le nom de catégorie est trop long"
+  },
+  "errorCreatingCategory": "Échec de la création de la catégorie",
+  "@errorCreatingCategory": {
+    "description": "Message d'erreur quand la création de catégorie échoue"
+  },
+  "errorUpdatingCategory": "Échec de la modification de la catégorie",
+  "@errorUpdatingCategory": {
+    "description": "Message d'erreur quand la modification de catégorie échoue"
+  },
+  "errorDeletingCategory": "Échec de la suppression de la catégorie",
+  "@errorDeletingCategory": {
+    "description": "Message d'erreur quand la suppression de catégorie échoue"
+  },
+  "categoryCreatedSuccess": "Catégorie créée avec succès",
+  "@categoryCreatedSuccess": {
+    "description": "Message de succès quand la catégorie est créée"
+  },
+  "categoryUpdatedSuccess": "Catégorie mise à jour avec succès",
+  "@categoryUpdatedSuccess": {
+    "description": "Message de succès quand la catégorie est mise à jour"
+  },
+  "categoryDeletedSuccess": "Catégorie supprimée avec succès",
+  "@categoryDeletedSuccess": {
+    "description": "Message de succès quand la catégorie est supprimée"
+  },
+  "deleteCategoryConfirmation": "Êtes-vous sûr de vouloir supprimer cette catégorie ? Cette action est irréversible.",
+  "@deleteCategoryConfirmation": {
+    "description": "Message de confirmation lors de la suppression d'une catégorie"
+  },
+  "noCustomCategoriesYet": "Aucune Catégorie Personnalisée",
+  "@noCustomCategoriesYet": {
+    "description": "Titre quand l'utilisateur n'a pas de catégories personnalisées (utilisateur premium)"
+  },
+  "noCustomCategoriesYetDescription": "Créez votre première catégorie personnalisée pour mieux organiser vos finances",
+  "@noCustomCategoriesYetDescription": {
+    "description": "Description quand l'utilisateur n'a pas de catégories personnalisées (utilisateur premium)"
+  },
+  "noCustomCategoriesPremium": "Débloquez les Catégories Personnalisées",
+  "@noCustomCategoriesPremium": {
+    "description": "Titre quand l'utilisateur n'a pas de catégories personnalisées (utilisateur gratuit)"
+  },
+  "noCustomCategoriesPremiumDescription": "Passez à Premium pour créer des catégories personnalisées illimitées",
+  "@noCustomCategoriesPremiumDescription": {
+    "description": "Description quand l'utilisateur n'a pas de catégories personnalisées (utilisateur gratuit)"
+  },
+  "createFirstCategory": "Créer la Première Catégorie",
+  "@createFirstCategory": {
+    "description": "Texte du bouton pour créer la première catégorie personnalisée"
+  },
+  "upgradeToPremium": "Passer à Premium",
+  "@upgradeToPremium": {
+    "description": "Texte du bouton pour passer à premium"
+  },
+  "deleteAccount": "Supprimer le Compte et les Données",
+  "@deleteAccount": {
+    "description": "Texte du bouton pour supprimer le compte"
+  },
+  "deleteAccountConfirmTitle": "Supprimer le Compte ?",
+  "@deleteAccountConfirmTitle": {
+    "description": "Titre de la boîte de dialogue de confirmation de suppression de compte"
+  },
+  "deleteAccountConfirmMessage": "Cette action supprimera définitivement votre compte et TOUTES les données associées :\n\n• Toutes les transactions\n• Toutes les catégories personnalisées\n• Tous les pockets\n• Tous les paramètres\n\nCette action est IRRÉVERSIBLE.",
+  "@deleteAccountConfirmMessage": {
+    "description": "Message de la boîte de dialogue de confirmation de suppression de compte"
+  },
+  "deleteAccountConfirmButton": "Oui, Tout Supprimer",
+  "@deleteAccountConfirmButton": {
+    "description": "Texte du bouton de confirmation pour la suppression de compte"
+  },
+  "cancel": "Annuler",
+  "@cancel": {
+    "description": "Texte du bouton d'annulation"
+  },
+  "accountDeleted": "Compte supprimé avec succès",
+  "@accountDeleted": {
+    "description": "Message de succès après la suppression du compte"
+  },
+  "errorDeletingAccount": "Échec de la suppression du compte",
+  "@errorDeletingAccount": {
+    "description": "Message d'erreur lorsque la suppression du compte échoue"
+  },
+  "legalNotice": "Mentions Légales",
+  "@legalNotice": {
+    "description": "Élément de menu mentions légales"
+  },
+  "privacyPolicy": "Politique de Confidentialité",
+  "@privacyPolicy": {
+    "description": "Élément de menu politique de confidentialité"
+  },
+  "termsOfUse": "Conditions Générales d'Utilisation",
+  "@termsOfUse": {
+    "description": "Élément de menu conditions d'utilisation"
+  },
+  "legal": "Légal",
+  "@legal": {
+    "description": "Titre de la section légale"
+  },
+  "about": "À propos",
+  "aboutApp": "À propos de l'app",
+  "aboutAppTitle": "Pocketly",
+  "aboutAppDescription": "Une application simple et intuitive pour visualiser vos dépenses par semaine et par mois, et économiser intelligemment avec la méthode 50/30/20.",
+  "aboutFeatureWeeklyView": "Visualisation rapide des dépenses hebdomadaires",
+  "aboutFeatureMonthlyTracking": "Suivi mensuel détaillé",
+  "aboutFeature503020": "Économiser avec la méthode 50/30/20",
+  "aboutCreator": "Créé avec ❤️ par Minhaj",
+  "visitWebsite": "Visiter le site web",
+  "close": "Fermer"
+,
+  "errorEmailRequired": "L'email est requis",
+  "errorPasswordRequired": "Le mot de passe est requis",
+  "errorPasswordMinLength": "Le mot de passe doit contenir au moins 6 caractères",
+  "errorInvalidAmount": "Montant invalide",
+  "errorAmountNegative": "Le montant ne peut pas être négatif",
+  "errorAmountPositive": "Le montant doit être positif",
+  "errorTransactionNameRequired": "Le nom de la transaction est requis",
+  "errorCategoryNameRequired": "Le nom de la catégorie est requis",
+  "errorUserNotAuthenticated": "Utilisateur non authentifié",
+  "errorNetworkConnection": "Erreur de connexion réseau",
+  "errorServerError": "Erreur serveur",
+  "errorCacheOperation": "Erreur de cache",
+  "errorCategoryNotFound": "Catégorie non trouvée",
+  "errorInvalidData": "Données invalides",
+  "errorSaveFailed": "Échec de la sauvegarde",
+  "errorLoadFailed": "Échec du chargement",
+  "errorDeleteFailed": "Échec de la suppression",
+  "errorInitializationFailed": "Échec de l'initialisation"
 }

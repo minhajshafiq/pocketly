@@ -6,23 +6,21 @@ import 'package:pocketly/core/services/logger_service.dart';
 import 'package:pocketly/features/subscription/data/models/subscription_offer_model.dart';
 import 'package:pocketly/features/subscription/data/models/subscription_package_model.dart';
 import 'package:pocketly/features/subscription/data/models/subscription_status_model.dart';
+import 'package:pocketly/core/config/revenuecat_config.dart';
 
 /// DataSource distant pour gérer les abonnements via RevenueCat
 ///
 /// Encapsule toutes les interactions avec le SDK RevenueCat
 class SubscriptionRemoteDataSource {
   final logger = const LoggerService();
-  /// Clés API RevenueCat
-  /// Note: Cette clé de test fonctionne pour iOS et Android en développement
-  static const String _iosApiKey = 'test_XDuMYVxZqmfhTwvUQIkgXhDbTjN';
-  static const String _androidApiKey = 'test_XDuMYVxZqmfhTwvUQIkgXhDbTjN';
 
   /// Identifiants des packages RevenueCat
   static const String monthlyPackageId = '\$rc_monthly';
   static const String yearlyPackageId = '\$rc_annual';
 
   /// Controller pour le stream de statut
-  final _statusStreamController = StreamController<SubscriptionStatusModel>.broadcast();
+  final _statusStreamController =
+      StreamController<SubscriptionStatusModel>.broadcast();
 
   /// Initialise le SDK RevenueCat
   ///
@@ -31,7 +29,9 @@ class SubscriptionRemoteDataSource {
     try {
       // Configuration du SDK
       final configuration = PurchasesConfiguration(
-        Platform.isIOS ? _iosApiKey : _androidApiKey,
+        Platform.isIOS
+            ? RevenueCatConfig.iosApiKey
+            : RevenueCatConfig.androidApiKey,
       )..appUserID = userId;
 
       await Purchases.configure(configuration);
@@ -45,9 +45,14 @@ class SubscriptionRemoteDataSource {
         _statusStreamController.add(status);
       });
 
-      logger.i('[SubscriptionRemoteDataSource] SDK RevenueCat initialisé pour user: $userId');
+      logger.i(
+        '[SubscriptionRemoteDataSource] SDK RevenueCat initialisé pour user: $userId',
+      );
     } catch (e) {
-      logger.e('[SubscriptionRemoteDataSource] Erreur initialisation: $e', error: e);
+      logger.e(
+        '[SubscriptionRemoteDataSource] Erreur initialisation: $e',
+        error: e,
+      );
       throw Exception('Échec de l\'initialisation du SDK RevenueCat: $e');
     }
   }
@@ -91,10 +96,15 @@ class SubscriptionRemoteDataSource {
       );
       offers.add(yearlyOffer);
 
-      logger.d('[SubscriptionRemoteDataSource] Récupéré ${offers.length} offres');
+      logger.d(
+        '[SubscriptionRemoteDataSource] Récupéré ${offers.length} offres',
+      );
       return offers;
     } catch (e) {
-      logger.e('[SubscriptionRemoteDataSource] Erreur récupération offres: $e', error: e);
+      logger.e(
+        '[SubscriptionRemoteDataSource] Erreur récupération offres: $e',
+        error: e,
+      );
       throw Exception('Échec de la récupération des offres: $e');
     }
   }
@@ -109,9 +119,14 @@ class SubscriptionRemoteDataSource {
       }
 
       final packages = offerings.current!.availablePackages;
-      return packages.map((p) => SubscriptionPackageModel.fromRevenueCat(p)).toList();
+      return packages
+          .map((p) => SubscriptionPackageModel.fromRevenueCat(p))
+          .toList();
     } catch (e) {
-      logger.e('[SubscriptionRemoteDataSource] Erreur récupération packages: $e', error: e);
+      logger.e(
+        '[SubscriptionRemoteDataSource] Erreur récupération packages: $e',
+        error: e,
+      );
       throw Exception('Échec de la récupération des packages: $e');
     }
   }
@@ -122,7 +137,10 @@ class SubscriptionRemoteDataSource {
       final customerInfo = await Purchases.getCustomerInfo();
       return _parseCustomerInfo(customerInfo);
     } catch (e) {
-      logger.e('[SubscriptionRemoteDataSource] Erreur vérification statut: $e', error: e);
+      logger.e(
+        '[SubscriptionRemoteDataSource] Erreur vérification statut: $e',
+        error: e,
+      );
       throw Exception('Échec de la vérification du statut: $e');
     }
   }
@@ -130,7 +148,9 @@ class SubscriptionRemoteDataSource {
   /// Achète un abonnement
   Future<SubscriptionStatusModel> purchaseSubscription(Package package) async {
     try {
-      logger.d('[SubscriptionRemoteDataSource] Début achat: ${package.identifier}');
+      logger.d(
+        '[SubscriptionRemoteDataSource] Début achat: ${package.identifier}',
+      );
 
       final purchaserInfo = await Purchases.purchasePackage(package);
 
@@ -138,13 +158,18 @@ class SubscriptionRemoteDataSource {
       return _parseCustomerInfo(purchaserInfo.customerInfo);
     } on PurchasesError catch (e) {
       if (e.code == PurchasesErrorCode.purchaseCancelledError) {
-        logger.w('[SubscriptionRemoteDataSource] Achat annulé par l\'utilisateur');
+        logger.w(
+          '[SubscriptionRemoteDataSource] Achat annulé par l\'utilisateur',
+        );
         throw Exception('Achat annulé');
       } else if (e.code == PurchasesErrorCode.paymentPendingError) {
         logger.w('[SubscriptionRemoteDataSource] Paiement en attente');
         throw Exception('Paiement en attente de confirmation');
       } else {
-        logger.e('[SubscriptionRemoteDataSource] Erreur achat: ${e.message}', error: e);
+        logger.e(
+          '[SubscriptionRemoteDataSource] Erreur achat: ${e.message}',
+          error: e,
+        );
         throw Exception('Erreur lors de l\'achat: ${e.message}');
       }
     } catch (e) {
@@ -163,7 +188,10 @@ class SubscriptionRemoteDataSource {
       logger.i('[SubscriptionRemoteDataSource] Achats restaurés');
       return _parseCustomerInfo(customerInfo);
     } catch (e) {
-      logger.e('[SubscriptionRemoteDataSource] Erreur restauration: $e', error: e);
+      logger.e(
+        '[SubscriptionRemoteDataSource] Erreur restauration: $e',
+        error: e,
+      );
       throw Exception('Échec de la restauration des achats: $e');
     }
   }
@@ -184,7 +212,8 @@ class SubscriptionRemoteDataSource {
     // Déterminer le type d'abonnement
     final productId = premiumEntitlement.productIdentifier;
     final bool isMonthly = productId.contains('monthly');
-    final bool isYearly = productId.contains('yearly') || productId.contains('annual');
+    final bool isYearly =
+        productId.contains('yearly') || productId.contains('annual');
 
     String subscriptionType = 'unknown';
     if (isMonthly) {
@@ -215,7 +244,8 @@ class SubscriptionRemoteDataSource {
   }
 
   /// Stream des changements de statut
-  Stream<SubscriptionStatusModel> get statusStream => _statusStreamController.stream;
+  Stream<SubscriptionStatusModel> get statusStream =>
+      _statusStreamController.stream;
 
   /// Nettoie les ressources
   void dispose() {
