@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pocketly/core/constants/app_constants.dart';
+import 'package:pocketly/core/core.dart';
 import 'package:pocketly/features/themes/presentation/providers/theme_providers.dart';
 import 'package:pocketly/features/themes/domain/entities/theme_entity.dart';
-import 'package:pocketly/core/widgets/app_button.dart';
 
 /// Widget pour sélectionner le thème de l'application.
 /// 
@@ -32,7 +31,7 @@ class ThemeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentTheme = ref.watch(themeNotifierProvider);
+    final currentTheme = ref.watch(themeProvider);
     final availableThemes = ref.watch(availableThemesProvider);
 
     return availableThemes.when(
@@ -66,13 +65,15 @@ class ThemeSelector extends ConsumerWidget {
     ThemeEntity currentTheme,
     List<ThemeEntity> themes,
   ) {
-    return Column(
+    return Row(
       children: themes.map((theme) {
-        return Column(
-          children: [
-            _buildThemeCard(context, ref, theme, currentTheme),
-            if (theme != themes.last) SizedBox(height: AppDimensions.paddingM),
-          ],
+        return Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(
+              right: theme != themes.last ? AppDimensions.paddingS : 0,
+            ),
+            child: _buildThemeCard(context, ref, theme, currentTheme),
+          ),
         );
       }).toList(),
     );
@@ -127,30 +128,63 @@ class ThemeSelector extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         // Animation de transition douce lors du changement de thème
-        ref.read(themeNotifierProvider.notifier).setTheme(theme);
+        ref.read(themeProvider.notifier).setTheme(theme);
       },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        padding: EdgeInsets.all(AppDimensions.paddingM),
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic,
+        padding: EdgeInsets.symmetric(
+          vertical: AppDimensions.paddingM,
+          horizontal: AppDimensions.paddingM,
+        ),
         decoration: BoxDecoration(
+          gradient: isSelected
+              ? LinearGradient(
+                  colors: [
+                    AppColors.primary.withValues(alpha: 0.15),
+                    AppColors.primary.withValues(alpha: 0.08),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
           color: isSelected 
-            ? AppColors.primary.withValues(alpha: 0.1)
+              ? null
             : (isDark ? AppColors.surfaceDark : AppColors.surface),
-          borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+          borderRadius: BorderRadius.circular(AppDimensions.radiusL),
           border: Border.all(
             color: isSelected 
               ? AppColors.primary 
-              : (isDark ? AppColors.grey700 : AppColors.borderLight),
+                : (isDark ? AppColors.borderDark : AppColors.borderLight),
             width: isSelected ? 2.0 : 1.0,
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.25),
+                    blurRadius: 12,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : [],
         ),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            if (showIcons) ...[
+            // Icône avec fond circulaire
               AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOutCubic,
+              padding: EdgeInsets.all(AppDimensions.paddingS),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppColors.primary.withValues(alpha: 0.2)
+                    : (isDark
+                        ? AppColors.textSecondaryOnDark.withValues(alpha: 0.1)
+                        : AppColors.textSecondary.withValues(alpha: 0.1)),
+                shape: BoxShape.circle,
+              ),
                 child: Icon(
                   _getThemeIcon(theme),
                   size: _getIconSize(),
@@ -159,48 +193,57 @@ class ThemeSelector extends ConsumerWidget {
                     : (isDark ? AppColors.textSecondaryOnDark : AppColors.textSecondary),
                 ),
               ),
-              SizedBox(width: AppDimensions.paddingM),
-            ],
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            SizedBox(height: AppDimensions.paddingS),
+            // Titre
                   AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    style: AppTypography.title.copyWith(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOutCubic,
+              style: AppTypography.bodyBold.copyWith(
+                fontSize: AppDimensions.fontSizeS,
                       color: isSelected 
                         ? AppColors.primary 
                         : (isDark ? AppColors.textOnDark : AppColors.textPrimary),
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     ),
+              textAlign: TextAlign.center,
                     child: Text(theme.displayName),
                   ),
                   if (showDescriptions) ...[
-                    SizedBox(height: AppDimensions.paddingXS),
+              SizedBox(height: AppDimensions.paddingXS / 2),
                     AnimatedDefaultTextStyle(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutCubic,
                       style: AppTypography.caption.copyWith(
-                        color: isDark ? AppColors.textSecondaryOnDark : AppColors.textSecondary,
+                  fontSize: AppDimensions.fontSizeLabel,
+                  color: isDark
+                      ? AppColors.textSecondaryOnDark
+                      : AppColors.textSecondary,
                       ),
-                      child: Text(_getThemeDescription(theme)),
+                textAlign: TextAlign.center,
+                child: Text(
+                  _getThemeDescription(theme),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
                     ),
                   ],
-                ],
-              ),
-            ),
-            if (isSelected)
+            // Indicateur de sélection
+            if (isSelected) ...[
+              SizedBox(height: AppDimensions.paddingXS),
               AnimatedScale(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOutBack,
                 scale: 1.0,
-                child: Icon(
-                  AppIcons.success,
+                child: Container(
+                  width: 6,
+                  height: 6,
+                  decoration: BoxDecoration(
                   color: AppColors.primary,
-                  size: _getIconSize(),
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
+            ],
           ],
         ),
       ),
@@ -217,7 +260,7 @@ class ThemeSelector extends ConsumerWidget {
     final isSelected = currentTheme.mode == theme.mode;
     
     return ListTile(
-      onTap: () => ref.read(themeNotifierProvider.notifier).setTheme(theme),
+      onTap: () => ref.read(themeProvider.notifier).setTheme(theme),
       leading: showIcons ? Icon(
         _getThemeIcon(theme),
         size: _getIconSize(),
@@ -259,7 +302,7 @@ class ThemeSelector extends ConsumerWidget {
     return AppButton(
       text: theme.displayName,
       icon: showIcons ? _getThemeIcon(theme) : null,
-      onPressed: () => ref.read(themeNotifierProvider.notifier).setTheme(theme),
+      onPressed: () => ref.read(themeProvider.notifier).setTheme(theme),
       style: isSelected ? AppButtonStyle.primary : AppButtonStyle.outline,
       size: _getButtonSize(),
     );
@@ -267,16 +310,16 @@ class ThemeSelector extends ConsumerWidget {
 
   /// Obtient l'icône du thème
   IconData _getThemeIcon(ThemeEntity theme) {
-    if (theme.isLight) return AppIcons.add; // Utiliser un icône approprié pour le mode clair
-    if (theme.isDark) return AppIcons.add; // Utiliser un icône approprié pour le mode sombre
-    return AppIcons.settings; // Utiliser un icône approprié pour le mode système
+    if (theme.isLight) return Icons.light_mode_outlined;
+    if (theme.isDark) return Icons.dark_mode_outlined;
+    return Icons.brightness_auto_outlined;
   }
 
   /// Obtient la description du thème
   String _getThemeDescription(ThemeEntity theme) {
-    if (theme.isLight) return 'Always use light theme';
-    if (theme.isDark) return 'Always use dark theme';
-    return 'Follow system settings';
+    if (theme.isLight) return 'Clair';
+    if (theme.isDark) return 'Sombre';
+    return 'Système';
   }
 
   /// Obtient la taille de l'icône selon la taille du sélecteur
@@ -359,49 +402,3 @@ enum ThemeSelectorSize {
   large,
 }
 
-/// Widget compact pour basculer rapidement entre Light et Dark
-class ThemeToggleButton extends ConsumerWidget {
-  /// Taille du bouton
-  final ThemeToggleSize size;
-  
-  /// Afficher le label
-  final bool showLabel;
-  
-  /// Afficher l'icône
-  final bool showIcon;
-
-  const ThemeToggleButton({
-    super.key,
-    this.size = ThemeToggleSize.medium,
-    this.showLabel = true,
-    this.showIcon = true,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentTheme = ref.watch(themeNotifierProvider);
-
-    return AppButton(
-      text: showLabel ? 'Theme' : '',
-      icon: showIcon ? _getToggleIcon(currentTheme) : null,
-      onPressed: () => ref.read(themeNotifierProvider.notifier).toggleTheme(),
-      style: AppButtonStyle.secondary,
-      tooltip: 'Toggle theme',
-    );
-  }
-
-  /// Obtient l'icône de basculement selon le thème actuel
-  IconData _getToggleIcon(ThemeEntity theme) {
-    if (theme.isSystem) {
-      return AppIcons.settings;
-    }
-    return theme.isLight ? AppIcons.add : AppIcons.add; // Utiliser des icônes appropriés
-  }
-}
-
-/// Tailles de bouton de basculement
-enum ThemeToggleSize {
-  small,
-  medium,
-  large,
-}

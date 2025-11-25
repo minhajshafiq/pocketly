@@ -49,11 +49,11 @@ class ThemeLocalDataSourceImpl implements ThemeLocalDataSource {
     
     switch (mode) {
       case ThemeMode.light:
-        return ThemeModel.fromEntity(ThemeEntity.light());
+        return ThemeEntity.light().toModel();
       case ThemeMode.dark:
-        return ThemeModel.fromEntity(ThemeEntity.dark());
+        return ThemeEntity.dark().toModel();
       case ThemeMode.system:
-        return ThemeModel.fromEntity(ThemeEntity.system());
+        return ThemeEntity.system().toModel();
     }
   }
 }

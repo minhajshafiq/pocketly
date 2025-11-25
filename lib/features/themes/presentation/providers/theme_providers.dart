@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:pocketly/core/core.dart';
 import 'package:pocketly/features/themes/domain/entities/theme_entity.dart';
 import 'package:pocketly/features/themes/domain/repositories/theme_repository.dart';
 import 'package:pocketly/features/themes/data/repositories/theme_repository_impl.dart';
@@ -10,50 +11,47 @@ import 'package:pocketly/features/themes/domain/usecases/set_theme_usecase.dart'
 import 'package:pocketly/features/themes/domain/usecases/toggle_theme_usecase.dart';
 import 'package:pocketly/features/themes/domain/usecases/get_available_themes_usecase.dart';
 
-// ==================== EXTERNAL DEPENDENCIES ====================
+part 'theme_providers.g.dart';
 
-/// Provider pour SharedPreferences
-final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
-  return await SharedPreferences.getInstance();
-});
+// ==================== EXTERNAL DEPENDENCIES ====================
 
 // ==================== DATA LAYER ====================
 
 /// Provider pour ThemeLocalDataSource
-final themeLocalDataSourceProvider = FutureProvider<ThemeLocalDataSource>((ref) async {
-  final prefs = await ref.watch(sharedPreferencesProvider.future);
+final themeLocalDataSourceProvider = Provider<ThemeLocalDataSource>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
   return ThemeLocalDataSourceImpl(prefs);
 });
 
 /// Provider pour ThemeRepository
-final themeRepositoryProvider = FutureProvider<ThemeRepository>((ref) async {
-  final localDataSource = await ref.watch(themeLocalDataSourceProvider.future);
+final themeRepositoryProvider = Provider<ThemeRepository>((ref) {
+  final localDataSource = ref.watch(themeLocalDataSourceProvider);
   return ThemeRepositoryImpl(localDataSource);
 });
 
 // ==================== USE CASES ====================
 
 /// Provider pour GetThemeUseCase
-final getThemeUseCaseProvider = FutureProvider<GetThemeUseCase>((ref) async {
-  final repository = await ref.watch(themeRepositoryProvider.future);
+final getThemeUseCaseProvider = Provider<GetThemeUseCase>((ref) {
+  final repository = ref.watch(themeRepositoryProvider);
   return GetThemeUseCase(repository);
 });
 
 /// Provider pour SetThemeUseCase
-final setThemeUseCaseProvider = FutureProvider<SetThemeUseCase>((ref) async {
-  final repository = await ref.watch(themeRepositoryProvider.future);
+final setThemeUseCaseProvider = Provider<SetThemeUseCase>((ref) {
+  final repository = ref.watch(themeRepositoryProvider);
   return SetThemeUseCase(repository);
 });
 
 /// Provider pour ToggleThemeUseCase
-final toggleThemeUseCaseProvider = FutureProvider<ToggleThemeUseCase>((ref) async {
-  final repository = await ref.watch(themeRepositoryProvider.future);
+final toggleThemeUseCaseProvider = Provider<ToggleThemeUseCase>((ref) {
+  final repository = ref.watch(themeRepositoryProvider);
   return ToggleThemeUseCase(repository);
 });
 
 /// Provider pour GetAvailableThemesUseCase
-final getAvailableThemesUseCaseProvider = FutureProvider<GetAvailableThemesUseCase>((ref) async {
-  final repository = await ref.watch(themeRepositoryProvider.future);
+final getAvailableThemesUseCaseProvider = Provider<GetAvailableThemesUseCase>((ref) {
+  final repository = ref.watch(themeRepositoryProvider);
   return GetAvailableThemesUseCase(repository);
 });
 
@@ -61,18 +59,19 @@ final getAvailableThemesUseCaseProvider = FutureProvider<GetAvailableThemesUseCa
 
 /// Provider pour le thème actuel
 final currentThemeProvider = FutureProvider<ThemeEntity>((ref) async {
-  final getThemeUseCase = await ref.read(getThemeUseCaseProvider.future);
+  final getThemeUseCase = ref.read(getThemeUseCaseProvider);
   return await getThemeUseCase.call();
 });
 
 /// Provider pour les thèmes disponibles
 final availableThemesProvider = FutureProvider<List<ThemeEntity>>((ref) async {
-  final getAvailableThemesUseCase = await ref.read(getAvailableThemesUseCaseProvider.future);
+  final getAvailableThemesUseCase = ref.read(getAvailableThemesUseCaseProvider);
   return await getAvailableThemesUseCase.call();
 });
 
 /// Notifier pour la gestion du thème
-class ThemeNotifier extends Notifier<ThemeEntity> {
+@riverpod
+class ThemeNotifier extends _$ThemeNotifier {
   @override
   ThemeEntity build() {
     // Écouter les changements de thème
@@ -88,18 +87,18 @@ class ThemeNotifier extends Notifier<ThemeEntity> {
 
   /// Définit un nouveau thème
   Future<void> setTheme(ThemeEntity theme) async {
-    final setThemeUseCase = await ref.read(setThemeUseCaseProvider.future);
+    final setThemeUseCase = ref.read(setThemeUseCaseProvider);
     await setThemeUseCase.call(theme);
     state = theme;
   }
 
   /// Bascule entre thème clair et sombre
   Future<void> toggleTheme() async {
-    final toggleThemeUseCase = await ref.read(toggleThemeUseCaseProvider.future);
+    final toggleThemeUseCase = ref.read(toggleThemeUseCaseProvider);
     await toggleThemeUseCase.call();
-    
+
     // Récupère le nouveau thème
-    final getThemeUseCase = await ref.read(getThemeUseCaseProvider.future);
+    final getThemeUseCase = ref.read(getThemeUseCaseProvider);
     final newTheme = await getThemeUseCase.call();
     state = newTheme;
   }
@@ -111,27 +110,25 @@ class ThemeNotifier extends Notifier<ThemeEntity> {
   }
 }
 
-/// Provider pour le notifier de thème
-final themeNotifierProvider = NotifierProvider<ThemeNotifier, ThemeEntity>(() {
-  return ThemeNotifier();
-});
+// Provider généré automatiquement par @riverpod
+// Utiliser: themeProvider
 
 // ==================== HELPER PROVIDERS ====================
 
 /// Provider pour vérifier si le thème est sombre
 final isDarkThemeProvider = Provider<bool>((ref) {
-  final theme = ref.watch(themeNotifierProvider);
+  final theme = ref.watch(themeProvider);
   return theme.isDark;
 });
 
 /// Provider pour vérifier si le thème est clair
 final isLightThemeProvider = Provider<bool>((ref) {
-  final theme = ref.watch(themeNotifierProvider);
+  final theme = ref.watch(themeProvider);
   return theme.isLight;
 });
 
 /// Provider pour vérifier si le thème suit le système
 final isSystemThemeProvider = Provider<bool>((ref) {
-  final theme = ref.watch(themeNotifierProvider);
+  final theme = ref.watch(themeProvider);
   return theme.isSystem;
 });

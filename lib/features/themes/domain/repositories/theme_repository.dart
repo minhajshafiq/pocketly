@@ -11,9 +11,6 @@ abstract class ThemeRepository {
   /// Sauvegarde un thème
   Future<void> setTheme(ThemeEntity theme);
   
-  /// Écoute les changements de thème
-  Stream<ThemeEntity> watchTheme();
-  
   /// Récupère tous les thèmes disponibles
   Future<List<ThemeEntity>> getAvailableThemes();
   

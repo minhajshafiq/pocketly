@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pocketly/core/constants/app_constants.dart';
+import 'package:pocketly/core/core.dart';
 
 /// Factory pour créer les thèmes Material Design.
 /// 
