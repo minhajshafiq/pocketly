@@ -23,30 +23,26 @@ class NotificationRepositoryImpl implements NotificationRepository {
   
   @override
   Future<bool> scheduleNotification(NotificationEntity notification) async {
-    final model = NotificationModel.fromEntity(notification);
-    
-    if (model.scheduledDate == null) {
+    if (notification.scheduledDate == null) {
       throw ArgumentError('Scheduled date must not be null for scheduling notifications');
     }
     
     return await localDataSource.scheduleNotification(
-      id: model.id,
-      title: model.title,
-      body: model.body,
-      payload: model.payload,
-      scheduledDate: model.scheduledDate!,
+      id: notification.id,
+      title: notification.title,
+      body: notification.body,
+      payload: notification.payload,
+      scheduledDate: notification.scheduledDate!,
     );
   }
   
   @override
   Future<bool> showNotification(NotificationEntity notification) async {
-    final model = NotificationModel.fromEntity(notification);
-    
     return await localDataSource.showNotification(
-      id: model.id,
-      title: model.title,
-      body: model.body,
-      payload: model.payload,
+      id: notification.id,
+      title: notification.title,
+      body: notification.body,
+      payload: notification.payload,
     );
   }
   

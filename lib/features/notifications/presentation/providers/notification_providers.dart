@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pocketly/core/errors/errors.dart';
 import 'package:pocketly/features/notifications/data/datasources/notification_local_datasource.dart';
 import 'package:pocketly/features/notifications/data/repositories/notification_repository_impl.dart';
@@ -8,95 +7,77 @@ import 'package:pocketly/features/notifications/domain/entities/notification_ent
 import 'package:pocketly/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:pocketly/features/notifications/domain/usecases/notification_service.dart';
 
+part 'notification_providers.g.dart';
+
 // ==================== INFRASTRUCTURE PROVIDERS ====================
 
 /// Provider pour FlutterLocalNotificationsPlugin
-final flutterLocalNotificationsPluginProvider = Provider<FlutterLocalNotificationsPlugin>((ref) {
+@Riverpod(keepAlive: true)
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(Ref ref) {
   return FlutterLocalNotificationsPlugin();
-});
+}
 
 /// Provider pour NotificationLocalDataSource
-final notificationLocalDataSourceProvider = Provider<NotificationLocalDataSource>((ref) {
+@Riverpod(keepAlive: true)
+NotificationLocalDataSource notificationLocalDataSource(Ref ref) {
   return NotificationLocalDataSource(
     flutterLocalNotificationsPlugin: ref.watch(flutterLocalNotificationsPluginProvider),
   );
-});
+}
 
 /// Provider pour NotificationRepository
-final notificationRepositoryProvider = Provider<NotificationRepository>((ref) {
+@Riverpod(keepAlive: true)
+NotificationRepository notificationRepository(Ref ref) {
   return NotificationRepositoryImpl(
     localDataSource: ref.watch(notificationLocalDataSourceProvider),
   );
-});
+}
 
 // ==================== USE CASE PROVIDERS ====================
 
 /// Provider pour le service de notification consolidé
-final notificationServiceUseCaseProvider = Provider<NotificationService>((ref) {
+@Riverpod(keepAlive: true)
+NotificationService notificationServiceUseCase(Ref ref) {
   return NotificationService(ref.watch(notificationRepositoryProvider));
-});
+}
 
 // ==================== STATE PROVIDERS ====================
 
 /// Provider pour l'état des permissions de notification
-final notificationPermissionStateProvider = FutureProvider<bool>((ref) async {
+@riverpod
+Future<bool> notificationPermissionState(Ref ref) async {
   final notificationService = ref.read(notificationServiceUseCaseProvider);
   return await notificationService.checkPermissions();
-});
-
-// ==================== NOTIFICATION SERVICE ====================
-
-/// État du service de notification
-class NotificationServiceState {
-  final bool isInitialized;
-  final String? error;
-
-  const NotificationServiceState({
-    this.isInitialized = false,
-    this.error,
-  });
-
-  NotificationServiceState copyWith({
-    bool? isInitialized,
-    String? error,
-  }) {
-    return NotificationServiceState(
-      isInitialized: isInitialized ?? this.isInitialized,
-      error: error,
-    );
-  }
 }
 
-/// Contrôleur pour le service de notification
-class NotificationServiceController {
-  final Ref ref;
-  NotificationServiceState _state = const NotificationServiceState();
+// ==================== NOTIFICATION SERVICE CONTROLLER ====================
 
-  NotificationServiceController(this.ref) {
-    _initialize();
+/// Contrôleur pour le service de notification
+@Riverpod(keepAlive: true)
+class NotificationServiceController extends _$NotificationServiceController {
+  @override
+  Future<bool> build() async {
+    // Initialiser le service de notification au démarrage
+    return await _initialize();
   }
 
-  NotificationServiceState get state => _state;
-
   /// Initialiser le service de notification
-  Future<void> _initialize() async {
+  Future<bool> _initialize() async {
     try {
       final dataSource = ref.read(notificationLocalDataSourceProvider);
       await dataSource.initialize();
-      _state = _state.copyWith(isInitialized: true);
+      return true;
     } catch (e, stackTrace) {
-      debugPrint('Error initializing notification service: $e');
-      _state = _state.copyWith(error: e.toString());
-      
       // Utiliser le système d'erreur global
       ref.read(errorNotifierProvider.notifier).setError(
-        NotificationError(
-          operation: 'initialize',
-          technicalMessage: 'Failed to initialize notification service: $e',
-          originalError: e,
-          stackTrace: stackTrace,
-        ),
-      );
+            NotificationError(
+              operation: 'initialize',
+              technicalMessage: 'Failed to initialize notification service: $e',
+              originalError: e,
+              stackTrace: stackTrace,
+            ),
+          );
+      return false;
     }
   }
 
@@ -174,25 +155,9 @@ class NotificationServiceController {
   }
 }
 
-/// Provider pour le service de notification
-final notificationServiceProvider = Provider<NotificationServiceController>((ref) {
-  return NotificationServiceController(ref);
-});
-
-/// Provider pour l'initialisation du service de notification
-/// Utilisé dans main.dart pour initialiser le service au démarrage de l'application
-final notificationServiceInitProvider = FutureProvider<void>((ref) async {
-  // Attendre que le service soit initialisé
-  final service = ref.watch(notificationServiceProvider);
-  
-  if (!service.state.isInitialized) {
-    // Attendre un peu pour laisser le temps à l'initialisation de se terminer
-    await Future.delayed(const Duration(milliseconds: 500));
-    
-    // Vérifier à nouveau l'état
-    final updatedService = ref.read(notificationServiceProvider);
-    if (!updatedService.state.isInitialized && updatedService.state.error != null) {
-      throw Exception('Failed to initialize notification service: ${updatedService.state.error}');
-    }
-  }
-});
+/// Provider pour vérifier si le service est initialisé
+@riverpod
+Future<bool> isNotificationServiceInitialized(Ref ref) async {
+  final serviceState = await ref.watch(notificationServiceControllerProvider.future);
+  return serviceState;
+}

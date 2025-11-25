@@ -264,7 +264,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
   /// Request notification permission
   Future<void> _requestPermission(BuildContext context, WidgetRef ref) async {
     try {
-      final notificationService = ref.read(notificationServiceProvider);
+      final notificationService = ref.read(notificationServiceUseCaseProvider);
       final result = await notificationService.requestPermissions();
       
       if (context.mounted) {
@@ -303,7 +303,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
     WidgetRef ref,
   ) async {
     final s = AppLocalizations.of(context)!;
-    final notificationService = ref.read(notificationServiceProvider);
+    final notificationService = ref.read(notificationServiceUseCaseProvider);
     
     final notification = NotificationEntity(
       id: 1,
@@ -321,7 +321,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
     WidgetRef ref,
   ) async {
     final s = AppLocalizations.of(context)!;
-    final notificationService = ref.read(notificationServiceProvider);
+    final notificationService = ref.read(notificationServiceUseCaseProvider);
     
     final notification = NotificationEntity(
       id: 2,
@@ -348,7 +348,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
     WidgetRef ref,
   ) async {
     final s = AppLocalizations.of(context)!;
-    final notificationService = ref.read(notificationServiceProvider);
+    final notificationService = ref.read(notificationServiceUseCaseProvider);
     
     final result = await notificationService.cancelAllNotifications();
     

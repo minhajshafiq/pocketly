@@ -1,36 +1,28 @@
-import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'notification_entity.freezed.dart';
+part 'notification_entity.g.dart';
 
 /// Entity representing a notification in the application
-@immutable
-class NotificationEntity {
-  final int id;
-  final String title;
-  final String body;
-  final String? payload;
-  final DateTime? scheduledDate;
-  
-  const NotificationEntity({
-    required this.id,
-    required this.title,
-    required this.body,
-    this.payload,
-    this.scheduledDate,
-  });
-  
-  NotificationEntity copyWith({
-    int? id,
-    String? title,
-    String? body,
-    String? payload,
-    DateTime? scheduledDate,
-    bool clearScheduledDate = false,
-  }) {
-    return NotificationEntity(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      body: body ?? this.body,
-      payload: payload ?? this.payload,
-      scheduledDate: clearScheduledDate ? null : scheduledDate ?? this.scheduledDate,
-    );
-  }
+@freezed
+sealed class NotificationEntity with _$NotificationEntity {
+  const factory NotificationEntity({
+    /// Unique identifier for the notification
+    required int id,
+
+    /// Title of the notification
+    required String title,
+
+    /// Body text of the notification
+    required String body,
+
+    /// Optional payload data for the notification
+    @Default(null) String? payload,
+
+    /// Optional scheduled date for the notification
+    @Default(null) DateTime? scheduledDate,
+  }) = _NotificationEntity;
+
+  factory NotificationEntity.fromJson(Map<String, dynamic> json) =>
+      _$NotificationEntityFromJson(json);
 }
