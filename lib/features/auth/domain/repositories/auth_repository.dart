@@ -1,76 +1,48 @@
-import 'package:pocketly/features/user/domain/entities/user_entity.dart';
+import '../entities/auth_session.dart';
+import '../entities/auth_user.dart';
 
-/// Interface définissant le contrat pour l'authentification.
-/// 
-/// Cette abstraction permet de découpler la logique métier de l'implémentation
-/// concrète (Supabase), facilitant les tests et la maintenance.
+/// Interface du repository d'authentification.
+///
+/// Définit les contrats pour les opérations d'authentification.
+/// Implémenté dans la couche data.
 abstract class AuthRepository {
-  /// Retourne l'utilisateur actuellement authentifié.
-  /// 
-  /// Returns `null` si aucun utilisateur n'est connecté.
-  Future<UserEntity?> getCurrentUser();
-
-  /// Écoute les changements d'état d'authentification.
-  /// 
-  /// Émet un nouveau [UserEntity] à chaque changement de session.
-  /// Émet `null` lorsque l'utilisateur se déconnecte.
-  Stream<UserEntity?> watchAuthState();
-
-  /// Connecte un utilisateur avec email et mot de passe.
-  /// 
-  /// Throws [AuthException] en cas d'erreur (email invalide, mot de passe incorrect, etc.).
-  /// 
-  /// Returns le [UserEntity] de l'utilisateur connecté.
-  Future<UserEntity> signInWithEmailPassword({
+  /// Se connecter avec email et mot de passe
+  Future<AuthSession> signInWithEmail({
     required String email,
     required String password,
   });
 
-  /// Inscrit un nouvel utilisateur avec email et mot de passe.
-  /// 
-  /// Throws [AuthException] en cas d'erreur (email déjà utilisé, mot de passe faible, etc.).
-  /// 
-  /// Returns le [UserEntity] de l'utilisateur créé.
-  Future<UserEntity> signUpWithEmailPassword({
+  /// S'inscrire avec email et mot de passe
+  Future<AuthSession> signUpWithEmail({
     required String email,
     required String password,
     String? name,
   });
 
-  /// Connecte un utilisateur avec Google OAuth.
-  /// 
-  /// Throws [AuthException] en cas d'erreur ou d'annulation.
-  /// 
-  /// Returns le [UserEntity] de l'utilisateur connecté.
-  Future<UserEntity> signInWithGoogle();
-
-  /// Connecte un utilisateur avec Apple OAuth.
-  /// 
-  /// Throws [AuthException] en cas d'erreur ou d'annulation.
-  /// 
-  /// Returns le [UserEntity] de l'utilisateur connecté.
-  Future<UserEntity> signInWithApple();
-
-  /// Déconnecte l'utilisateur actuel.
-  /// 
-  /// Throws [AuthException] en cas d'erreur.
+  /// Se déconnecter
   Future<void> signOut();
 
-  /// Restaure la session utilisateur depuis le stockage local.
-  /// 
-  /// Utile au démarrage de l'application pour vérifier si une session existe.
-  /// 
-  /// Returns le [UserEntity] si une session valide existe, sinon `null`.
-  Future<UserEntity?> restoreSession();
+  /// Obtenir la session actuelle
+  Future<AuthSession?> getCurrentSession();
 
-  /// Envoie un email de réinitialisation de mot de passe.
-  /// 
-  /// Throws [AuthException] en cas d'erreur (email invalide, etc.).
-  Future<void> sendPasswordResetEmail(String email);
+  /// Obtenir l'utilisateur actuel
+  Future<AuthUser?> getCurrentUser();
 
-  /// Rafraîchit les données de l'utilisateur actuel depuis le serveur.
-  /// 
-  /// Utile après une mise à jour du profil pour synchroniser les données.
-  Future<UserEntity?> refreshCurrentUser();
+  /// Rafraîchir la session
+  Future<AuthSession> refreshSession(String refreshToken);
+
+  /// Réinitialiser le mot de passe (envoi d'email)
+  Future<void> resetPassword(String email);
+
+  /// Mettre à jour le mot de passe
+  Future<void> updatePassword(String newPassword);
+
+  /// Mettre à jour l'email
+  Future<void> updateEmail(String newEmail);
+
+  /// Vérifier si l'utilisateur est authentifié
+  Future<bool> isAuthenticated();
+
+  /// Stream des changements d'état d'authentification
+  Stream<AuthUser?> authStateChanges();
 }
-

@@ -6,66 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pocketly/generated/l10n/app_localizations.dart';
-import 'package:pocketly/core/constants/app_constants.dart';
-import 'package:pocketly/core/router/app_route_paths.dart';
-import 'package:pocketly/core/widgets/app_button.dart';
-import 'package:pocketly/core/widgets/app_text_field.dart';
-import 'package:pocketly/core/widgets/platform_safe_area.dart';
-import 'package:pocketly/features/auth/presentation/providers/auth_state_provider.dart';
-import 'package:pocketly/features/auth/domain/failures/auth_failures.dart' as auth_failures;
-
-/// Provider pour obtenir les couleurs du thème
-final signupThemeColorsProvider = Provider<ThemeColors>((ref) {
-  throw UnimplementedError('Use signupThemeColorsProvider.withContext(context)');
-});
-
-/// Extension pour utiliser le provider avec un contexte
-extension SignupThemeColorsProviderExtension on WidgetRef {
-  ThemeColors getSignupThemeColors(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    
-    return ThemeColors(
-      primary: AppColors.primary,
-      secondary: AppColors.secondary,
-      surface: isDark ? AppColors.surfaceDark : AppColors.surface,
-      background: isDark ? AppColors.backgroundDark : AppColors.background,
-      onSurface: isDark ? AppColors.textOnDark : AppColors.textPrimary,
-      onBackground: isDark ? AppColors.textOnDark : AppColors.textPrimary,
-      textPrimary: isDark ? AppColors.textOnDark : AppColors.textPrimary,
-      textSecondary: isDark ? AppColors.textSecondaryOnDark : AppColors.textSecondary,
-      border: isDark ? AppColors.borderDark : AppColors.borderLight,
-      isDark: isDark,
-    );
-  }
-}
-
-/// Classe pour les couleurs du thème
-class ThemeColors {
-  final Color primary;
-  final Color secondary;
-  final Color surface;
-  final Color background;
-  final Color onSurface;
-  final Color onBackground;
-  final Color textPrimary;
-  final Color textSecondary;
-  final Color border;
-  final bool isDark;
-
-  const ThemeColors({
-    required this.primary,
-    required this.secondary,
-    required this.surface,
-    required this.background,
-    required this.onSurface,
-    required this.onBackground,
-    required this.textPrimary,
-    required this.textSecondary,
-    required this.border,
-    required this.isDark,
-  });
-}
+import 'package:pocketly/core/core.dart';
+import 'package:pocketly/features/auth/auth.dart';
+import 'package:pocketly/features/notifications/notifications.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -80,7 +23,27 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _hasBeenSubmitted = false;
+  bool _hasInteracted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Ajouter des listeners pour reconstruire le widget quand les champs changent
+    _nameController.addListener(_onFieldChanged);
+    _emailController.addListener(_onFieldChanged);
+    _passwordController.addListener(_onFieldChanged);
+    _confirmPasswordController.addListener(_onFieldChanged);
+  }
+
+  void _onFieldChanged() {
+    setState(() {
+      // Marquer que l'utilisateur a commencé à interagir
+      if (!_hasInteracted) {
+        _hasInteracted = true;
+      }
+      // Reconstruire le widget pour mettre à jour l'état du bouton
+    });
+  }
 
   @override
   void dispose() {
@@ -93,80 +56,82 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   bool get _isIOS => !kIsWeb && Platform.isIOS;
 
+  // RFC 5322 compliant email regex (more strict)
+  static final _emailRegex = RegExp(
+    r'^[a-zA-Z0-9]+([\._-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([\.-]?[a-zA-Z0-9]+)*(\.[a-zA-Z]{2,})+$',
+  );
+  // NIST recommends minimum 12 characters for strong passwords
+  static const _minPasswordLength = 12;
+
+  /// Vérifie si le formulaire est valide
+  bool get _isFormValid {
+    return _emailController.text.trim().isNotEmpty &&
+        _passwordController.text.isNotEmpty &&
+        _confirmPasswordController.text.isNotEmpty &&
+        _passwordController.text == _confirmPasswordController.text &&
+        _passwordController.text.length >= _minPasswordLength &&
+        _emailRegex.hasMatch(_emailController.text.trim());
+  }
+
   /// Inscription avec email/password
   Future<void> _handleSignup() async {
-    setState(() {
-      _hasBeenSubmitted = true;
-    });
-    
     if (!_formKey.currentState!.validate()) return;
 
-    try {
-      // Utiliser AuthActions pour s'inscrire et récupérer directement le UserEntity
-      await ref.read(authActionsProvider).signUpWithEmailPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-        name: _nameController.text.trim().isNotEmpty ? _nameController.text.trim() : null,
-      );
+    // Appeler signUp (ne lance pas d'exception car utilise AsyncValue.guard)
+    await ref
+        .read(authProvider.notifier)
+        .signUp(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+          name: _nameController.text.trim().isNotEmpty
+              ? _nameController.text.trim()
+              : null,
+        );
 
-      // Afficher la modal de bienvenue après inscription réussie
-      if (mounted) {
-        await _showWelcomeModal();
-        
-        // Rediriger vers l'onboarding
-        if (mounted) {
-          context.go(AppRoutePaths.step1);
-        }
-      }
-    } on auth_failures.SignUpFailure {
-      _showError('Impossible de créer le compte');
-    } on auth_failures.EmailAlreadyInUseFailure {
-      _showError('Cet email est déjà utilisé');
-    } on auth_failures.WeakPasswordFailure {
-      _showError('Le mot de passe doit contenir au moins 8 caractères');
-    } on auth_failures.InvalidEmailFailure {
-      _showError('Adresse email invalide');
-    } on auth_failures.NetworkFailure {
-      _showError('Vérifiez votre connexion Internet');
-    } on auth_failures.AuthFailure catch (e) {
-      _showError(e.message);
-    } catch (e) {
-      _showError('Une erreur inattendue s\'est produite');
-    }
-  }
-
-  void _showError(String message) {
     if (!mounted) return;
-    
-    if (_isIOS) {
-      _showCupertinoAlert(
-        title: 'Erreur',
-        content: message,
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: AppColors.error,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    }
+
+    // Vérifier l'état d'authentification après signUp
+    final authState = ref.read(authProvider);
+    final l10n = AppLocalizations.of(context)!;
+
+    await authState.when(
+      data: (state) async {
+        // Seulement continuer si authentifié
+        if (state is AuthAuthenticated) {
+          // Afficher la modal de bienvenue après inscription réussie
+          await _showWelcomeModal();
+
+          // Rediriger vers l'onboarding
+          if (mounted) {
+            context.go(AppRoutePaths.step1);
+          }
+        }
+      },
+      error: (error, stackTrace) async {
+        _handleSignupError(error, l10n);
+      },
+      loading: () async {
+        // En cours de chargement, ne rien faire
+      },
+    );
   }
 
-  void _showCupertinoAlert({required String title, required String content}) {
-    showCupertinoDialog(
-      context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
+  /// Gère les erreurs d'inscription
+  void _handleSignupError(Object error, AppLocalizations l10n) {
+    String message;
+
+    if (error is AuthenticationError ||
+        error is NetworkError ||
+        error is ValidationError) {
+      message = (error as dynamic).userMessage as String;
+    } else {
+      message = l10n.unexpectedError;
+    }
+
+    InAppNotificationService.showError(
+      context,
+      title: l10n.errorTitle,
+      message: message,
     );
   }
 
@@ -179,6 +144,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Future<void> _showCupertinoWelcomeModal() async {
+    final l10n = AppLocalizations.of(context)!;
+
     return showCupertinoDialog(
       context: context,
       barrierDismissible: false,
@@ -187,17 +154,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Bienvenue !',
+              l10n.welcomeModalTitle,
               style: AppTypography.title.copyWith(
                 color: AppColors.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(width: 8),
-            Text(
-              '🎉',
-              style: const TextStyle(fontSize: 24),
-            ),
+            const Text('🎉', style: TextStyle(fontSize: 24)),
           ],
         ),
         content: Column(
@@ -205,7 +169,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           children: [
             const SizedBox(height: 12),
             Text(
-              'Ton essai Premium de 14 jours est activé',
+              l10n.welcomeModalMessage,
               style: AppTypography.body.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.w500,
@@ -233,7 +197,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   Navigator.of(context).pop();
                 },
                 child: Text(
-                  'Commencer >',
+                  l10n.getStartedButton,
                   style: AppTypography.button.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -248,13 +212,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Future<void> _showMaterialWelcomeModal() async {
+    final l10n = AppLocalizations.of(context)!;
+
     return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(28),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         contentPadding: const EdgeInsets.all(24),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -263,22 +227,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Bienvenue !',
+                  l10n.welcomeModalTitle,
                   style: AppTypography.title.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  '🎉',
-                  style: const TextStyle(fontSize: 24),
-                ),
+                const Text('🎉', style: TextStyle(fontSize: 24)),
               ],
             ),
             const SizedBox(height: 12),
             Text(
-              'Ton essai Premium de 14 jours est activé',
+              l10n.welcomeModalMessage,
               style: AppTypography.body.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.w500,
@@ -309,7 +270,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   },
                   child: Center(
                     child: Text(
-                      'Commencer >',
+                      l10n.getStartedButton,
                       style: AppTypography.button.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -325,40 +286,51 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final themeColors = ref.getSignupThemeColors(context);
-    final authState = ref.watch(authStateProvider);
+    final themeColors = ThemeColors.fromContext(context);
+    final authState = ref.watch(authProvider);
 
-    return _isIOS 
-        ? _buildIOS(context, l10n, themeColors, authState) 
+    return _isIOS
+        ? _buildIOS(context, l10n, themeColors, authState)
         : _buildAndroid(context, l10n, themeColors, authState);
   }
 
-  Widget _buildIOS(BuildContext context, AppLocalizations l10n, ThemeColors colors, AsyncValue authState) {
+  Widget _buildIOS(
+    BuildContext context,
+    AppLocalizations l10n,
+    ThemeColors colors,
+    AsyncValue<AuthState> authState,
+  ) {
     return CupertinoPageScaffold(
       backgroundColor: colors.background,
       child: _buildSignupContent(l10n, colors, authState),
     );
   }
 
-  Widget _buildAndroid(BuildContext context, AppLocalizations l10n, ThemeColors colors, AsyncValue authState) {
+  Widget _buildAndroid(
+    BuildContext context,
+    AppLocalizations l10n,
+    ThemeColors colors,
+    AsyncValue<AuthState> authState,
+  ) {
     return Scaffold(
       backgroundColor: colors.background,
       body: _buildSignupContent(l10n, colors, authState),
     );
   }
 
-  Widget _buildSignupContent(AppLocalizations l10n, ThemeColors colors, AsyncValue authState) {
+  Widget _buildSignupContent(
+    AppLocalizations l10n,
+    ThemeColors colors,
+    AsyncValue<AuthState> authState,
+  ) {
     return PlatformSafeArea(
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingL,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: AppDimensions.paddingL),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -371,6 +343,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   child: SingleChildScrollView(
                     child: Form(
                       key: _formKey,
+                      autovalidateMode: _hasInteracted
+                          ? AutovalidateMode.onUserInteraction
+                          : AutovalidateMode.disabled,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -402,161 +377,170 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _buildBackButton(ThemeColors colors) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Align(
-      alignment: Alignment.centerLeft,
-      child: Semantics(
-        label: 'Retour',
-        button: true,
-        child: Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: colors.surface,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
+          alignment: Alignment.centerLeft,
+          child: Semantics(
+            label: l10n.backButton,
+            button: true,
+            child: Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: colors.surface,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(28),
-              onTap: () => context.pop(),
-              child: Icon(
-                AppIcons.back,
-                color: AppColors.primary,
-                size: 24,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(28),
+                  onTap: () => GoRouter.of(context).pop(),
+                  child: Icon(
+                    AppIcons.back,
+                    color: AppColors.primary,
+                    size: 24,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
-    )
+        )
         .animate()
         .fadeIn(duration: 400.ms)
         .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0));
   }
 
   Widget _buildWelcomeSection(ThemeColors colors) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Material(
-          color: Colors.transparent,
-          child: Text(
-            'Créer un\ncompte',
-            style: AppTypography.display.copyWith(
-              color: colors.textPrimary,
-              fontWeight: FontWeight.bold,
-              height: 1.2,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Material(
+              color: Colors.transparent,
+              child: Text(
+                l10n.signupWelcomeTitle,
+                style: AppTypography.display.copyWith(
+                  color: colors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                  height: 1.2,
+                ),
+              ),
             ),
-          ),
-        ),
-        SizedBox(height: AppDimensions.paddingM),
-        Material(
-          color: Colors.transparent,
-          child: Text(
-            'Rejoignez-nous et commencez votre aventure',
-            style: AppTypography.body.copyWith(
-              color: colors.textSecondary,
+            SizedBox(height: AppDimensions.paddingM),
+            Material(
+              color: Colors.transparent,
+              child: Text(
+                l10n.signupWelcomeDescription,
+                style: AppTypography.body.copyWith(color: colors.textSecondary),
+              ),
             ),
-          ),
-        ),
-      ],
-    )
+          ],
+        )
         .animate()
         .fadeIn(duration: 600.ms, delay: 100.ms)
         .slideY(begin: 0.2, end: 0.0, curve: Curves.easeOutCubic);
   }
 
   Widget _buildEmailField(ThemeColors colors) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AppTextField(
-      controller: _emailController,
-      label: 'Adresse email',
-      type: AppTextFieldType.email,
-      validator: _validateEmail,
-      showValidationErrors: true,
-      hasBeenSubmitted: _hasBeenSubmitted,
-    )
+          controller: _emailController,
+          label: l10n.emailAddress,
+          type: AppTextFieldType.email,
+          validator: _validateEmail,
+          showValidationErrors: true,
+          hasBeenSubmitted: _hasInteracted,
+        )
         .animate()
         .fadeIn(duration: 600.ms, delay: 200.ms)
         .slideY(begin: 0.1, end: 0.0, curve: Curves.easeOutCubic);
   }
 
-
   Widget _buildPasswordField(ThemeColors colors) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AppTextField(
-      controller: _passwordController,
-      label: 'Mot de passe',
-      type: AppTextFieldType.password,
-      validator: _validatePassword,
-      showValidationErrors: true,
-      hasBeenSubmitted: _hasBeenSubmitted,
-      showPasswordToggle: true,
-    )
+          controller: _passwordController,
+          label: l10n.password,
+          type: AppTextFieldType.password,
+          validator: _validatePassword,
+          showValidationErrors: true,
+          hasBeenSubmitted: _hasInteracted,
+          showPasswordToggle: true,
+        )
         .animate()
         .fadeIn(duration: 600.ms, delay: 300.ms)
         .slideY(begin: 0.1, end: 0.0, curve: Curves.easeOutCubic);
   }
 
-
   Widget _buildConfirmPasswordField(ThemeColors colors) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AppTextField(
-      controller: _confirmPasswordController,
-      label: 'Confirmer le mot de passe',
-      type: AppTextFieldType.password,
-      validator: _validateConfirmPassword,
-      showValidationErrors: true,
-      hasBeenSubmitted: _hasBeenSubmitted,
-      showPasswordToggle: true,
-    )
+          controller: _confirmPasswordController,
+          label: l10n.confirmPassword,
+          type: AppTextFieldType.password,
+          validator: _validateConfirmPassword,
+          showValidationErrors: true,
+          hasBeenSubmitted: _hasInteracted,
+          showPasswordToggle: true,
+        )
         .animate()
         .fadeIn(duration: 600.ms, delay: 400.ms)
         .slideY(begin: 0.1, end: 0.0, curve: Curves.easeOutCubic);
   }
 
-
-
-  Widget _buildSignupButton(ThemeColors colors, AsyncValue authState) {
+  Widget _buildSignupButton(
+    ThemeColors colors,
+    AsyncValue<AuthState> authState,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
     final isLoading = authState.isLoading;
-    
+    final isFormValid = _isFormValid;
+
     return AppButton(
-      text: 'S\'inscrire',
-      onPressed: isLoading ? null : _handleSignup,
-      style: AppButtonStyle.gradient,
-      size: AppButtonSize.large,
-      isFullWidth: true,
-      isLoading: isLoading,
-      customBorderRadius: 28,
-      icon: AppIcons.add,
-      iconPosition: IconPosition.right,
-    )
+          text: l10n.signUp,
+          onPressed: (isLoading || !isFormValid) ? null : _handleSignup,
+          style: AppButtonStyle.gradient,
+          size: AppButtonSize.large,
+          isFullWidth: true,
+          isLoading: isLoading,
+          customBorderRadius: 28,
+          icon: AppIcons.arrowRight,
+          iconPosition: IconPosition.right,
+        )
         .animate()
         .fadeIn(duration: 600.ms, delay: 500.ms)
-        .scale(begin: const Offset(0.95, 0.95), end: const Offset(1.0, 1.0), curve: Curves.easeOutCubic);
+        .scale(
+          begin: const Offset(0.95, 0.95),
+          end: const Offset(1.0, 1.0),
+          curve: Curves.easeOutCubic,
+        );
   }
 
   Widget _buildLoginLink(ThemeColors colors) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          AppIcons.profile,
-          size: 18,
-          color: colors.textSecondary,
-        ),
+        Icon(AppIcons.profile, size: 18, color: colors.textSecondary),
         const SizedBox(width: 8),
         Material(
           color: Colors.transparent,
           child: Text(
-            'Déjà un compte ? ',
-            style: AppTypography.body.copyWith(
-              color: colors.textSecondary,
-            ),
+            l10n.alreadyHaveAccount,
+            style: AppTypography.body.copyWith(color: colors.textSecondary),
           ),
         ),
         TextButton(
@@ -571,7 +555,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           child: Material(
             color: Colors.transparent,
             child: Text(
-              'Se connecter',
+              l10n.signIn,
               style: AppTypography.body.copyWith(
                 color: AppColors.primary,
                 fontWeight: FontWeight.w600,
@@ -581,61 +565,48 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           ),
         ),
       ],
-    )
-        .animate()
-        .fadeIn(duration: 600.ms, delay: 550.ms);
+    ).animate().fadeIn(duration: 600.ms, delay: 550.ms);
   }
 
   Widget _buildDivider(ThemeColors colors) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            height: 1,
-            color: colors.border,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'ou',
-            style: AppTypography.small.copyWith(
-              color: colors.textSecondary,
+    final l10n = AppLocalizations.of(context)!;
+
+    return Material(
+      color: Colors.transparent,
+      child: Row(
+        children: [
+          Expanded(child: Container(height: 1, color: colors.border)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              l10n.or,
+              style: AppTypography.small.copyWith(color: colors.textSecondary),
             ),
           ),
-        ),
-        Expanded(
-          child: Container(
-            height: 1,
-            color: colors.border,
-          ),
-        ),
-      ],
-    )
-        .animate()
-        .fadeIn(duration: 600.ms, delay: 600.ms);
+          Expanded(child: Container(height: 1, color: colors.border)),
+        ],
+      ),
+    ).animate().fadeIn(duration: 600.ms, delay: 600.ms);
   }
 
   Widget _buildSocialLoginButtons(ThemeColors colors) {
     return Row(
-      children: [
-        Expanded(
-          child: _buildGoogleButton(colors),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildAppleButton(colors),
-        ),
-      ],
-    )
+          children: [
+            Expanded(child: _buildGoogleButton(colors)),
+            const SizedBox(width: 12),
+            Expanded(child: _buildAppleButton(colors)),
+          ],
+        )
         .animate()
         .fadeIn(duration: 600.ms, delay: 650.ms)
         .slideY(begin: 0.1, end: 0.0, curve: Curves.easeOutCubic);
   }
 
   Widget _buildGoogleButton(ThemeColors colors) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AppButton(
-      text: 'Google',
+      text: l10n.google,
       onPressed: () {
         // TODO: Implement Google sign up
       },
@@ -650,8 +621,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _buildAppleButton(ThemeColors colors) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AppButton(
-      text: 'Apple',
+      text: l10n.apple,
       onPressed: () {
         // TODO: Implement Apple sign up
       },
@@ -666,32 +639,42 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   String? _validateEmail(String? value) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (value == null || value.isEmpty) {
-      return 'Veuillez saisir votre email';
+      return l10n.emailValidationRequired;
     }
-    // Regex plus permissive et standard pour les emails
-    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
-      return 'Veuillez saisir un email valide';
+    // Utiliser la même regex stricte que _isFormValid pour cohérence
+    if (!_emailRegex.hasMatch(value.trim())) {
+      return l10n.emailValidationInvalid;
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (value == null || value.isEmpty) {
-      return 'Veuillez saisir votre mot de passe';
+      return l10n.passwordValidationRequired;
     }
-    if (value.length < 6) {
-      return 'Le mot de passe doit contenir au moins 6 caractères';
+    if (value.length < _minPasswordLength) {
+      return l10n.passwordValidationMinLength;
     }
     return null;
   }
 
   String? _validateConfirmPassword(String? value) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (value == null || value.isEmpty) {
-      return 'Veuillez confirmer votre mot de passe';
+      return l10n.confirmPasswordRequired;
+    }
+    // Vérifier aussi la longueur minimale pour cohérence avec _validatePassword
+    if (value.length < _minPasswordLength) {
+      return l10n.passwordValidationMinLength;
     }
     if (value != _passwordController.text) {
-      return 'Les mots de passe ne correspondent pas';
+      return l10n.passwordsDoNotMatch;
     }
     return null;
   }
