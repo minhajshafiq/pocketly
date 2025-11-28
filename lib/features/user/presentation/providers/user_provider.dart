@@ -8,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pocketly/core/core.dart';
 
 // Internal packages (features)
+import 'package:pocketly/features/auth/auth.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
@@ -249,38 +250,122 @@ class CurrentUserNotifier extends _$CurrentUserNotifier {
   /// ⚠️ ATTENTION : Cette opération est IRRÉVERSIBLE
   Future<void> deleteAccount(String userId) async {
     final authService = AuthService();
+    final logger = ref.read(loggerProvider);
 
     try {
       state = const AsyncValue.loading();
+      logger.i('Début de la suppression du compte: $userId');
 
       // 1. Supprimer toutes les données de l'utilisateur (transactions, catégories, pockets, users)
-      final deleteUserUseCase = await ref.read(
-        deleteUserUseCaseProvider.future,
-      );
-      await deleteUserUseCase(userId);
-
-      // 2. Supprimer le compte Auth (RPC call)
       try {
-        await authService.deleteAuthUser();
+        // Récupérer le use case avec timeout pour éviter les blocages
+        final deleteUserUseCase = await ref.read(deleteUserUseCaseProvider.future).timeout(
+          const Duration(seconds: 3),
+          onTimeout: () {
+            logger.w('Timeout lors de la récupération du use case (tentative de continuation)');
+            throw TimeoutException('Timeout getting use case');
+          },
+        );
+        
+        // Exécuter la suppression avec timeout
+        await deleteUserUseCase(userId).timeout(
+          const Duration(seconds: 8),
+          onTimeout: () {
+            logger.w('Timeout lors de la suppression des données utilisateur (considéré comme OK)');
+            return;
+          },
+        );
+        logger.i('Données utilisateur supprimées avec succès');
       } catch (e) {
-        ref.read(loggerProvider).d('Suppression Auth: $e');
+        logger.w('Erreur lors de la suppression des données (ignorée): $e');
+        // Continuer même en cas d'erreur - les données peuvent déjà être supprimées
       }
 
-      // 3. Déconnecter immédiatement (force la déconnexion)
+      // 2. Supprimer le compte Auth (RPC call) avec timeout
       try {
-        await authService.signOut();
+        await authService.deleteAuthUser().timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {
+            logger.w('Timeout lors de la suppression Auth (considéré comme OK)');
+            return;
+          },
+        );
+        logger.i('Compte Auth supprimé avec succès');
       } catch (e) {
-        ref.read(loggerProvider).d('SignOut après suppression: $e');
+        logger.w('Erreur lors de la suppression Auth (ignorée): $e');
+        // Continuer même si la suppression Auth échoue
       }
 
-      // 4. Mettre à jour le state à null
+      // 3. Nettoyer toutes les données locales
+      try {
+        final localDataService = LocalDataService(ref);
+        await localDataService.clearAllLocalData(userId: userId).timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {
+            logger.w('Timeout lors du nettoyage des données locales (considéré comme OK)');
+            return;
+          },
+        );
+        logger.i('Données locales nettoyées avec succès');
+      } catch (e) {
+        logger.w('Erreur lors du nettoyage des données locales (ignorée): $e');
+        // Continuer même si le nettoyage échoue
+      }
+
+      // 4. Déconnecter immédiatement (force la déconnexion) avec timeout
+      try {
+        await authService.signOut().timeout(
+          const Duration(seconds: 3),
+          onTimeout: () {
+            logger.w('Timeout lors du signOut (considéré comme OK)');
+            return;
+          },
+        );
+        logger.i('Déconnexion réussie');
+      } catch (e) {
+        logger.w('Erreur lors du signOut (ignorée): $e');
+        // Continuer même si signOut échoue
+      }
+
+      // 5. Mettre à jour le state à null
       state = const AsyncValue.data(null);
+      
+      // 6. Forcer authProvider à unauthenticated pour déclencher la redirection
+      // Cela va mettre à jour isAuthenticatedProvider qui est écouté par le router
+      try {
+        final authNotifier = ref.read(authProvider.notifier);
+        authNotifier.state = const AsyncValue.data(AuthState.unauthenticated());
+        logger.i('authProvider mis à jour à unauthenticated pour déclencher la redirection');
+      } catch (e) {
+        logger.w('Erreur lors de la mise à jour de authProvider (tentative d\'invalidation): $e');
+        // Fallback: invalider le provider
+        ref.invalidate(authProvider);
+        logger.i('authProvider invalidé (fallback) pour déclencher la redirection');
+      }
+      
+      logger.i('Suppression du compte terminée avec succès');
+    } catch (e, stackTrace) {
+      logger.e('Erreur lors de la suppression du compte', error: e, stackTrace: stackTrace);
+      // Mettre le state à null même en cas d'erreur pour permettre la redirection
+      state = const AsyncValue.data(null);
+      
+      // Forcer authProvider à unauthenticated même en cas d'erreur
+      try {
+        final authNotifier = ref.read(authProvider.notifier);
+        authNotifier.state = const AsyncValue.data(AuthState.unauthenticated());
+        logger.i('authProvider mis à jour à unauthenticated (même en cas d\'erreur) pour déclencher la redirection');
     } catch (e) {
-      ref
-          .read(loggerProvider)
-          .e('Erreur lors de la suppression du compte', error: e);
-      state = AsyncValue.error(e, StackTrace.current);
-      rethrow;
+        logger.w('Erreur lors de la mise à jour de authProvider (tentative d\'invalidation): $e');
+        // Fallback: invalider le provider
+        try {
+          ref.invalidate(authProvider);
+          logger.i('authProvider invalidé (fallback) pour déclencher la redirection');
+        } catch (invalidateError) {
+          logger.w('Erreur lors de l\'invalidation de authProvider: $invalidateError');
+        }
+      }
+      
+      // Ne pas rethrow - on veut toujours rediriger
     }
   }
 }

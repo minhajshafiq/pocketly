@@ -15,7 +15,7 @@ import 'package:pocketly/generated/l10n/app_localizations.dart';
 
 /// Provider pour récupérer les occurrences d'une transaction
 final transactionOccurrencesProvider = FutureProvider.autoDispose
-    .family<List<TransactionEntity>, int>((ref, transactionId) async {
+    .family<List<TransactionEntity>, String>((ref, transactionId) async {
       // Récupérer toutes les transactions
       final transactionNotifier = ref.read(
         transactionProvider.notifier,
@@ -57,7 +57,7 @@ final transactionOccurrencesProvider = FutureProvider.autoDispose
 
 /// Écran de détails d'une transaction
 class TransactionDetailScreen extends ConsumerWidget {
-  final int transactionId;
+  final String transactionId;
 
   const TransactionDetailScreen({required this.transactionId, super.key});
 

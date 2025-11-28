@@ -113,8 +113,8 @@ extension TransactionSummaryX on TransactionSummaryEntity {
   }
 
   /// Dépenses par catégorie
-  Map<int, double> get expensesByCategory {
-    final Map<int, double> result = {};
+  Map<String, double> get expensesByCategory {
+    final Map<String, double> result = {};
     for (final transaction in transactions) {
       if (transaction.type == TransactionType.expense) {
         result[transaction.categoryId] =
@@ -125,8 +125,8 @@ extension TransactionSummaryX on TransactionSummaryEntity {
   }
 
   /// Revenus par catégorie
-  Map<int, double> get incomesByCategory {
-    final Map<int, double> result = {};
+  Map<String, double> get incomesByCategory {
+    final Map<String, double> result = {};
     for (final transaction in transactions) {
       if (transaction.type == TransactionType.income) {
         result[transaction.categoryId] =

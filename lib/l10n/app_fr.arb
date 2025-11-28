@@ -111,6 +111,7 @@
   "errorUpdatingProfile": "Erreur lors de la mise à jour du profil",
   "appearance": "Apparence",
   "preferences": "Préférences",
+  "subscription": "Abonnement",
   "account": "Compte",
   "theme": "Thème",
   "language": "Langue",
@@ -197,8 +198,13 @@
   "appleSignInCancelled": "Connexion Apple annulée ou échouée",
   "emailValidationRequired": "Veuillez saisir votre email",
   "emailValidationInvalid": "Veuillez saisir un email valide",
+  "emailAlreadyTaken": "Cet email est déjà utilisé. Connectez-vous ou utilisez un autre email.",
+  "emailAlreadyRegistered": "Un compte existe déjà avec cet email. Essayez de vous connecter.",
   "passwordValidationRequired": "Veuillez saisir votre mot de passe",
   "passwordValidationMinLength": "Le mot de passe doit contenir au moins 12 caractères",
+  "passwordTooWeak": "Le mot de passe est trop faible. Utilisez au moins 12 caractères avec des lettres, chiffres et symboles.",
+  "signupFailed": "Impossible de créer le compte. Veuillez réessayer.",
+  "signupNetworkError": "Erreur de connexion. Vérifiez votre connexion internet et réessayez.",
   "tooManyAttempts": "Trop de tentatives de connexion",
   "rateLimitMessage": "Veuillez réessayer dans {minutes} {minutes, plural, =1{minute} other{minutes}}",
   "@rateLimitMessage": {
@@ -231,6 +237,26 @@
   "statusPremium": "Premium",
   "statusTrial": "Essai",
   "statusFree": "Gratuit",
+  "subscriptionPlan": "Formule",
+  "trialEnd": "Fin de l'essai",
+  "renewal": "Renouvellement",
+  "unknown": "Inconnu",
+  "daysRemaining": "Jours restants",
+  "daysRemainingCount": "{count} jours",
+  "@daysRemainingCount": {
+    "description": "Nombre de jours restants avec placeholder",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "manageSubscription": "Gérer l'abonnement",
+  "trialActive": "Essai gratuit actif",
+  "subscriptionActive": "Abonnement actif",
+  "freeAccount": "Compte gratuit",
+  "cannotOpenManagementPage": "Impossible d'ouvrir la page de gestion",
+  "errorOpeningSubscriptionManagement": "Erreur lors de l'ouverture de la gestion d'abonnement",
   "today": "Aujourd'hui",
   "yesterday": "Hier",
   "week": "Semaine",
@@ -257,6 +283,8 @@
   "oneTimeTransaction": "Transaction unique",
   "premiumFeature": "Fonctionnalité Premium",
   "premiumFeatureDescription": "Cette fonctionnalité est disponible pour les utilisateurs Premium et Essai",
+  "premiumUnlockDescription": "",
+  "premiumFeatureOnlyMembers": "Disponible uniquement pour les membres Premium",
   "premiumBenefits": "Avantages Premium",
   "detailedStatistics": "Statistiques détaillées",
   "advancedCharts": "Graphiques avancés",
@@ -267,6 +295,48 @@
   "trialActivated": "Essai activé avec succès ! Profitez de 14 jours de fonctionnalités Premium.",
   "errorActivatingTrial": "Erreur lors de l'activation de l'essai. Veuillez réessayer.",
   "comingSoon": "Bientôt disponible ! Les achats in-app seront disponibles prochainement.",
+  "featureComingSoon": "Cette fonctionnalité sera bientôt disponible !",
+  "onboardingStep3Title": "Ajoutez votre première dépense",
+  "onboardingStep3Subtitle": "Pour mieux comprendre comment Pocketly fonctionne.",
+  "onboardingExpenseNameLabel": "Nom de la dépense",
+  "onboardingExpenseNameHint": "Ex : Courses",
+  "onboardingExpenseAmountLabel": "Montant",
+  "onboardingCategoryLabel": "Catégorie",
+  "onboardingCategoryNeedsDescription": "Loyer, courses, factures...",
+  "onboardingCategoryWantsDescription": "Loisirs, sorties, shopping...",
+  "onboardingCategorySavingsDescription": "Économies, investissements...",
+  "onboardingQuickSuggestions": "Suggestions rapides",
+  "onboardingSuggestionGroceries": "Courses",
+  "onboardingSuggestionTransport": "Transport",
+  "onboardingSuggestionSnacks": "Snacks",
+  "onboardingExpenseHelper": "Cette dépense sera ajoutée à votre budget.",
+  "onboardingExpenseValidationError": "Veuillez saisir un nom et un montant valides",
+  "onboardingCreating": "Création en cours...",
+  "onboardingStep1IncomeTitle": "Quel est votre revenu mensuel ?",
+  "onboardingStep1IncomeSubtitle": "Cela nous permet de personnaliser automatiquement votre budget.",
+  "onboardingStep1IncomeAmountLabel": "Montant",
+  "onboardingStep1FrequencyLabel": "Fréquence",
+  "onboardingStep1FrequencyMonthly": "Mensuel",
+  "onboardingStep1FrequencyWeekly": "Hebdo",
+  "onboardingStep1FrequencyOther": "Autre",
+  "onboardingStep1IncomeHelper": "Vous pourrez modifier ce montant à tout moment.",
+  "onboardingStep1IncomeError": "Veuillez saisir un montant valide",
+  "onboardingStep1Personalizing": "Personnalisation de votre budget...",
+  "onboardingStep2Title": "Votre budget réparti automatiquement",
+  "onboardingStep2Subtitle": "Nous utilisons la règle 50/30/20 pour optimiser votre budget.",
+  "onboardingStep2Total": "Total",
+  "onboardingStep4Title": "Félicitations ! 🎉",
+  "onboardingStep4Subtitle": "Vous êtes prêt à maîtriser votre budget !\nProfitez de 14 jours d'essai gratuit.",
+  "onboardingStep4PremiumActivated": "Premium activé",
+  "onboardingStep4TrialDays": "14 jours d'essai gratuit",
+  "onboardingStep4FeatureUnlimitedBudgets": "Budgets illimités",
+  "onboardingStep4FeatureUnlimitedBudgetsDesc": "Créez autant de pockets que vous voulez",
+  "onboardingStep4FeatureDetailedAnalytics": "Analyses détaillées",
+  "onboardingStep4FeatureDetailedAnalyticsDesc": "Suivez vos dépenses en temps réel",
+  "onboardingStep4FeatureSmartNotifications": "Notifications intelligentes",
+  "onboardingStep4FeatureSmartNotificationsDesc": "Restez informé de vos finances",
+  "onboardingStep4Activating": "Activation en cours...",
+  "onboardingStep4Start": "Commencer",
   "pockets": "Pockets",
   "pocketCategoryNeeds": "Besoins",
   "pocketCategoryWants": "Envies",
@@ -819,17 +889,41 @@
   "@deleteAccountConfirmTitle": {
     "description": "Titre de la boîte de dialogue de confirmation de suppression de compte"
   },
-  "deleteAccountConfirmMessage": "Cette action supprimera définitivement votre compte et TOUTES les données associées :\n\n• Toutes les transactions\n• Toutes les catégories personnalisées\n• Tous les pockets\n• Tous les paramètres\n\nCette action est IRRÉVERSIBLE.",
+  "deleteAccountConfirmMessage": "Vous allez supprimer votre compte. Êtes-vous sûr ?",
   "@deleteAccountConfirmMessage": {
     "description": "Message de la boîte de dialogue de confirmation de suppression de compte"
   },
-  "deleteAccountConfirmButton": "Oui, Tout Supprimer",
+  "deleteAccountConfirmButton": "Oui, supprimer",
   "@deleteAccountConfirmButton": {
-    "description": "Texte du bouton de confirmation pour la suppression de compte"
+    "description": "Texte du bouton de confirmation pour supprimer le compte"
+  },
+  "deleteAccountDataTransactions": "Toutes les transactions",
+  "@deleteAccountDataTransactions": {
+    "description": "Élément de liste pour les transactions à supprimer"
+  },
+  "deleteAccountDataCategories": "Toutes les catégories personnalisées",
+  "@deleteAccountDataCategories": {
+    "description": "Élément de liste pour les catégories à supprimer"
+  },
+  "deleteAccountDataPockets": "Tous les pockets",
+  "@deleteAccountDataPockets": {
+    "description": "Élément de liste pour les pockets à supprimer"
+  },
+  "deleteAccountDataSettings": "Tous les paramètres",
+  "@deleteAccountDataSettings": {
+    "description": "Élément de liste pour les paramètres à supprimer"
+  },
+  "deleteAccountIrreversible": "Cette action est IRRÉVERSIBLE.",
+  "@deleteAccountIrreversible": {
+    "description": "Message d'avertissement que la suppression est irréversible"
   },
   "cancel": "Annuler",
   "@cancel": {
     "description": "Texte du bouton d'annulation"
+  },
+  "deleteAccountCancel": "Non, garder",
+  "@deleteAccountCancel": {
+    "description": "Bouton d'annulation pour la suppression de compte"
   },
   "accountDeleted": "Compte supprimé avec succès",
   "@accountDeleted": {
@@ -883,5 +977,25 @@
   "errorSaveFailed": "Échec de la sauvegarde",
   "errorLoadFailed": "Échec du chargement",
   "errorDeleteFailed": "Échec de la suppression",
-  "errorInitializationFailed": "Échec de l'initialisation"
+  "errorInitializationFailed": "Échec de l'initialisation",
+  "onboardingErrorTitle": "Attention",
+  "@onboardingErrorTitle": {
+    "description": "Titre de la boîte de dialogue d'erreur lors de l'onboarding"
+  },
+  "onboardingErrorIncomeSave": "Une erreur est survenue lors de la sauvegarde de votre revenu. Vous pourrez le modifier plus tard.",
+  "@onboardingErrorIncomeSave": {
+    "description": "Message d'erreur lors de la sauvegarde du revenu dans l'onboarding"
+  },
+  "onboardingErrorPocketsCreate": "Une erreur est survenue lors de la création de vos pockets. Vous pourrez les créer plus tard.",
+  "@onboardingErrorPocketsCreate": {
+    "description": "Message d'erreur lors de la création des pockets dans l'onboarding"
+  },
+  "onboardingErrorFinalization": "Une erreur est survenue lors de la finalisation de l'onboarding.",
+  "@onboardingErrorFinalization": {
+    "description": "Message d'erreur lors de la finalisation de l'onboarding"
+  },
+  "onboardingErrorGeneric": "Une erreur est survenue",
+  "@onboardingErrorGeneric": {
+    "description": "Message d'erreur générique dans l'onboarding"
+  }
 }

@@ -39,7 +39,7 @@ class TransactionLocalDataSource {
   }
 
   /// Récupère les transactions par catégorie depuis le cache local
-  Future<List<TransactionModel>> getTransactionsByCategory(int categoryId) async {
+  Future<List<TransactionModel>> getTransactionsByCategory(String categoryId) async {
     try {
       final allTransactions = await getAllTransactions();
       return allTransactions.where((t) => t.categoryId == categoryId).toList();
@@ -94,7 +94,7 @@ class TransactionLocalDataSource {
   }
 
   /// Récupère une transaction par son ID depuis le cache local
-  Future<TransactionModel?> getTransactionById(int id) async {
+  Future<TransactionModel?> getTransactionById(String id) async {
     try {
       final allTransactions = await getAllTransactions();
       return allTransactions.where((t) => t.id == id).firstOrNull;
@@ -135,7 +135,7 @@ class TransactionLocalDataSource {
   }
 
   /// Supprime une transaction du cache local
-  Future<void> deleteTransaction(int transactionId) async {
+  Future<void> deleteTransaction(String transactionId) async {
     try {
       final allTransactions = await getAllTransactions();
       allTransactions.removeWhere((t) => t.id == transactionId);

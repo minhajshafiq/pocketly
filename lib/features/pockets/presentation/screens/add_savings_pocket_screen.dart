@@ -173,8 +173,10 @@ class _AddSavingsPocketScreenState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isIOS = Platform.isIOS;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: null, // Auto: true sur Android, false sur iOS

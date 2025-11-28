@@ -21,6 +21,7 @@ _UserEntity _$UserEntityFromJson(Map<String, dynamic> json) => _UserEntity(
   premiumTrialEnd: json['premium_trial_end'] == null
       ? null
       : DateTime.parse(json['premium_trial_end'] as String),
+  activeSubscriptionType: json['active_subscription_type'] as String?,
   hasCompletedOnboarding: json['has_completed_onboarding'] as bool? ?? false,
   notificationsEnabled: json['notifications_enabled'] as bool? ?? true,
   pushToken: json['push_token'] as String?,
@@ -48,6 +49,7 @@ Map<String, dynamic> _$UserEntityToJson(_UserEntity instance) =>
       'premium_expires_at': instance.premiumExpiresAt?.toIso8601String(),
       'premium_trial_start': instance.premiumTrialStart?.toIso8601String(),
       'premium_trial_end': instance.premiumTrialEnd?.toIso8601String(),
+      'active_subscription_type': instance.activeSubscriptionType,
       'has_completed_onboarding': instance.hasCompletedOnboarding,
       'notifications_enabled': instance.notificationsEnabled,
       'push_token': instance.pushToken,

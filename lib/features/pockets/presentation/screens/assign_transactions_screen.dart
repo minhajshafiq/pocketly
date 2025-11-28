@@ -30,8 +30,8 @@ class _AssignTransactionsScreenState
     extends ConsumerState<AssignTransactionsScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
-  final Set<int> _selectedTransactionIds = {};
-  final Set<int> _initiallyAssignedIds = {};
+  final Set<String> _selectedTransactionIds = {};
+  final Set<String> _initiallyAssignedIds = {};
   bool _isAssigning = false;
   bool _isInitialized = false;
   String _searchQuery = '';
@@ -59,7 +59,8 @@ class _AssignTransactionsScreenState
 
     final assignedIds = transactions
         .where((t) => t.pocketId == widget.pocketId)
-        .map((t) => t.id as int)
+        .where((t) => t.id != null)
+        .map<String>((t) => t.id!)
         .toSet();
 
     setState(() {
@@ -87,6 +88,7 @@ class _AssignTransactionsScreenState
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false,
@@ -242,7 +244,7 @@ class _AssignTransactionsScreenState
           
           // Liste des transactions
           ...filteredTransactions.map((transaction) {
-        final isSelected = _selectedTransactionIds.contains(transaction.id);
+        final isSelected = transaction.id != null && _selectedTransactionIds.contains(transaction.id);
         final isAssignedToOtherPocket =
             transaction.pocketId != null &&
             transaction.pocketId != widget.pocketId;
@@ -257,10 +259,10 @@ class _AssignTransactionsScreenState
                   ? null // Désactivé si déjà assigné à un autre pocket
                   : (value) {
                       setState(() {
-                        if (value == true) {
+                        if (value == true && transaction.id != null) {
                           _selectedTransactionIds.add(transaction.id!);
-                        } else {
-                          _selectedTransactionIds.remove(transaction.id);
+                        } else if (transaction.id != null) {
+                          _selectedTransactionIds.remove(transaction.id!);
                         }
                       });
                     },

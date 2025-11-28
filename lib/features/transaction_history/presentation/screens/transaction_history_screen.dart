@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketly/core/constants/app_colors.dart';
 import 'package:pocketly/core/constants/app_dimensions.dart';
 import 'package:pocketly/core/widgets/animated_page_header.dart';
 import 'package:pocketly/core/widgets/platform_safe_area.dart';
@@ -34,7 +35,10 @@ class _TransactionHistoryScreenState
     ref.watch(currentLocaleProvider);
     final l10n = AppLocalizations.of(context)!;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false,

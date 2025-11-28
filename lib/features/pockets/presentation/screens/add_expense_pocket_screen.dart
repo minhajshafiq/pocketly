@@ -131,6 +131,7 @@ class _AddExpensePocketScreenState
         : l10n.addWantsPocket;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: null, // Auto: true sur Android, false sur iOS

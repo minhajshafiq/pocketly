@@ -513,7 +513,7 @@ final class CurrentUserNotifierProvider
 }
 
 String _$currentUserNotifierHash() =>
-    r'25f515ba34166faccc3a57a6a31ad1fb3968a483';
+    r'73fa3cc89e10e3f4a45e438c1f43f0a6c6d4aa7d';
 
 /// Notifier pour la gestion de l'utilisateur actuel
 

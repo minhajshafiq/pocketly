@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pocketly/features/onboarding/data/models/onboarding_state_model.dart';
 import 'package:pocketly/core/errors/common_errors.dart';
+import 'package:pocketly/core/core.dart';
 
 /// Clé pour stocker l'état de l'onboarding dans SharedPreferences
 const String _kOnboardingStateKey = 'onboarding_state';
@@ -26,15 +28,22 @@ abstract class OnboardingLocalDataSource {
 /// Implémentation du datasource local pour l'onboarding
 class OnboardingLocalDataSourceImpl implements OnboardingLocalDataSource {
   final SharedPreferences _prefs;
+  final LoggerService _logger = LoggerService();
 
-  const OnboardingLocalDataSourceImpl(this._prefs);
+  OnboardingLocalDataSourceImpl(this._prefs);
 
   @override
   Future<void> saveOnboardingState(OnboardingStateModel state) async {
     try {
       final json = state.toJson();
+      if (kDebugMode) {
+        _logger.d('[OnboardingLocalDataSource] Sauvegarde état: $json');
+      }
       final jsonString = jsonEncode(json);
       final success = await _prefs.setString(_kOnboardingStateKey, jsonString);
+      if (kDebugMode) {
+        _logger.d('[OnboardingLocalDataSource] Sauvegarde réussie: $success');
+      }
 
       if (!success) {
         throw CacheError(
@@ -43,6 +52,9 @@ class OnboardingLocalDataSourceImpl implements OnboardingLocalDataSource {
         );
       }
     } catch (e) {
+      if (kDebugMode) {
+        _logger.w('[OnboardingLocalDataSource] Erreur sauvegarde: $e');
+      }
       if (e is CacheError) rethrow;
       throw CacheError(
         operation: 'save_onboarding_state',
@@ -55,13 +67,26 @@ class OnboardingLocalDataSourceImpl implements OnboardingLocalDataSource {
   Future<OnboardingStateModel?> getOnboardingState() async {
     try {
       final jsonString = _prefs.getString(_kOnboardingStateKey);
+      if (kDebugMode) {
+        _logger.d('[OnboardingLocalDataSource] Chargement état: jsonString=$jsonString');
+      }
       if (jsonString == null) {
+        if (kDebugMode) {
+          _logger.d('[OnboardingLocalDataSource] Aucun état sauvegardé');
+        }
         return null;
       }
 
       final json = jsonDecode(jsonString) as Map<String, dynamic>;
-      return OnboardingStateModel.fromJson(json);
+      final state = OnboardingStateModel.fromJson(json);
+      if (kDebugMode) {
+        _logger.d('[OnboardingLocalDataSource] État chargé: monthlyIncome=${state.monthlyIncome}, frequency=${state.incomeFrequency}');
+      }
+      return state;
     } catch (e) {
+      if (kDebugMode) {
+        _logger.w('[OnboardingLocalDataSource] Erreur chargement: $e');
+      }
       throw CacheError(
         operation: 'get_onboarding_state',
         technicalMessage: 'Error retrieving onboarding state: $e',

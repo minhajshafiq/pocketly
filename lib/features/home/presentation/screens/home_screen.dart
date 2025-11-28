@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pocketly/core/constants/app_colors.dart';
 import 'package:pocketly/core/constants/app_dimensions.dart';
 import 'package:pocketly/core/widgets/platform_safe_area.dart';
 import 'package:pocketly/features/home/presentation/widgets/action_buttons_widget.dart';
@@ -19,10 +20,12 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // Écouter le changement de locale pour rebuild automatique
     ref.watch(currentLocaleProvider);
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false, // La bottom nav gère déjà le safe area

@@ -704,6 +704,12 @@ abstract class AppLocalizations {
   /// **'Preferences'**
   String get preferences;
 
+  /// Subscription section title
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription'**
+  String get subscription;
+
   /// Account section title
   ///
   /// In en, this message translates to:
@@ -1094,6 +1100,18 @@ abstract class AppLocalizations {
   /// **'Please enter a valid email'**
   String get emailValidationInvalid;
 
+  /// Error message when email is already registered
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already in use. Sign in or use a different email.'**
+  String get emailAlreadyTaken;
+
+  /// Error message when email is already registered (alternative)
+  ///
+  /// In en, this message translates to:
+  /// **'An account already exists with this email. Try signing in instead.'**
+  String get emailAlreadyRegistered;
+
   /// Password validation required message
   ///
   /// In en, this message translates to:
@@ -1105,6 +1123,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password must be at least 12 characters'**
   String get passwordValidationMinLength;
+
+  /// Error message when password is too weak
+  ///
+  /// In en, this message translates to:
+  /// **'Password is too weak. Use at least 12 characters with letters, numbers, and symbols.'**
+  String get passwordTooWeak;
+
+  /// Generic signup error message
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to create account. Please try again.'**
+  String get signupFailed;
+
+  /// Network error during signup
+  ///
+  /// In en, this message translates to:
+  /// **'Connection error. Check your internet connection and try again.'**
+  String get signupNetworkError;
 
   /// Rate limit error title
   ///
@@ -1244,6 +1280,78 @@ abstract class AppLocalizations {
   /// **'Free'**
   String get statusFree;
 
+  /// Subscription plan type label
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get subscriptionPlan;
+
+  /// Trial end date label
+  ///
+  /// In en, this message translates to:
+  /// **'Trial end'**
+  String get trialEnd;
+
+  /// Subscription renewal date label
+  ///
+  /// In en, this message translates to:
+  /// **'Renewal'**
+  String get renewal;
+
+  /// Unknown value placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
+  /// Days remaining label
+  ///
+  /// In en, this message translates to:
+  /// **'Days remaining'**
+  String get daysRemaining;
+
+  /// Number of days remaining with placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String daysRemainingCount(int count);
+
+  /// Manage subscription button label
+  ///
+  /// In en, this message translates to:
+  /// **'Manage subscription'**
+  String get manageSubscription;
+
+  /// Active trial status text
+  ///
+  /// In en, this message translates to:
+  /// **'Free trial active'**
+  String get trialActive;
+
+  /// Active subscription status text
+  ///
+  /// In en, this message translates to:
+  /// **'Active subscription'**
+  String get subscriptionActive;
+
+  /// Free account status text
+  ///
+  /// In en, this message translates to:
+  /// **'Free account'**
+  String get freeAccount;
+
+  /// Error message when subscription management page cannot be opened
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot open management page'**
+  String get cannotOpenManagementPage;
+
+  /// Error message when subscription management fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error opening subscription management'**
+  String get errorOpeningSubscriptionManagement;
+
   /// Today label
   ///
   /// In en, this message translates to:
@@ -1364,6 +1472,18 @@ abstract class AppLocalizations {
   /// **'This feature is available for Premium and Trial users'**
   String get premiumFeatureDescription;
 
+  /// Premium overlay - only premium members note
+  ///
+  /// In en, this message translates to:
+  /// **'Only available for Premium members'**
+  String get premiumFeatureOnlyMembers;
+
+  /// Description below unlock card without mentioning a trial
+  ///
+  /// In en, this message translates to:
+  /// **''**
+  String get premiumUnlockDescription;
+
   /// Premium benefits title
   ///
   /// In en, this message translates to:
@@ -1423,6 +1543,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coming soon! In-app purchases will be available shortly.'**
   String get comingSoon;
+
+  /// No description provided for @featureComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature will be available soon!'**
+  String get featureComingSoon;
+
+  /// No description provided for @onboardingStep3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your first expense'**
+  String get onboardingStep3Title;
+
+  /// No description provided for @onboardingStep3Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'To better understand how Pocketly works.'**
+  String get onboardingStep3Subtitle;
+
+  /// No description provided for @onboardingExpenseNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense name'**
+  String get onboardingExpenseNameLabel;
+
+  /// No description provided for @onboardingExpenseNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Groceries'**
+  String get onboardingExpenseNameHint;
+
+  /// No description provided for @onboardingExpenseAmountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get onboardingExpenseAmountLabel;
+
+  /// No description provided for @onboardingCategoryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get onboardingCategoryLabel;
+
+  /// No description provided for @onboardingCategoryNeedsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent, groceries, bills...'**
+  String get onboardingCategoryNeedsDescription;
+
+  /// No description provided for @onboardingCategoryWantsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Entertainment, outings, shopping...'**
+  String get onboardingCategoryWantsDescription;
+
+  /// No description provided for @onboardingCategorySavingsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings, investments...'**
+  String get onboardingCategorySavingsDescription;
+
+  /// No description provided for @onboardingQuickSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick suggestions'**
+  String get onboardingQuickSuggestions;
+
+  /// No description provided for @onboardingSuggestionGroceries.
+  ///
+  /// In en, this message translates to:
+  /// **'Groceries'**
+  String get onboardingSuggestionGroceries;
+
+  /// No description provided for @onboardingSuggestionTransport.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get onboardingSuggestionTransport;
+
+  /// No description provided for @onboardingSuggestionSnacks.
+  ///
+  /// In en, this message translates to:
+  /// **'Snacks'**
+  String get onboardingSuggestionSnacks;
+
+  /// No description provided for @onboardingExpenseHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'This expense will be added to your budget.'**
+  String get onboardingExpenseHelper;
+
+  /// No description provided for @onboardingExpenseValidationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid name and amount'**
+  String get onboardingExpenseValidationError;
+
+  /// No description provided for @onboardingCreating.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating...'**
+  String get onboardingCreating;
+
+  /// No description provided for @onboardingStep1IncomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What is your monthly income?'**
+  String get onboardingStep1IncomeTitle;
+
+  /// No description provided for @onboardingStep1IncomeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This allows us to automatically personalize your budget.'**
+  String get onboardingStep1IncomeSubtitle;
+
+  /// No description provided for @onboardingStep1IncomeAmountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get onboardingStep1IncomeAmountLabel;
+
+  /// No description provided for @onboardingStep1FrequencyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency'**
+  String get onboardingStep1FrequencyLabel;
+
+  /// No description provided for @onboardingStep1FrequencyMonthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get onboardingStep1FrequencyMonthly;
+
+  /// No description provided for @onboardingStep1FrequencyWeekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get onboardingStep1FrequencyWeekly;
+
+  /// No description provided for @onboardingStep1FrequencyOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get onboardingStep1FrequencyOther;
+
+  /// No description provided for @onboardingStep1IncomeHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'You can modify this amount at any time.'**
+  String get onboardingStep1IncomeHelper;
+
+  /// No description provided for @onboardingStep1IncomeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid amount'**
+  String get onboardingStep1IncomeError;
+
+  /// No description provided for @onboardingStep1Personalizing.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalizing your budget...'**
+  String get onboardingStep1Personalizing;
+
+  /// No description provided for @onboardingStep2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your budget automatically allocated'**
+  String get onboardingStep2Title;
+
+  /// No description provided for @onboardingStep2Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We use the 50/30/20 rule to optimize your budget.'**
+  String get onboardingStep2Subtitle;
+
+  /// No description provided for @onboardingStep2Total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get onboardingStep2Total;
+
+  /// No description provided for @onboardingStep4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations! 🎉'**
+  String get onboardingStep4Title;
+
+  /// No description provided for @onboardingStep4Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re ready to master your budget!\nEnjoy 14 days of free trial.'**
+  String get onboardingStep4Subtitle;
+
+  /// No description provided for @onboardingStep4PremiumActivated.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium activated'**
+  String get onboardingStep4PremiumActivated;
+
+  /// No description provided for @onboardingStep4TrialDays.
+  ///
+  /// In en, this message translates to:
+  /// **'14 days free trial'**
+  String get onboardingStep4TrialDays;
+
+  /// No description provided for @onboardingStep4FeatureUnlimitedBudgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited budgets'**
+  String get onboardingStep4FeatureUnlimitedBudgets;
+
+  /// No description provided for @onboardingStep4FeatureUnlimitedBudgetsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create as many pockets as you want'**
+  String get onboardingStep4FeatureUnlimitedBudgetsDesc;
+
+  /// No description provided for @onboardingStep4FeatureDetailedAnalytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed analytics'**
+  String get onboardingStep4FeatureDetailedAnalytics;
+
+  /// No description provided for @onboardingStep4FeatureDetailedAnalyticsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your expenses in real time'**
+  String get onboardingStep4FeatureDetailedAnalyticsDesc;
+
+  /// No description provided for @onboardingStep4FeatureSmartNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart notifications'**
+  String get onboardingStep4FeatureSmartNotifications;
+
+  /// No description provided for @onboardingStep4FeatureSmartNotificationsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay informed about your finances'**
+  String get onboardingStep4FeatureSmartNotificationsDesc;
+
+  /// No description provided for @onboardingStep4Activating.
+  ///
+  /// In en, this message translates to:
+  /// **'Activating...'**
+  String get onboardingStep4Activating;
+
+  /// No description provided for @onboardingStep4Start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get onboardingStep4Start;
 
   /// Pockets screen title
   ///
@@ -2885,14 +3257,50 @@ abstract class AppLocalizations {
   /// Message for delete account confirmation dialog
   ///
   /// In en, this message translates to:
-  /// **'This will permanently delete your account and ALL associated data:\n\n• All transactions\n• All custom categories\n• All pockets\n• All settings\n\nThis action CANNOT be undone.'**
+  /// **'You\'re going to delete your account. Are you sure?'**
   String get deleteAccountConfirmMessage;
 
   /// Confirm button text for delete account dialog
   ///
   /// In en, this message translates to:
-  /// **'Yes, Delete Everything'**
+  /// **'Yes, Delete It!'**
   String get deleteAccountConfirmButton;
+
+  /// Cancel button for account deletion
+  ///
+  /// In en, this message translates to:
+  /// **'No, Keep it.'**
+  String get deleteAccountCancel;
+
+  /// No description provided for @deleteAccountDataTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'All transactions'**
+  String get deleteAccountDataTransactions;
+
+  /// No description provided for @deleteAccountDataCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All custom categories'**
+  String get deleteAccountDataCategories;
+
+  /// No description provided for @deleteAccountDataPockets.
+  ///
+  /// In en, this message translates to:
+  /// **'All pockets'**
+  String get deleteAccountDataPockets;
+
+  /// No description provided for @deleteAccountDataSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'All settings'**
+  String get deleteAccountDataSettings;
+
+  /// Warning message that deletion is irreversible
+  ///
+  /// In en, this message translates to:
+  /// **'This action is IRREVERSIBLE.'**
+  String get deleteAccountIrreversible;
 
   /// Success message after account deletion
   ///
@@ -3091,6 +3499,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Initialization failed'**
   String get errorInitializationFailed;
+
+  /// Error dialog title during onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get onboardingErrorTitle;
+
+  /// Error message when saving income during onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred while saving your income. You can modify it later.'**
+  String get onboardingErrorIncomeSave;
+
+  /// Error message when creating pockets during onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred while creating your pockets. You can create them later.'**
+  String get onboardingErrorPocketsCreate;
+
+  /// Error message when finalizing onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred while finalizing onboarding.'**
+  String get onboardingErrorFinalization;
+
+  /// Generic error message in onboarding
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get onboardingErrorGeneric;
 }
 
 class _AppLocalizationsDelegate

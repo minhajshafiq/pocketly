@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pocketly/core/core.dart';
@@ -19,12 +18,14 @@ import 'package:pocketly/features/pockets/pockets.dart' show pocketByIdProvider;
 part 'transaction_provider.g.dart';
 
 /// Provider pour SupabaseClient
-final supabaseClientProvider = Provider<SupabaseClient>((ref) {
+@riverpod
+SupabaseClient supabaseClient(Ref ref) {
   return Supabase.instance.client;
-});
+}
 
 /// Provider pour TransactionRepository
-final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
+@riverpod
+TransactionRepository transactionRepository(Ref ref) {
   final supabase = ref.watch(supabaseClientProvider);
   final prefs = ref.watch(sharedPreferencesProvider);
 
@@ -32,51 +33,54 @@ final transactionRepositoryProvider = Provider<TransactionRepository>((ref) {
     supabase: supabase,
     prefs: prefs,
   );
-});
+}
 
 /// Provider pour les use cases
-final getAllTransactionsUseCaseProvider =
-    Provider<GetAllTransactionsUseCase>((ref) {
+@riverpod
+GetAllTransactionsUseCase getAllTransactionsUseCase(Ref ref) {
   final repository = ref.watch(transactionRepositoryProvider);
   return GetAllTransactionsUseCase(repository);
-});
+}
 
-final createTransactionUseCaseProvider =
-    Provider<CreateTransactionUseCase>((ref) {
+@riverpod
+CreateTransactionUseCase createTransactionUseCase(Ref ref) {
   final repository = ref.watch(transactionRepositoryProvider);
   return CreateTransactionUseCase(repository);
-});
+}
 
-final updateTransactionUseCaseProvider =
-    Provider<UpdateTransactionUseCase>((ref) {
+@riverpod
+UpdateTransactionUseCase updateTransactionUseCase(Ref ref) {
   final repository = ref.watch(transactionRepositoryProvider);
   return UpdateTransactionUseCase(repository);
-});
+}
 
-final deleteTransactionUseCaseProvider =
-    Provider<DeleteTransactionUseCase>((ref) {
+@riverpod
+DeleteTransactionUseCase deleteTransactionUseCase(Ref ref) {
   final repository = ref.watch(transactionRepositoryProvider);
   return DeleteTransactionUseCase(repository);
-});
+}
 
-final getTransactionsByPeriodUseCaseProvider =
-    Provider<GetTransactionsByPeriodUseCase>((ref) {
+@riverpod
+GetTransactionsByPeriodUseCase getTransactionsByPeriodUseCase(Ref ref) {
   final repository = ref.watch(transactionRepositoryProvider);
   return GetTransactionsByPeriodUseCase(repository);
-});
+}
 
-final getTransactionStatsUseCaseProvider =
-    Provider<GetTransactionStatsUseCase>((ref) {
+@riverpod
+GetTransactionStatsUseCase getTransactionStatsUseCase(Ref ref) {
   final repository = ref.watch(transactionRepositoryProvider);
   return GetTransactionStatsUseCase(repository);
-});
+}
 
 /// Provider pour récupérer les transactions par pocket_id
-final transactionsByPocketProvider =
-    FutureProvider.family<List<TransactionEntity>, String>((ref, pocketId) async {
+@riverpod
+Future<List<TransactionEntity>> transactionsByPocket(
+  Ref ref,
+  String pocketId,
+) async {
   final repository = ref.watch(transactionRepositoryProvider);
   return await repository.getTransactionsByPocket(pocketId);
-});
+}
 
 /// ========================================================================
 /// PROVIDER PRINCIPAL - Notifier unifié avec Freezed State
@@ -174,7 +178,7 @@ class TransactionNotifier extends _$TransactionNotifier {
     required String name,
     required double amount,
     required DateTime date,
-    required int categoryId,
+    required String categoryId,
     required TransactionType type,
     RecurrenceType recurrence = RecurrenceType.none,
     String? imageUrl,
@@ -280,7 +284,7 @@ class TransactionNotifier extends _$TransactionNotifier {
   /// Supprime une transaction
   ///
   /// Met à jour automatiquement l'UI en retirant la transaction de la liste.
-  Future<void> deleteTransaction(int id) async {
+  Future<void> deleteTransaction(String id) async {
     // Sauvegarder pour rollback en cas d'échec
     final previousTransactions = state.allTransactions;
 
@@ -378,7 +382,7 @@ class TransactionNotifier extends _$TransactionNotifier {
   }
 
   /// Filtre les transactions par catégorie
-  List<TransactionEntity> filterByCategory(int categoryId) {
+  List<TransactionEntity> filterByCategory(String categoryId) {
     return state.allTransactions
         .where((transaction) => transaction.categoryId == categoryId)
         .toList();
@@ -398,37 +402,42 @@ class TransactionNotifier extends _$TransactionNotifier {
 /// ========================================================================
 
 /// Provider pour les transactions filtrées par type
-final transactionsByTypeProvider =
-    Provider.family<List<TransactionEntity>, TransactionType>((ref, type) {
+@riverpod
+List<TransactionEntity> transactionsByType(Ref ref, TransactionType type) {
   final state = ref.watch(transactionProvider);
   return state.allTransactions.where((t) => t.type == type).toList();
-});
+}
 
 /// Provider pour les transactions par catégorie
-final transactionsByCategoryProvider =
-    Provider.family<List<TransactionEntity>, int>((ref, categoryId) {
+@riverpod
+List<TransactionEntity> transactionsByCategory(Ref ref, String categoryId) {
   final state = ref.watch(transactionProvider);
   return state.allTransactions.where((t) => t.categoryId == categoryId).toList();
-});
+}
 
 /// Provider pour les transactions récurrentes
-final recurringTransactionsProvider = Provider<List<TransactionEntity>>((ref) {
+@riverpod
+List<TransactionEntity> recurringTransactions(Ref ref) {
   final state = ref.watch(transactionProvider);
   return state.allTransactions.where((t) => t.isRecurring).toList();
-});
+}
 
 /// Provider pour les transactions d'un mois
-final transactionsForMonthProvider = Provider.family<List<TransactionEntity>,
-    ({int year, int month})>((ref, period) {
+@riverpod
+List<TransactionEntity> transactionsForMonth(
+  Ref ref,
+  ({int year, int month}) period,
+) {
   final state = ref.watch(transactionProvider);
   return state.allTransactions.where((t) {
     return t.date.year == period.year && t.date.month == period.month;
   }).toList();
-});
+}
 
 /// Provider pour les statistiques des transactions
-final transactionStatsProvider = Provider<TransactionStats>((ref) {
+@riverpod
+TransactionStats transactionStats(Ref ref) {
   final state = ref.watch(transactionProvider);
   return TransactionStats.fromTransactions(state.allTransactions);
-});
+}
 

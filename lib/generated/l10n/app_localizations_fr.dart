@@ -334,6 +334,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get preferences => 'Préférences';
 
   @override
+  String get subscription => 'Abonnement';
+
+  @override
   String get account => 'Compte';
 
   @override
@@ -536,11 +539,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get emailValidationInvalid => 'Veuillez saisir un email valide';
 
   @override
+  String get emailAlreadyTaken =>
+      'Cet email est déjà utilisé. Connectez-vous ou utilisez un autre email.';
+
+  @override
+  String get emailAlreadyRegistered =>
+      'Un compte existe déjà avec cet email. Essayez de vous connecter.';
+
+  @override
   String get passwordValidationRequired => 'Veuillez saisir votre mot de passe';
 
   @override
   String get passwordValidationMinLength =>
       'Le mot de passe doit contenir au moins 12 caractères';
+
+  @override
+  String get passwordTooWeak =>
+      'Le mot de passe est trop faible. Utilisez au moins 12 caractères avec des lettres, chiffres et symboles.';
+
+  @override
+  String get signupFailed =>
+      'Impossible de créer le compte. Veuillez réessayer.';
+
+  @override
+  String get signupNetworkError =>
+      'Erreur de connexion. Vérifiez votre connexion internet et réessayez.';
 
   @override
   String get tooManyAttempts => 'Trop de tentatives de connexion';
@@ -621,6 +644,46 @@ class AppLocalizationsFr extends AppLocalizations {
   String get statusFree => 'Gratuit';
 
   @override
+  String get subscriptionPlan => 'Formule';
+
+  @override
+  String get trialEnd => 'Fin de l\'essai';
+
+  @override
+  String get renewal => 'Renouvellement';
+
+  @override
+  String get unknown => 'Inconnu';
+
+  @override
+  String get daysRemaining => 'Jours restants';
+
+  @override
+  String daysRemainingCount(int count) {
+    return '$count jours';
+  }
+
+  @override
+  String get manageSubscription => 'Gérer l\'abonnement';
+
+  @override
+  String get trialActive => 'Essai gratuit actif';
+
+  @override
+  String get subscriptionActive => 'Abonnement actif';
+
+  @override
+  String get freeAccount => 'Compte gratuit';
+
+  @override
+  String get cannotOpenManagementPage =>
+      'Impossible d\'ouvrir la page de gestion';
+
+  @override
+  String get errorOpeningSubscriptionManagement =>
+      'Erreur lors de l\'ouverture de la gestion d\'abonnement';
+
+  @override
   String get today => 'Aujourd\'hui';
 
   @override
@@ -682,6 +745,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cette fonctionnalité est disponible pour les utilisateurs Premium et Essai';
 
   @override
+  String get premiumFeatureOnlyMembers =>
+      'Disponible uniquement pour les membres Premium';
+
+  @override
+  String get premiumUnlockDescription => '';
+
+  @override
   String get premiumBenefits => 'Avantages Premium';
 
   @override
@@ -713,6 +783,148 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get comingSoon =>
       'Bientôt disponible ! Les achats in-app seront disponibles prochainement.';
+
+  @override
+  String get featureComingSoon =>
+      'Cette fonctionnalité sera bientôt disponible !';
+
+  @override
+  String get onboardingStep3Title => 'Ajoutez votre première dépense';
+
+  @override
+  String get onboardingStep3Subtitle =>
+      'Pour mieux comprendre comment Pocketly fonctionne.';
+
+  @override
+  String get onboardingExpenseNameLabel => 'Nom de la dépense';
+
+  @override
+  String get onboardingExpenseNameHint => 'Ex : Courses';
+
+  @override
+  String get onboardingExpenseAmountLabel => 'Montant';
+
+  @override
+  String get onboardingCategoryLabel => 'Catégorie';
+
+  @override
+  String get onboardingCategoryNeedsDescription =>
+      'Loyer, courses, factures...';
+
+  @override
+  String get onboardingCategoryWantsDescription =>
+      'Loisirs, sorties, shopping...';
+
+  @override
+  String get onboardingCategorySavingsDescription =>
+      'Économies, investissements...';
+
+  @override
+  String get onboardingQuickSuggestions => 'Suggestions rapides';
+
+  @override
+  String get onboardingSuggestionGroceries => 'Courses';
+
+  @override
+  String get onboardingSuggestionTransport => 'Transport';
+
+  @override
+  String get onboardingSuggestionSnacks => 'Snacks';
+
+  @override
+  String get onboardingExpenseHelper =>
+      'Cette dépense sera ajoutée à votre budget.';
+
+  @override
+  String get onboardingExpenseValidationError =>
+      'Veuillez saisir un nom et un montant valides';
+
+  @override
+  String get onboardingCreating => 'Création en cours...';
+
+  @override
+  String get onboardingStep1IncomeTitle => 'Quel est votre revenu mensuel ?';
+
+  @override
+  String get onboardingStep1IncomeSubtitle =>
+      'Cela nous permet de personnaliser automatiquement votre budget.';
+
+  @override
+  String get onboardingStep1IncomeAmountLabel => 'Montant';
+
+  @override
+  String get onboardingStep1FrequencyLabel => 'Fréquence';
+
+  @override
+  String get onboardingStep1FrequencyMonthly => 'Mensuel';
+
+  @override
+  String get onboardingStep1FrequencyWeekly => 'Hebdo';
+
+  @override
+  String get onboardingStep1FrequencyOther => 'Autre';
+
+  @override
+  String get onboardingStep1IncomeHelper =>
+      'Vous pourrez modifier ce montant à tout moment.';
+
+  @override
+  String get onboardingStep1IncomeError => 'Veuillez saisir un montant valide';
+
+  @override
+  String get onboardingStep1Personalizing =>
+      'Personnalisation de votre budget...';
+
+  @override
+  String get onboardingStep2Title => 'Votre budget réparti automatiquement';
+
+  @override
+  String get onboardingStep2Subtitle =>
+      'Nous utilisons la règle 50/30/20 pour optimiser votre budget.';
+
+  @override
+  String get onboardingStep2Total => 'Total';
+
+  @override
+  String get onboardingStep4Title => 'Félicitations ! 🎉';
+
+  @override
+  String get onboardingStep4Subtitle =>
+      'Vous êtes prêt à maîtriser votre budget !\nProfitez de 14 jours d\'essai gratuit.';
+
+  @override
+  String get onboardingStep4PremiumActivated => 'Premium activé';
+
+  @override
+  String get onboardingStep4TrialDays => '14 jours d\'essai gratuit';
+
+  @override
+  String get onboardingStep4FeatureUnlimitedBudgets => 'Budgets illimités';
+
+  @override
+  String get onboardingStep4FeatureUnlimitedBudgetsDesc =>
+      'Créez autant de pockets que vous voulez';
+
+  @override
+  String get onboardingStep4FeatureDetailedAnalytics => 'Analyses détaillées';
+
+  @override
+  String get onboardingStep4FeatureDetailedAnalyticsDesc =>
+      'Suivez vos dépenses en temps réel';
+
+  @override
+  String get onboardingStep4FeatureSmartNotifications =>
+      'Notifications intelligentes';
+
+  @override
+  String get onboardingStep4FeatureSmartNotificationsDesc =>
+      'Restez informé de vos finances';
+
+  @override
+  String get onboardingStep4Activating => 'Activation en cours...';
+
+  @override
+  String get onboardingStep4Start => 'Commencer';
 
   @override
   String get pockets => 'Pockets';
@@ -1558,10 +1770,29 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deleteAccountConfirmMessage =>
-      'Cette action supprimera définitivement votre compte et TOUTES les données associées :\n\n• Toutes les transactions\n• Toutes les catégories personnalisées\n• Tous les pockets\n• Tous les paramètres\n\nCette action est IRRÉVERSIBLE.';
+      'Vous allez supprimer votre compte. Êtes-vous sûr ?';
 
   @override
-  String get deleteAccountConfirmButton => 'Oui, Tout Supprimer';
+  String get deleteAccountConfirmButton => 'Oui, supprimer';
+
+  @override
+  String get deleteAccountCancel => 'Non, garder';
+
+  @override
+  String get deleteAccountDataTransactions => 'Toutes les transactions';
+
+  @override
+  String get deleteAccountDataCategories =>
+      'Toutes les catégories personnalisées';
+
+  @override
+  String get deleteAccountDataPockets => 'Tous les pockets';
+
+  @override
+  String get deleteAccountDataSettings => 'Tous les paramètres';
+
+  @override
+  String get deleteAccountIrreversible => 'Cette action est IRRÉVERSIBLE.';
 
   @override
   String get accountDeleted => 'Compte supprimé avec succès';
@@ -1665,4 +1896,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorInitializationFailed => 'Échec de l\'initialisation';
+
+  @override
+  String get onboardingErrorTitle => 'Attention';
+
+  @override
+  String get onboardingErrorIncomeSave =>
+      'Une erreur est survenue lors de la sauvegarde de votre revenu. Vous pourrez le modifier plus tard.';
+
+  @override
+  String get onboardingErrorPocketsCreate =>
+      'Une erreur est survenue lors de la création de vos pockets. Vous pourrez les créer plus tard.';
+
+  @override
+  String get onboardingErrorFinalization =>
+      'Une erreur est survenue lors de la finalisation de l\'onboarding.';
+
+  @override
+  String get onboardingErrorGeneric => 'Une erreur est survenue';
 }

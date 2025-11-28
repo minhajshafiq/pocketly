@@ -18,6 +18,7 @@ sealed class UserEntity with _$UserEntity {
     @JsonKey(name: 'premium_expires_at') DateTime? premiumExpiresAt,
     @JsonKey(name: 'premium_trial_start') DateTime? premiumTrialStart,
     @JsonKey(name: 'premium_trial_end') DateTime? premiumTrialEnd,
+    @JsonKey(name: 'active_subscription_type') String? activeSubscriptionType,
     @JsonKey(name: 'has_completed_onboarding')
     @Default(false)
     bool hasCompletedOnboarding,

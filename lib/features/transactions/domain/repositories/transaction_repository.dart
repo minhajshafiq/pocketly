@@ -9,7 +9,7 @@ abstract class TransactionRepository {
   Future<List<TransactionEntity>> getTransactionsByType(TransactionType type);
 
   /// Récupère les transactions par catégorie
-  Future<List<TransactionEntity>> getTransactionsByCategory(int categoryId);
+  Future<List<TransactionEntity>> getTransactionsByCategory(String categoryId);
 
   /// Récupère les transactions par pocket
   Future<List<TransactionEntity>> getTransactionsByPocket(String pocketId);
@@ -30,7 +30,7 @@ abstract class TransactionRepository {
   });
 
   /// Récupère une transaction par son ID
-  Future<TransactionEntity?> getTransactionById(int id);
+  Future<TransactionEntity?> getTransactionById(String id);
 
   /// Crée une nouvelle transaction
   Future<TransactionEntity> createTransaction(TransactionEntity transaction);
@@ -40,24 +40,24 @@ abstract class TransactionRepository {
 
   /// Assigne une transaction à un pocket
   Future<TransactionEntity> assignTransactionToPocket({
-    required int transactionId,
+    required String transactionId,
     required String pocketId,
   });
 
   /// Retire une transaction d'un pocket
   Future<TransactionEntity> unassignTransactionFromPocket({
-    required int transactionId,
+    required String transactionId,
   });
 
   /// Supprime une transaction
-  Future<void> deleteTransaction(int transactionId);
+  Future<void> deleteTransaction(String transactionId);
 
   /// Met en pause/active une récurrence
-  Future<void> toggleRecurrenceActive(int transactionId, bool isActive);
+  Future<void> toggleRecurrenceActive(String transactionId, bool isActive);
 
   /// Génère les occurrences futures d'une transaction récurrente
   Future<List<TransactionEntity>> generateFutureOccurrences({
-    required int transactionId,
+    required String transactionId,
     required DateTime until,
   });
 
@@ -78,7 +78,7 @@ class TransactionStats {
   final double balance;
   final int transactionCount;
   final int recurringCount;
-  final Map<int, double> categoryBreakdown;
+  final Map<String, double> categoryBreakdown;
 
   const TransactionStats({
     required this.totalIncome,
@@ -98,9 +98,9 @@ class TransactionStats {
     final totalExpense = expenses.fold(0.0, (sum, t) => sum + t.amount);
     final balance = totalIncome - totalExpense;
 
-    final categoryBreakdown = <int, double>{};
+    final categoryBreakdown = <String, double>{};
     for (final transaction in transactions) {
-      categoryBreakdown[transaction.categoryId] = 
+      categoryBreakdown[transaction.categoryId] =
           (categoryBreakdown[transaction.categoryId] ?? 0.0) + transaction.amount;
     }
 

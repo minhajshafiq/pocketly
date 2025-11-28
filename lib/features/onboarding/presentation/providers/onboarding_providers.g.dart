@@ -8,58 +8,14 @@ part of 'onboarding_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Provider pour SharedPreferences (singleton)
-
-@ProviderFor(sharedPreferences)
-const sharedPreferencesProvider = SharedPreferencesProvider._();
-
-/// Provider pour SharedPreferences (singleton)
-
-final class SharedPreferencesProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<SharedPreferences>,
-          SharedPreferences,
-          FutureOr<SharedPreferences>
-        >
-    with
-        $FutureModifier<SharedPreferences>,
-        $FutureProvider<SharedPreferences> {
-  /// Provider pour SharedPreferences (singleton)
-  const SharedPreferencesProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'sharedPreferencesProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$sharedPreferencesHash();
-
-  @$internal
-  @override
-  $FutureProviderElement<SharedPreferences> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<SharedPreferences> create(Ref ref) {
-    return sharedPreferences(ref);
-  }
-}
-
-String _$sharedPreferencesHash() => r'd22b545aefe95500327f9dce52c645d746349271';
-
 /// Provider pour le datasource local onboarding
+/// Utilise le provider global sharedPreferencesProvider qui est déjà initialisé dans main.dart
 
 @ProviderFor(onboardingLocalDataSource)
 const onboardingLocalDataSourceProvider = OnboardingLocalDataSourceProvider._();
 
 /// Provider pour le datasource local onboarding
+/// Utilise le provider global sharedPreferencesProvider qui est déjà initialisé dans main.dart
 
 final class OnboardingLocalDataSourceProvider
     extends
@@ -70,6 +26,7 @@ final class OnboardingLocalDataSourceProvider
         >
     with $Provider<OnboardingLocalDataSource> {
   /// Provider pour le datasource local onboarding
+  /// Utilise le provider global sharedPreferencesProvider qui est déjà initialisé dans main.dart
   const OnboardingLocalDataSourceProvider._()
     : super(
         from: null,
@@ -105,7 +62,7 @@ final class OnboardingLocalDataSourceProvider
 }
 
 String _$onboardingLocalDataSourceHash() =>
-    r'f417a0c6a8118dc2d53d17db8d48782f9b8d92ec';
+    r'9af13abf2bfb5360bc757a38d269fded18eeec7f';
 
 /// Provider pour le repository onboarding
 
@@ -350,7 +307,7 @@ final class OnboardingNotifierProvider
 }
 
 String _$onboardingNotifierHash() =>
-    r'79d57cf3757de64e3fbcf9e5ff2c3279afea1c12';
+    r'2135e40dfdbb29118a09d9cad3b84caa0ca33a23';
 
 /// Provider principal pour gérer l'état de l'onboarding
 
@@ -471,4 +428,4 @@ final class ConvertedMonthlyIncomeProvider
 }
 
 String _$convertedMonthlyIncomeHash() =>
-    r'62a6fd5f5919ea8cad3953918cc1630ed15c1316';
+    r'e7eb1cef21e12df73e5e115cbcbb00eb46aae3bd';

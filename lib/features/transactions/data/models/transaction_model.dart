@@ -8,11 +8,11 @@ part 'transaction_model.g.dart';
 @freezed
 sealed class TransactionModel with _$TransactionModel {
   const factory TransactionModel({
-    int? id,
+    String? id,
     required String name,
     required double amount,
     required DateTime date,
-    @JsonKey(name: 'category_id') required int categoryId,
+    @JsonKey(name: 'category_id') required String categoryId,
     required TransactionType type,
     @Default(RecurrenceType.none) RecurrenceType recurrence,
     @JsonKey(name: 'image_url') String? imageUrl,

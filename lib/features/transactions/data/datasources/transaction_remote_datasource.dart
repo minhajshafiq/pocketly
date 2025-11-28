@@ -55,7 +55,7 @@ class TransactionRemoteDataSource {
   }
 
   /// Récupère les transactions par catégorie depuis Supabase
-  Future<List<TransactionModel>> getTransactionsByCategory(int categoryId) async {
+  Future<List<TransactionModel>> getTransactionsByCategory(String categoryId) async {
     try {
       final response = await _supabase
           .from('transactions')
@@ -98,7 +98,7 @@ class TransactionRemoteDataSource {
 
   /// Assigne une transaction à un pocket
   Future<TransactionModel> assignTransactionToPocket({
-    required int transactionId,
+    required String transactionId,
     required String pocketId,
   }) async {
     try {
@@ -121,7 +121,7 @@ class TransactionRemoteDataSource {
 
   /// Retire une transaction d'un pocket
   Future<TransactionModel> unassignTransactionFromPocket({
-    required int transactionId,
+    required String transactionId,
   }) async {
     try {
       final response = await _supabase
@@ -209,7 +209,7 @@ class TransactionRemoteDataSource {
   }
 
   /// Récupère une transaction par son ID depuis Supabase
-  Future<TransactionModel?> getTransactionById(int id) async {
+  Future<TransactionModel?> getTransactionById(String id) async {
     try {
       final response = await _supabase
           .from('transactions')
@@ -232,7 +232,9 @@ class TransactionRemoteDataSource {
   Future<TransactionModel> createTransaction(TransactionModel transaction) async {
     try {
       logger.d('[TransactionRemoteDataSource] Préparation de l\'insertion...');
-      final jsonData = transaction.toJson();
+      // Utiliser toJsonForSupabase() qui exclut les champs gérés par la DB (id, created_at, updated_at)
+      final jsonData = transaction.toJsonForSupabase();
+
       logger.d('[TransactionRemoteDataSource] Données JSON à insérer: $jsonData');
 
       final response = await _supabase
@@ -274,7 +276,7 @@ class TransactionRemoteDataSource {
   }
 
   /// Supprime une transaction de Supabase
-  Future<void> deleteTransaction(int transactionId) async {
+  Future<void> deleteTransaction(String transactionId) async {
     try {
       await _supabase
           .from('transactions')
@@ -290,7 +292,7 @@ class TransactionRemoteDataSource {
   }
 
   /// Met en pause/active une récurrence sur Supabase
-  Future<void> toggleRecurrenceActive(int transactionId, bool isActive) async {
+  Future<void> toggleRecurrenceActive(String transactionId, bool isActive) async {
     try {
       await _supabase
           .from('transactions')
@@ -307,7 +309,7 @@ class TransactionRemoteDataSource {
 
   /// Génère les occurrences futures d'une transaction récurrente
   Future<List<TransactionModel>> generateFutureOccurrences({
-    required int transactionId,
+    required String transactionId,
     required DateTime until,
   }) async {
     try {

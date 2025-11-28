@@ -13,6 +13,8 @@ import 'package:pocketly/features/pockets/presentation/widgets/pocket_category_s
 import 'package:pocketly/features/pockets/presentation/widgets/budget_total_widget.dart';
 import 'package:pocketly/features/pockets/presentation/widgets/rule_502030_widget.dart';
 import 'package:pocketly/features/pockets/presentation/widgets/pocket_category_filter_buttons.dart';
+import 'package:pocketly/features/statistics/presentation/widgets/premium_locked_widget.dart';
+import 'package:pocketly/features/user/user.dart';
 import 'package:pocketly/generated/l10n/app_localizations.dart';
 import 'package:pocketly/features/notifications/notifications.dart';
 
@@ -47,35 +49,41 @@ class _PocketsListScreenState extends ConsumerState<PocketsListScreen> {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // Vérifier l'accès premium
+    final canAccessPremium = ref.watch(canAccessPremiumProvider);
+
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false,
         padding: EdgeInsets.only(top: AppDimensions.paddingS),
         child: Stack(
-          children: [
-            // Contenu scrollable
-            RefreshIndicator(
-              onRefresh: () async {
-                ref.invalidate(userPocketsProvider);
-                await ref.read(userPocketsProvider.future);
-              },
-              child: _buildBody(),
-            ),
+                children: [
+                  // Contenu scrollable
+                  RefreshIndicator(
+                    onRefresh: () async {
+                      ref.invalidate(userPocketsProvider);
+                      await ref.read(userPocketsProvider.future);
+                    },
+                    child: _buildBody(),
+                  ),
 
-            // Header sticky animé
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: AnimatedPageHeader(
-                title: l10n.pockets,
-                scrollController: _scrollController,
-                showBackButton: false,
-                actionButton: _buildRefreshButton(isDark),
-              ),
-            ),
-          ],
+                  // Header sticky animé
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: AnimatedPageHeader(
+                      title: l10n.pockets,
+                      scrollController: _scrollController,
+                      showBackButton: false,
+                      actionButton: _buildRefreshButton(isDark),
+                    ),
+                  ),
+
+            if (!canAccessPremium) PremiumLockedOverlay(),
+                ],
         ),
       ),
     );

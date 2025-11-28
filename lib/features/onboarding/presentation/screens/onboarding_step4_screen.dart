@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pocketly/core/core.dart';
 import 'package:pocketly/core/widgets/animated_page_header.dart';
+import 'package:pocketly/generated/l10n/app_localizations.dart';
 import 'package:pocketly/features/onboarding/presentation/providers/onboarding_providers.dart';
 
 /// Écran d'onboarding - Étape 4 : Activation du trial et célébration
@@ -61,6 +62,7 @@ class _OnboardingStep4ScreenState
     final isIOS = Platform.isIOS;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false,
@@ -104,7 +106,7 @@ class _OnboardingStep4ScreenState
               left: 0,
               right: 0,
               child: AnimatedPageHeader(
-                title: 'Étape $_totalSteps/$_totalSteps',
+                title: AppLocalizations.of(context)!.onboardingStepProgress(_totalSteps, _totalSteps),
                 scrollController: _scrollController,
                 showBackButton: false,
                 actionButton: _buildSkipButton(isDark, isIOS),
@@ -121,11 +123,12 @@ class _OnboardingStep4ScreenState
 
 
   Widget _buildProgressIndicator(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Étape $_totalSteps/$_totalSteps',
+          l10n.onboardingStepProgress(_totalSteps, _totalSteps),
           style: AppTypography.caption.copyWith(
             color: isDark
                 ? AppColors.textSecondaryOnDark
@@ -179,8 +182,9 @@ class _OnboardingStep4ScreenState
   }
 
   Widget _buildTitle(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Félicitations ! 🎉',
+      l10n.onboardingStep4Title,
       textAlign: TextAlign.center,
       style: AppTypography.display.copyWith(
         color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
@@ -193,8 +197,9 @@ class _OnboardingStep4ScreenState
   }
 
   Widget _buildSubtitle(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Vous êtes prêt à maîtriser votre budget !\nProfitez de 14 jours d\'essai gratuit.',
+      l10n.onboardingStep4Subtitle,
       textAlign: TextAlign.center,
       style: AppTypography.body.copyWith(
         color: isDark
@@ -231,7 +236,7 @@ class _OnboardingStep4ScreenState
           ),
           SizedBox(height: AppDimensions.paddingM),
           Text(
-            'Premium activé',
+            AppLocalizations.of(context)!.onboardingStep4PremiumActivated,
             style: AppTypography.heading.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -239,7 +244,7 @@ class _OnboardingStep4ScreenState
           ),
           SizedBox(height: AppDimensions.paddingS),
           Text(
-            '14 jours d\'essai gratuit',
+            AppLocalizations.of(context)!.onboardingStep4TrialDays,
             style: AppTypography.body.copyWith(
               color: Colors.white.withValues(alpha: 0.9),
             ),
@@ -254,21 +259,22 @@ class _OnboardingStep4ScreenState
   }
 
   Widget _buildFeaturesList(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     final features = [
       _Feature(
         icon: AppIcons.budget,
-        title: 'Budgets illimités',
-        description: 'Créez autant de pockets que vous voulez',
+        title: l10n.onboardingStep4FeatureUnlimitedBudgets,
+        description: l10n.onboardingStep4FeatureUnlimitedBudgetsDesc,
       ),
       _Feature(
         icon: AppIcons.stats,
-        title: 'Analyses détaillées',
-        description: 'Suivez vos dépenses en temps réel',
+        title: l10n.onboardingStep4FeatureDetailedAnalytics,
+        description: l10n.onboardingStep4FeatureDetailedAnalyticsDesc,
       ),
       _Feature(
         icon: AppIcons.notification,
-        title: 'Notifications intelligentes',
-        description: 'Restez informé de vos finances',
+        title: l10n.onboardingStep4FeatureSmartNotifications,
+        description: l10n.onboardingStep4FeatureSmartNotificationsDesc,
       ),
     ];
 
@@ -338,7 +344,7 @@ class _OnboardingStep4ScreenState
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppButton(
-          text: _isActivatingTrial ? 'Activation en cours...' : 'Commencer',
+          text: _isActivatingTrial ? AppLocalizations.of(context)!.onboardingStep4Activating : AppLocalizations.of(context)!.onboardingStep4Start,
           icon: AppIcons.arrowRight,
           iconPosition: IconPosition.right,
           style: AppButtonStyle.gradient,
@@ -392,9 +398,9 @@ class _OnboardingStep4ScreenState
   }
 
   Widget _buildConfettiOverlay() {
-    return IgnorePointer(
+    return Positioned.fill(
+      child: IgnorePointer(
       ignoring: true,
-      child: Positioned.fill(
         child: Stack(
           children: _confettiPieces
               .map(
@@ -458,15 +464,16 @@ class _OnboardingStep4ScreenState
       setState(() => _isActivatingTrial = false);
 
       // Afficher une erreur
+      final l10n = AppLocalizations.of(context)!;
       if (Platform.isIOS) {
         showCupertinoDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
-            title: const Text('Erreur'),
-            content: Text('Une erreur est survenue: $e'),
+            title: Text(l10n.errorTitle),
+            content: Text('${l10n.onboardingErrorFinalization}\n\n$e'),
             actions: [
               CupertinoDialogAction(
-                child: const Text('OK'),
+                child: Text(l10n.okButton),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],
@@ -476,12 +483,12 @@ class _OnboardingStep4ScreenState
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Erreur'),
-            content: Text('Une erreur est survenue: $e'),
+            title: Text(l10n.errorTitle),
+            content: Text('${l10n.onboardingErrorFinalization}\n\n$e'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
+                child: Text(l10n.okButton),
               ),
             ],
           ),

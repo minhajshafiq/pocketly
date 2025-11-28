@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketly/core/errors/errors.dart';
+import 'package:pocketly/core/constants/app_colors.dart';
 import 'package:pocketly/features/notifications/domain/entities/notification_entity.dart';
 import 'package:pocketly/features/notifications/presentation/providers/notification_providers.dart';
 import 'package:pocketly/features/notifications/presentation/widgets/notification_helper.dart';
@@ -17,13 +18,14 @@ class NotificationSettingsScreen extends ConsumerWidget {
     // Utiliser ! pour s'assurer que AppLocalizations n'est pas null
     final s = AppLocalizations.of(context)!;
     final permissionState = ref.watch(notificationPermissionStateProvider);
-    
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     // Determine if we're on iOS
     final bool isIOS = Platform.isIOS;
-    
+
     return isIOS
-        ? _buildIOSScreen(context, ref, s, permissionState)
-        : _buildAndroidScreen(context, ref, s, permissionState);
+        ? _buildIOSScreen(context, ref, s, permissionState, isDark)
+        : _buildAndroidScreen(context, ref, s, permissionState, isDark);
   }
   
   /// Build iOS screen with Cupertino widgets
@@ -32,8 +34,10 @@ class NotificationSettingsScreen extends ConsumerWidget {
     WidgetRef ref,
     AppLocalizations s,
     AsyncValue<bool> permissionState,
+    bool isDark,
   ) {
     return CupertinoPageScaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       navigationBar: CupertinoNavigationBar(
         middle: Text(s.notificationSettings),
       ),
@@ -49,8 +53,10 @@ class NotificationSettingsScreen extends ConsumerWidget {
     WidgetRef ref,
     AppLocalizations s,
     AsyncValue<bool> permissionState,
+    bool isDark,
   ) {
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       appBar: AppBar(
         title: Text(s.notificationSettings),
       ),

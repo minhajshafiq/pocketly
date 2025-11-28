@@ -8,10 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pocketly/core/core.dart';
 import 'package:pocketly/core/widgets/animated_page_header.dart';
+import 'package:pocketly/generated/l10n/app_localizations.dart';
 import 'package:pocketly/features/onboarding/onboarding.dart';
 import 'package:pocketly/features/pockets/pockets.dart';
-import 'package:pocketly/features/category/category.dart';
-import 'package:pocketly/features/transactions/transactions.dart';
 import 'package:pocketly/features/user/user.dart';
 
 /// Écran d'onboarding - Étape 3 : Première dépense
@@ -50,6 +49,7 @@ class _OnboardingStep3ScreenState
     final isIOS = Platform.isIOS;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false,
@@ -108,7 +108,7 @@ class _OnboardingStep3ScreenState
               left: 0,
               right: 0,
               child: AnimatedPageHeader(
-                title: 'Étape 3/$_totalSteps',
+                title: AppLocalizations.of(context)!.onboardingStepProgress(3, _totalSteps),
                 scrollController: _scrollController,
                 showBackButton: true,
                 actionButton: _buildSkipButton(isDark, isIOS),
@@ -122,11 +122,12 @@ class _OnboardingStep3ScreenState
 
 
   Widget _buildProgressIndicator(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Étape 3/$_totalSteps',
+          l10n.onboardingStepProgress(3, _totalSteps),
           style: AppTypography.caption.copyWith(
             color: isDark
                 ? AppColors.textSecondaryOnDark
@@ -149,8 +150,9 @@ class _OnboardingStep3ScreenState
   }
 
   Widget _buildTitle(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Ajoutez votre première dépense',
+      l10n.onboardingStep3Title,
       style: AppTypography.heading.copyWith(
         color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
         fontWeight: FontWeight.bold,
@@ -162,8 +164,9 @@ class _OnboardingStep3ScreenState
   }
 
   Widget _buildSubtitle(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Pour mieux comprendre comment Pocketly fonctionne.',
+      l10n.onboardingStep3Subtitle,
       style: AppTypography.body.copyWith(
         color: isDark
             ? AppColors.textSecondaryOnDark
@@ -176,17 +179,33 @@ class _OnboardingStep3ScreenState
   }
 
   Widget _buildAmountInput(bool isDark) {
+    final theme = Theme.of(context);
+    final isDarkTheme = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
+    
     return AppTextField(
-            controller: _amountController,
-      label: 'Montant',
+      controller: _amountController,
+      label: l10n.onboardingExpenseAmountLabel,
       hint: '0',
       type: AppTextFieldType.number,
-            textInputAction: TextInputAction.next,
-            onChanged: (_) {
-              if (_showValidationError) {
-                setState(() => _showValidationError = false);
-              }
-            },
+      textInputAction: TextInputAction.next,
+      suffixIcon: Padding(
+        padding: EdgeInsets.only(right: AppDimensions.paddingM),
+        child: Text(
+          '€',
+          style: AppTypography.body.copyWith(
+            color: isDarkTheme
+                ? AppColors.textSecondaryOnDark
+                : AppColors.textSecondary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      onChanged: (_) {
+        if (_showValidationError) {
+          setState(() => _showValidationError = false);
+        }
+      },
     )
         .animate()
         .fadeIn(duration: 400.ms, delay: 300.ms)
@@ -194,11 +213,12 @@ class _OnboardingStep3ScreenState
   }
 
   Widget _buildCategorySelector(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Catégorie',
+          l10n.onboardingCategoryLabel,
           style: AppTypography.title.copyWith(
             color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
             fontWeight: FontWeight.w600,
@@ -207,24 +227,24 @@ class _OnboardingStep3ScreenState
         SizedBox(height: AppDimensions.paddingM),
         _buildCategoryCard(
           icon: AppIcons.home,
-          title: 'Besoins',
-          description: 'Loyer, courses, factures...',
+          title: l10n.pocketCategoryNeeds,
+          description: l10n.onboardingCategoryNeedsDescription,
           category: ExpenseCategory.needs,
           isDark: isDark,
         ),
         SizedBox(height: AppDimensions.paddingM),
         _buildCategoryCard(
           icon: AppIcons.favorite,
-          title: 'Envies',
-          description: 'Loisirs, sorties, shopping...',
+          title: l10n.pocketCategoryWants,
+          description: l10n.onboardingCategoryWantsDescription,
           category: ExpenseCategory.wants,
           isDark: isDark,
         ),
         SizedBox(height: AppDimensions.paddingM),
         _buildCategoryCard(
           icon: AppIcons.savings,
-          title: 'Épargne',
-          description: 'Économies, investissements...',
+          title: l10n.pocketCategorySavings,
+          description: l10n.onboardingCategorySavingsDescription,
           category: ExpenseCategory.savings,
           isDark: isDark,
         ),
@@ -236,19 +256,20 @@ class _OnboardingStep3ScreenState
   }
 
   Widget _buildQuickSuggestions(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     final suggestions = [
       _ExpenseSuggestion(
-        label: 'Courses',
+        label: l10n.onboardingSuggestionGroceries,
         amount: 20,
         category: ExpenseCategory.needs,
       ),
       _ExpenseSuggestion(
-        label: 'Transport',
+        label: l10n.onboardingSuggestionTransport,
         amount: 10,
         category: ExpenseCategory.needs,
       ),
       _ExpenseSuggestion(
-        label: 'Snacks',
+        label: l10n.onboardingSuggestionSnacks,
         amount: 5,
         category: ExpenseCategory.wants,
       ),
@@ -258,7 +279,7 @@ class _OnboardingStep3ScreenState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Suggestions rapides',
+          l10n.onboardingQuickSuggestions,
           style: AppTypography.title.copyWith(
             color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
             fontWeight: FontWeight.w600,
@@ -442,11 +463,13 @@ class _OnboardingStep3ScreenState
   }
 
   Widget _buildNameInput(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return AppTextField(
       controller: _nameController,
-      label: 'Nom de la dépense',
-      hint: 'Ex : Courses',
-            textInputAction: TextInputAction.done,
+      label: l10n.onboardingExpenseNameLabel,
+      hint: l10n.onboardingExpenseNameHint,
+      icon: AppIcons.tag,
+      textInputAction: TextInputAction.done,
       onChanged: (_) {
         if (_showValidationError) {
           setState(() => _showValidationError = false);
@@ -459,6 +482,7 @@ class _OnboardingStep3ScreenState
   }
 
   Widget _buildHelperText(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         Icon(
@@ -470,7 +494,7 @@ class _OnboardingStep3ScreenState
         SizedBox(width: AppDimensions.paddingXS),
         Expanded(
           child: Text(
-            'Cette dépense sera ajoutée à votre budget.',
+            l10n.onboardingExpenseHelper,
             style: AppTypography.caption.copyWith(
               color: isDark
                   ? AppColors.textSecondaryOnDark
@@ -486,8 +510,9 @@ class _OnboardingStep3ScreenState
   }
 
   Widget _buildErrorMessage() {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Veuillez saisir un nom et un montant valides',
+      l10n.onboardingExpenseValidationError,
       style: AppTypography.caption.copyWith(
         color: AppColors.error,
         fontWeight: FontWeight.w600,
@@ -496,9 +521,10 @@ class _OnboardingStep3ScreenState
   }
 
   Widget _buildBottomActions(BuildContext context, bool isIOS) {
+    final l10n = AppLocalizations.of(context)!;
     return AppButton(
       width: double.infinity,
-      text: _isLoading ? 'Création en cours...' : 'Continuer',
+      text: _isLoading ? l10n.onboardingCreating : l10n.onboardingContinue,
       icon: _isLoading ? null : AppIcons.arrowRight,
           iconPosition: IconPosition.right,
           style: AppButtonStyle.primary,
@@ -522,24 +548,33 @@ class _OnboardingStep3ScreenState
 
     HapticFeedback.mediumImpact();
 
-    // Sauvegarder dans le provider
-    ref.read(onboardingProvider.notifier).setFirstExpenseAmount(amount);
-    ref
-        .read(onboardingProvider.notifier)
-        .setFirstExpenseCategory(_selectedCategory);
+    // S'assurer que le provider est initialisé
+    try {
+      await ref.read(onboardingProvider.future);
+    } catch (e) {
+      ref.read(loggerProvider).w('[Step3] Provider déjà initialisé: $e');
+    }
 
-      ref
-          .read(onboardingProvider.notifier)
-        .setFirstExpenseDescription(name);
+    // Sauvegarder dans le provider (AWAIT pour éviter les race conditions!)
+    ref.read(loggerProvider).d('[Step3] Sauvegarde dépense: amount=$amount, category=$_selectedCategory, name=$name');
+    await ref.read(onboardingProvider.notifier).setFirstExpenseAmount(amount);
+    await ref.read(onboardingProvider.notifier).setFirstExpenseCategory(_selectedCategory);
+    await ref.read(onboardingProvider.notifier).setFirstExpenseDescription(name);
+    ref.read(loggerProvider).d('[Step3] Dépense sauvegardée dans l\'état local');
+
+    // Vérifier que la sauvegarde a fonctionné
+    final savedState = await ref.read(onboardingProvider.future);
+    ref.read(loggerProvider).d('[Step3] État vérifié: firstExpenseAmount=${savedState.firstExpenseAmount}');
 
     // Afficher l'animation de chargement
     setState(() => _isLoading = true);
 
     try {
-      ref.read(loggerProvider).i('Création des pockets par défaut et de la première dépense...');
+      ref.read(loggerProvider).i('Création des pockets par défaut...');
 
       // Récupérer l'utilisateur actuel
       final currentUser = await ref.read(currentUserProvider.future);
+      if (!mounted) return; // Vérifier après await
       if (currentUser == null) {
         throw Exception('Utilisateur non connecté');
     }
@@ -548,80 +583,36 @@ class _OnboardingStep3ScreenState
       ref.read(loggerProvider).i('Création des pockets par défaut...');
       final useCase = ref.read(createDefaultPocketsUseCaseProvider);
       final createdPockets = await useCase(currentUser.id);
+      if (!mounted) return; // Vérifier après await
 
       ref.read(loggerProvider).i('${createdPockets.length} pockets créés');
-
-      // Convertir ExpenseCategory en PocketCategory
-      final pocketCategory = switch (_selectedCategory) {
-        ExpenseCategory.needs => PocketCategory.needs,
-        ExpenseCategory.wants => PocketCategory.wants,
-        ExpenseCategory.savings => PocketCategory.savings,
-      };
-
-      // Trouver le premier pocket de la catégorie sélectionnée
-      final targetPockets = createdPockets.where((p) => p.category == pocketCategory).toList();
-
-      if (targetPockets.isEmpty) {
-        throw Exception('Aucun pocket trouvé pour la catégorie ${_selectedCategory.name}');
-      }
-
-      final targetPocket = targetPockets.first;
-
-      ref.read(loggerProvider).d('Pocket cible: ${targetPocket.name} (${targetPocket.id})');
-
-      // Récupérer les catégories de type expense
-      final categories = await ref.read(categoryProvider.future);
-      final expenseCategories = categories.where((c) => c.type == CategoryType.expense).toList();
-
-      if (expenseCategories.isEmpty) {
-        throw Exception('Aucune catégorie de dépense disponible');
-      }
-
-      // Prendre la première catégorie de dépense
-      final expenseCategory = expenseCategories.first;
-
-      ref.read(loggerProvider).i('Catégorie de dépense: ${expenseCategory.name} (id: ${expenseCategory.id})');
-
-      // Sauvegarder dans la base de données via le notifier (mise à jour optimiste + invalidation auto)
-      await ref.read(transactionProvider.notifier).createTransaction(
-        name: name,
-        amount: amount,
-        date: DateTime.now(),
-        categoryId: expenseCategory.id!,
-        type: TransactionType.expense,
-        userId: currentUser.id,
-        notes: 'Première dépense créée lors de l\'onboarding',
-      );
-
-      // Invalider les pockets pour afficher les montants mis à jour
-      ref.invalidate(userPocketsProvider);
-
-      ref.read(loggerProvider).i('Transaction de dépense créée avec succès');
 
       if (!mounted) return;
 
       // Naviguer vers l'étape 4
       setState(() => _isLoading = false);
-      context.push('/onboarding/step4');
+      if (!mounted) return;
+      context.push(AppRoutePaths.step4);
     } catch (e) {
-      ref.read(loggerProvider).e('Erreur lors de la création des pockets et transaction', error: e);
+      ref.read(loggerProvider).e('Erreur lors de la création des pockets', error: e);
 
       if (!mounted) return;
       setState(() => _isLoading = false);
 
       // Afficher un message d'erreur mais continuer quand même
+      final l10n = AppLocalizations.of(context)!;
       if (Platform.isIOS) {
         showCupertinoDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
-            title: const Text('Attention'),
-            content: Text('Une erreur est survenue lors de la création de vos pockets. Vous pourrez les créer plus tard.\n\nErreur: $e'),
+            title: Text(l10n.onboardingErrorTitle),
+            content: Text('${l10n.onboardingErrorPocketsCreate}\n\n${l10n.errorTitle}: $e'),
             actions: [
               CupertinoDialogAction(
-                child: const Text('Continuer'),
+                child: Text(l10n.onboardingContinue),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  context.push('/onboarding/step4');
+                  context.push(AppRoutePaths.step4);
                 },
               ),
             ],
@@ -631,15 +622,15 @@ class _OnboardingStep3ScreenState
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Attention'),
-            content: Text('Une erreur est survenue lors de la création de vos pockets. Vous pourrez les créer plus tard.\n\nErreur: $e'),
+            title: Text(l10n.onboardingErrorTitle),
+            content: Text('${l10n.onboardingErrorPocketsCreate}\n\n${l10n.errorTitle}: $e'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-    context.push('/onboarding/step4');
+                  context.push(AppRoutePaths.step4);
                 },
-                child: const Text('Continuer'),
+                child: Text(l10n.onboardingContinue),
               ),
             ],
           ),
@@ -692,7 +683,7 @@ class _OnboardingStep3ScreenState
 
   void _handleSkip(BuildContext context) {
     HapticFeedback.lightImpact();
-    context.push('/onboarding/step4');
+    context.push(AppRoutePaths.step4);
   }
 }
 

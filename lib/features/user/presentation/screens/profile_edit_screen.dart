@@ -87,6 +87,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     AsyncValue<void> avatarState,
   ) {
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false,

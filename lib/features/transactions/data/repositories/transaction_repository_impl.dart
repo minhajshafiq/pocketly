@@ -58,7 +58,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
       // Fusionner avec le cache existant au lieu d'écraser
       final allLocalTransactions = await _localDataSource.getAllTransactions();
-      final Map<int, TransactionModel> transactionMap = {
+      final Map<String, TransactionModel> transactionMap = {
         for (var t in allLocalTransactions) if (t.id != null) t.id!: t
       };
 
@@ -81,10 +81,10 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<List<TransactionEntity>> getTransactionsByCategory(int categoryId) async {
+  Future<List<TransactionEntity>> getTransactionsByCategory(String categoryId) async {
     try {
       final localTransactions = await _localDataSource.getTransactionsByCategory(categoryId);
-      
+
       if (localTransactions.isNotEmpty && _localDataSource.isCacheValid()) {
         return localTransactions.map((model) => model.toEntity()).toList();
       }
@@ -94,7 +94,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
       // Fusionner avec le cache existant au lieu d'écraser
       final allLocalTransactions = await _localDataSource.getAllTransactions();
-      final Map<int, TransactionModel> transactionMap = {
+      final Map<String, TransactionModel> transactionMap = {
         for (var t in allLocalTransactions) if (t.id != null) t.id!: t
       };
 
@@ -142,7 +142,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
       // Fusionner avec le cache existant au lieu d'écraser
       final allLocalTransactions = await _localDataSource.getAllTransactions();
-      final Map<int, TransactionModel> transactionMap = {
+      final Map<String, TransactionModel> transactionMap = {
         for (var t in allLocalTransactions) if (t.id != null) t.id!: t
       };
 
@@ -187,7 +187,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
       // Fusionner avec le cache existant au lieu d'écraser
       final allLocalTransactions = await _localDataSource.getAllTransactions();
-      final Map<int, TransactionModel> transactionMap = {
+      final Map<String, TransactionModel> transactionMap = {
         for (var t in allLocalTransactions) if (t.id != null) t.id!: t
       };
 
@@ -235,7 +235,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
       // Fusionner avec le cache existant au lieu d'écraser
       final allLocalTransactions = await _localDataSource.getAllTransactions();
-      final Map<int, TransactionModel> transactionMap = {
+      final Map<String, TransactionModel> transactionMap = {
         for (var t in allLocalTransactions) if (t.id != null) t.id!: t
       };
 
@@ -261,11 +261,11 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<TransactionEntity?> getTransactionById(int id) async {
+  Future<TransactionEntity?> getTransactionById(String id) async {
     try {
       // Essayer le cache local d'abord
       final localTransaction = await _localDataSource.getTransactionById(id);
-      
+
       if (localTransaction != null) {
         return localTransaction.toEntity();
       }
@@ -335,7 +335,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<TransactionEntity> assignTransactionToPocket({
-    required int transactionId,
+    required String transactionId,
     required String pocketId,
   }) async {
     try {
@@ -358,8 +358,8 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<TransactionEntity> unassignTransactionFromPocket({
-    required int transactionId,
-  }) async {
+    required String transactionId,
+  }) async{
     try {
       // Retirer du serveur
       final updatedModel = await _remoteDataSource.unassignTransactionFromPocket(
@@ -378,11 +378,11 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<void> deleteTransaction(int transactionId) async {
+  Future<void> deleteTransaction(String transactionId) async {
     try {
       // Supprimer du serveur
       await _remoteDataSource.deleteTransaction(transactionId);
-      
+
       // Supprimer du cache local
       await _localDataSource.deleteTransaction(transactionId);
     } catch (e) {
@@ -391,11 +391,11 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Future<void> toggleRecurrenceActive(int transactionId, bool isActive) async {
+  Future<void> toggleRecurrenceActive(String transactionId, bool isActive) async {
     try {
       // Mettre à jour sur le serveur
       await _remoteDataSource.toggleRecurrenceActive(transactionId, isActive);
-      
+
       // Mettre à jour en cache local
       final localTransaction = await _localDataSource.getTransactionById(transactionId);
       if (localTransaction != null) {
@@ -409,7 +409,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<List<TransactionEntity>> generateFutureOccurrences({
-    required int transactionId,
+    required String transactionId,
     required DateTime until,
   }) async {
     try {

@@ -7,7 +7,7 @@ class ValidateTransactionUseCase {
   static void validate({
     required String name,
     required double amount,
-    required int categoryId,
+    required String categoryId,
     required String userId,
     required RecurrenceType recurrence,
     DateTime? recurrenceEndDate,
@@ -38,12 +38,12 @@ class ValidateTransactionUseCase {
       );
     }
 
-    // Validation de l'ID de catégorie (positif)
-    if (categoryId <= 0) {
-      throw ValidationError(
+    // Validation de l'ID de catégorie (non vide UUID)
+    if (categoryId.trim().isEmpty) {
+      throw const ValidationError(
         field: 'categoryId',
-        userMessage: 'L\'ID de catégorie doit être positif',
-        technicalMessage: 'Invalid category ID: $categoryId',
+        userMessage: 'L\'ID de catégorie ne peut pas être vide',
+        technicalMessage: 'Category ID is required',
       );
     }
 

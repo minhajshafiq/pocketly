@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TransactionModel {
 
- int? get id; String get name; double get amount; DateTime get date;@JsonKey(name: 'category_id') int get categoryId; TransactionType get type; RecurrenceType get recurrence;@JsonKey(name: 'image_url') String? get imageUrl; String? get notes;@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'pocket_id') String? get pocketId;@JsonKey(name: 'recurrence_group_id') int? get recurrenceGroupId;@JsonKey(name: 'recurrence_start_date') DateTime? get recurrenceStartDate;@JsonKey(name: 'recurrence_end_date') DateTime? get recurrenceEndDate;@JsonKey(name: 'recurrence_day_of_month') int? get recurrenceDayOfMonth;@JsonKey(name: 'is_recurrence_active') bool get isRecurrenceActive;@JsonKey(name: 'created_at') DateTime? get createdAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;
+ String? get id; String get name; double get amount; DateTime get date;@JsonKey(name: 'category_id') String get categoryId; TransactionType get type; RecurrenceType get recurrence;@JsonKey(name: 'image_url') String? get imageUrl; String? get notes;@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'pocket_id') String? get pocketId;@JsonKey(name: 'recurrence_group_id') int? get recurrenceGroupId;@JsonKey(name: 'recurrence_start_date') DateTime? get recurrenceStartDate;@JsonKey(name: 'recurrence_end_date') DateTime? get recurrenceEndDate;@JsonKey(name: 'recurrence_day_of_month') int? get recurrenceDayOfMonth;@JsonKey(name: 'is_recurrence_active') bool get isRecurrenceActive;@JsonKey(name: 'created_at') DateTime? get createdAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;
 /// Create a copy of TransactionModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TransactionModelCopyWith<$Res>  {
   factory $TransactionModelCopyWith(TransactionModel value, $Res Function(TransactionModel) _then) = _$TransactionModelCopyWithImpl;
 @useResult
 $Res call({
- int? id, String name, double amount, DateTime date,@JsonKey(name: 'category_id') int categoryId, TransactionType type, RecurrenceType recurrence,@JsonKey(name: 'image_url') String? imageUrl, String? notes,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'pocket_id') String? pocketId,@JsonKey(name: 'recurrence_group_id') int? recurrenceGroupId,@JsonKey(name: 'recurrence_start_date') DateTime? recurrenceStartDate,@JsonKey(name: 'recurrence_end_date') DateTime? recurrenceEndDate,@JsonKey(name: 'recurrence_day_of_month') int? recurrenceDayOfMonth,@JsonKey(name: 'is_recurrence_active') bool isRecurrenceActive,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
+ String? id, String name, double amount, DateTime date,@JsonKey(name: 'category_id') String categoryId, TransactionType type, RecurrenceType recurrence,@JsonKey(name: 'image_url') String? imageUrl, String? notes,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'pocket_id') String? pocketId,@JsonKey(name: 'recurrence_group_id') int? recurrenceGroupId,@JsonKey(name: 'recurrence_start_date') DateTime? recurrenceStartDate,@JsonKey(name: 'recurrence_end_date') DateTime? recurrenceEndDate,@JsonKey(name: 'recurrence_day_of_month') int? recurrenceDayOfMonth,@JsonKey(name: 'is_recurrence_active') bool isRecurrenceActive,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -68,11 +68,11 @@ class _$TransactionModelCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? amount = null,Object? date = null,Object? categoryId = null,Object? type = null,Object? recurrence = null,Object? imageUrl = freezed,Object? notes = freezed,Object? userId = null,Object? pocketId = freezed,Object? recurrenceGroupId = freezed,Object? recurrenceStartDate = freezed,Object? recurrenceEndDate = freezed,Object? recurrenceDayOfMonth = freezed,Object? isRecurrenceActive = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as double,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,categoryId: null == categoryId ? _self.categoryId : categoryId // ignore: cast_nullable_to_non_nullable
-as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as TransactionType,recurrence: null == recurrence ? _self.recurrence : recurrence // ignore: cast_nullable_to_non_nullable
 as RecurrenceType,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
@@ -167,7 +167,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String name,  double amount,  DateTime date, @JsonKey(name: 'category_id')  int categoryId,  TransactionType type,  RecurrenceType recurrence, @JsonKey(name: 'image_url')  String? imageUrl,  String? notes, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'pocket_id')  String? pocketId, @JsonKey(name: 'recurrence_group_id')  int? recurrenceGroupId, @JsonKey(name: 'recurrence_start_date')  DateTime? recurrenceStartDate, @JsonKey(name: 'recurrence_end_date')  DateTime? recurrenceEndDate, @JsonKey(name: 'recurrence_day_of_month')  int? recurrenceDayOfMonth, @JsonKey(name: 'is_recurrence_active')  bool isRecurrenceActive, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String name,  double amount,  DateTime date, @JsonKey(name: 'category_id')  String categoryId,  TransactionType type,  RecurrenceType recurrence, @JsonKey(name: 'image_url')  String? imageUrl,  String? notes, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'pocket_id')  String? pocketId, @JsonKey(name: 'recurrence_group_id')  int? recurrenceGroupId, @JsonKey(name: 'recurrence_start_date')  DateTime? recurrenceStartDate, @JsonKey(name: 'recurrence_end_date')  DateTime? recurrenceEndDate, @JsonKey(name: 'recurrence_day_of_month')  int? recurrenceDayOfMonth, @JsonKey(name: 'is_recurrence_active')  bool isRecurrenceActive, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TransactionModel() when $default != null:
 return $default(_that.id,_that.name,_that.amount,_that.date,_that.categoryId,_that.type,_that.recurrence,_that.imageUrl,_that.notes,_that.userId,_that.pocketId,_that.recurrenceGroupId,_that.recurrenceStartDate,_that.recurrenceEndDate,_that.recurrenceDayOfMonth,_that.isRecurrenceActive,_that.createdAt,_that.updatedAt);case _:
@@ -188,7 +188,7 @@ return $default(_that.id,_that.name,_that.amount,_that.date,_that.categoryId,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String name,  double amount,  DateTime date, @JsonKey(name: 'category_id')  int categoryId,  TransactionType type,  RecurrenceType recurrence, @JsonKey(name: 'image_url')  String? imageUrl,  String? notes, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'pocket_id')  String? pocketId, @JsonKey(name: 'recurrence_group_id')  int? recurrenceGroupId, @JsonKey(name: 'recurrence_start_date')  DateTime? recurrenceStartDate, @JsonKey(name: 'recurrence_end_date')  DateTime? recurrenceEndDate, @JsonKey(name: 'recurrence_day_of_month')  int? recurrenceDayOfMonth, @JsonKey(name: 'is_recurrence_active')  bool isRecurrenceActive, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String name,  double amount,  DateTime date, @JsonKey(name: 'category_id')  String categoryId,  TransactionType type,  RecurrenceType recurrence, @JsonKey(name: 'image_url')  String? imageUrl,  String? notes, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'pocket_id')  String? pocketId, @JsonKey(name: 'recurrence_group_id')  int? recurrenceGroupId, @JsonKey(name: 'recurrence_start_date')  DateTime? recurrenceStartDate, @JsonKey(name: 'recurrence_end_date')  DateTime? recurrenceEndDate, @JsonKey(name: 'recurrence_day_of_month')  int? recurrenceDayOfMonth, @JsonKey(name: 'is_recurrence_active')  bool isRecurrenceActive, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _TransactionModel():
 return $default(_that.id,_that.name,_that.amount,_that.date,_that.categoryId,_that.type,_that.recurrence,_that.imageUrl,_that.notes,_that.userId,_that.pocketId,_that.recurrenceGroupId,_that.recurrenceStartDate,_that.recurrenceEndDate,_that.recurrenceDayOfMonth,_that.isRecurrenceActive,_that.createdAt,_that.updatedAt);}
@@ -205,7 +205,7 @@ return $default(_that.id,_that.name,_that.amount,_that.date,_that.categoryId,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String name,  double amount,  DateTime date, @JsonKey(name: 'category_id')  int categoryId,  TransactionType type,  RecurrenceType recurrence, @JsonKey(name: 'image_url')  String? imageUrl,  String? notes, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'pocket_id')  String? pocketId, @JsonKey(name: 'recurrence_group_id')  int? recurrenceGroupId, @JsonKey(name: 'recurrence_start_date')  DateTime? recurrenceStartDate, @JsonKey(name: 'recurrence_end_date')  DateTime? recurrenceEndDate, @JsonKey(name: 'recurrence_day_of_month')  int? recurrenceDayOfMonth, @JsonKey(name: 'is_recurrence_active')  bool isRecurrenceActive, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String name,  double amount,  DateTime date, @JsonKey(name: 'category_id')  String categoryId,  TransactionType type,  RecurrenceType recurrence, @JsonKey(name: 'image_url')  String? imageUrl,  String? notes, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'pocket_id')  String? pocketId, @JsonKey(name: 'recurrence_group_id')  int? recurrenceGroupId, @JsonKey(name: 'recurrence_start_date')  DateTime? recurrenceStartDate, @JsonKey(name: 'recurrence_end_date')  DateTime? recurrenceEndDate, @JsonKey(name: 'recurrence_day_of_month')  int? recurrenceDayOfMonth, @JsonKey(name: 'is_recurrence_active')  bool isRecurrenceActive, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _TransactionModel() when $default != null:
 return $default(_that.id,_that.name,_that.amount,_that.date,_that.categoryId,_that.type,_that.recurrence,_that.imageUrl,_that.notes,_that.userId,_that.pocketId,_that.recurrenceGroupId,_that.recurrenceStartDate,_that.recurrenceEndDate,_that.recurrenceDayOfMonth,_that.isRecurrenceActive,_that.createdAt,_that.updatedAt);case _:
@@ -223,11 +223,11 @@ class _TransactionModel extends TransactionModel {
   const _TransactionModel({this.id, required this.name, required this.amount, required this.date, @JsonKey(name: 'category_id') required this.categoryId, required this.type, this.recurrence = RecurrenceType.none, @JsonKey(name: 'image_url') this.imageUrl, this.notes, @JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'pocket_id') this.pocketId, @JsonKey(name: 'recurrence_group_id') this.recurrenceGroupId, @JsonKey(name: 'recurrence_start_date') this.recurrenceStartDate, @JsonKey(name: 'recurrence_end_date') this.recurrenceEndDate, @JsonKey(name: 'recurrence_day_of_month') this.recurrenceDayOfMonth, @JsonKey(name: 'is_recurrence_active') this.isRecurrenceActive = false, @JsonKey(name: 'created_at') this.createdAt, @JsonKey(name: 'updated_at') this.updatedAt}): super._();
   factory _TransactionModel.fromJson(Map<String, dynamic> json) => _$TransactionModelFromJson(json);
 
-@override final  int? id;
+@override final  String? id;
 @override final  String name;
 @override final  double amount;
 @override final  DateTime date;
-@override@JsonKey(name: 'category_id') final  int categoryId;
+@override@JsonKey(name: 'category_id') final  String categoryId;
 @override final  TransactionType type;
 @override@JsonKey() final  RecurrenceType recurrence;
 @override@JsonKey(name: 'image_url') final  String? imageUrl;
@@ -275,7 +275,7 @@ abstract mixin class _$TransactionModelCopyWith<$Res> implements $TransactionMod
   factory _$TransactionModelCopyWith(_TransactionModel value, $Res Function(_TransactionModel) _then) = __$TransactionModelCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String name, double amount, DateTime date,@JsonKey(name: 'category_id') int categoryId, TransactionType type, RecurrenceType recurrence,@JsonKey(name: 'image_url') String? imageUrl, String? notes,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'pocket_id') String? pocketId,@JsonKey(name: 'recurrence_group_id') int? recurrenceGroupId,@JsonKey(name: 'recurrence_start_date') DateTime? recurrenceStartDate,@JsonKey(name: 'recurrence_end_date') DateTime? recurrenceEndDate,@JsonKey(name: 'recurrence_day_of_month') int? recurrenceDayOfMonth,@JsonKey(name: 'is_recurrence_active') bool isRecurrenceActive,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
+ String? id, String name, double amount, DateTime date,@JsonKey(name: 'category_id') String categoryId, TransactionType type, RecurrenceType recurrence,@JsonKey(name: 'image_url') String? imageUrl, String? notes,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'pocket_id') String? pocketId,@JsonKey(name: 'recurrence_group_id') int? recurrenceGroupId,@JsonKey(name: 'recurrence_start_date') DateTime? recurrenceStartDate,@JsonKey(name: 'recurrence_end_date') DateTime? recurrenceEndDate,@JsonKey(name: 'recurrence_day_of_month') int? recurrenceDayOfMonth,@JsonKey(name: 'is_recurrence_active') bool isRecurrenceActive,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -295,11 +295,11 @@ class __$TransactionModelCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = null,Object? amount = null,Object? date = null,Object? categoryId = null,Object? type = null,Object? recurrence = null,Object? imageUrl = freezed,Object? notes = freezed,Object? userId = null,Object? pocketId = freezed,Object? recurrenceGroupId = freezed,Object? recurrenceStartDate = freezed,Object? recurrenceEndDate = freezed,Object? recurrenceDayOfMonth = freezed,Object? isRecurrenceActive = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_TransactionModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as double,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,categoryId: null == categoryId ? _self.categoryId : categoryId // ignore: cast_nullable_to_non_nullable
-as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as TransactionType,recurrence: null == recurrence ? _self.recurrence : recurrence // ignore: cast_nullable_to_non_nullable
 as RecurrenceType,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
 as String?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable

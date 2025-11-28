@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:pocketly/core/core.dart';
 import 'package:pocketly/features/themes/domain/entities/theme_entity.dart';
@@ -18,56 +17,64 @@ part 'theme_providers.g.dart';
 // ==================== DATA LAYER ====================
 
 /// Provider pour ThemeLocalDataSource
-final themeLocalDataSourceProvider = Provider<ThemeLocalDataSource>((ref) {
+@riverpod
+ThemeLocalDataSource themeLocalDataSource(Ref ref) {
   final prefs = ref.watch(sharedPreferencesProvider);
   return ThemeLocalDataSourceImpl(prefs);
-});
+}
 
 /// Provider pour ThemeRepository
-final themeRepositoryProvider = Provider<ThemeRepository>((ref) {
+@riverpod
+ThemeRepository themeRepository(Ref ref) {
   final localDataSource = ref.watch(themeLocalDataSourceProvider);
   return ThemeRepositoryImpl(localDataSource);
-});
+}
 
 // ==================== USE CASES ====================
 
 /// Provider pour GetThemeUseCase
-final getThemeUseCaseProvider = Provider<GetThemeUseCase>((ref) {
+@riverpod
+GetThemeUseCase getThemeUseCase(Ref ref) {
   final repository = ref.watch(themeRepositoryProvider);
   return GetThemeUseCase(repository);
-});
+}
 
 /// Provider pour SetThemeUseCase
-final setThemeUseCaseProvider = Provider<SetThemeUseCase>((ref) {
+@riverpod
+SetThemeUseCase setThemeUseCase(Ref ref) {
   final repository = ref.watch(themeRepositoryProvider);
   return SetThemeUseCase(repository);
-});
+}
 
 /// Provider pour ToggleThemeUseCase
-final toggleThemeUseCaseProvider = Provider<ToggleThemeUseCase>((ref) {
+@riverpod
+ToggleThemeUseCase toggleThemeUseCase(Ref ref) {
   final repository = ref.watch(themeRepositoryProvider);
   return ToggleThemeUseCase(repository);
-});
+}
 
 /// Provider pour GetAvailableThemesUseCase
-final getAvailableThemesUseCaseProvider = Provider<GetAvailableThemesUseCase>((ref) {
+@riverpod
+GetAvailableThemesUseCase getAvailableThemesUseCase(Ref ref) {
   final repository = ref.watch(themeRepositoryProvider);
   return GetAvailableThemesUseCase(repository);
-});
+}
 
 // ==================== STATE MANAGEMENT ====================
 
 /// Provider pour le thème actuel
-final currentThemeProvider = FutureProvider<ThemeEntity>((ref) async {
+@riverpod
+Future<ThemeEntity> currentTheme(Ref ref) async {
   final getThemeUseCase = ref.read(getThemeUseCaseProvider);
   return await getThemeUseCase.call();
-});
+}
 
 /// Provider pour les thèmes disponibles
-final availableThemesProvider = FutureProvider<List<ThemeEntity>>((ref) async {
+@riverpod
+Future<List<ThemeEntity>> availableThemes(Ref ref) async {
   final getAvailableThemesUseCase = ref.read(getAvailableThemesUseCaseProvider);
   return await getAvailableThemesUseCase.call();
-});
+}
 
 /// Notifier pour la gestion du thème
 @riverpod
@@ -116,19 +123,22 @@ class ThemeNotifier extends _$ThemeNotifier {
 // ==================== HELPER PROVIDERS ====================
 
 /// Provider pour vérifier si le thème est sombre
-final isDarkThemeProvider = Provider<bool>((ref) {
+@riverpod
+bool isDarkTheme(Ref ref) {
   final theme = ref.watch(themeProvider);
   return theme.isDark;
-});
+}
 
 /// Provider pour vérifier si le thème est clair
-final isLightThemeProvider = Provider<bool>((ref) {
+@riverpod
+bool isLightTheme(Ref ref) {
   final theme = ref.watch(themeProvider);
   return theme.isLight;
-});
+}
 
 /// Provider pour vérifier si le thème suit le système
-final isSystemThemeProvider = Provider<bool>((ref) {
+@riverpod
+bool isSystemTheme(Ref ref) {
   final theme = ref.watch(themeProvider);
   return theme.isSystem;
-});
+}

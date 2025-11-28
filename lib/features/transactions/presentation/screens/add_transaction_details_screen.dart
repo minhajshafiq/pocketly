@@ -66,6 +66,7 @@ class _AddTransactionDetailsScreenState
     final isExpense = widget.transactionType == TransactionType.expense;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: null, // Auto: true sur Android, false sur iOS

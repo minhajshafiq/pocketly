@@ -33,6 +33,7 @@ class _NotificationPreferencesScreenState
     final preferencesAsync = ref.watch(notificationPreferencesProvider);
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false,

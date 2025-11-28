@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:pocketly/core/services/logger_service.dart';
 import 'package:pocketly/features/subscription/data/models/subscription_offer_model.dart';
@@ -36,8 +37,10 @@ class SubscriptionRemoteDataSource {
 
       await Purchases.configure(configuration);
 
-      // Activer le mode debug en développement
-      await Purchases.setLogLevel(LogLevel.debug);
+      // Activer le mode debug uniquement en développement
+      await Purchases.setLogLevel(
+        kDebugMode ? LogLevel.debug : LogLevel.info,
+      );
 
       // Écouter les changements de statut
       Purchases.addCustomerInfoUpdateListener((customerInfo) {
@@ -203,11 +206,21 @@ class SubscriptionRemoteDataSource {
 
     if (entitlements.isEmpty) {
       // Pas d'abonnement actif
+      logger.d('[SubscriptionRemoteDataSource] Aucun abonnement actif');
       return SubscriptionStatusModel.free();
     }
 
     // Récupérer le premier entitlement actif (devrait être "premium")
     final premiumEntitlement = entitlements.values.first;
+
+    // LOGS DÉTAILLÉS pour déboguer
+    logger.i('[SubscriptionRemoteDataSource] === PARSING CUSTOMER INFO ===');
+    logger.i('Product ID: ${premiumEntitlement.productIdentifier}');
+    logger.i('Expiration Date (String): ${premiumEntitlement.expirationDate}');
+    logger.i('Will Renew: ${premiumEntitlement.willRenew}');
+    logger.i('Period Type: ${premiumEntitlement.periodType}');
+    logger.i('Purchase Date: ${premiumEntitlement.originalPurchaseDate}');
+    logger.i('Latest Purchase Date: ${premiumEntitlement.latestPurchaseDate}');
 
     // Déterminer le type d'abonnement
     final productId = premiumEntitlement.productIdentifier;
@@ -224,6 +237,15 @@ class SubscriptionRemoteDataSource {
 
     // Date d'expiration
     final expirationDate = premiumEntitlement.expirationDate;
+    DateTime? parsedExpirationDate;
+
+    if (expirationDate != null) {
+      parsedExpirationDate = DateTime.parse(expirationDate);
+      logger.i('Parsed Expiration Date: $parsedExpirationDate');
+      logger.i('Days until expiration: ${parsedExpirationDate.difference(DateTime.now()).inDays}');
+    } else {
+      logger.w('Expiration date is NULL!');
+    }
 
     // Est-ce que ça se renouvelle automatiquement
     final willRenew = premiumEntitlement.willRenew;
@@ -233,10 +255,12 @@ class SubscriptionRemoteDataSource {
       (e) => e.periodType == PeriodType.trial,
     );
 
+    logger.i('Subscription Type: $subscriptionType');
+    logger.i('Is In Trial: $isInTrial');
+    logger.i('==============================================');
+
     return SubscriptionStatusModel.premium(
-      expirationDate: expirationDate != null
-          ? DateTime.parse(expirationDate)
-          : null,
+      expirationDate: parsedExpirationDate,
       activeSubscriptionType: subscriptionType,
       willRenew: willRenew,
       isInTrial: isInTrial,

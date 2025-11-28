@@ -23,7 +23,10 @@ class SavingsGoalScreen extends ConsumerStatefulWidget {
 class _SavingsGoalScreenState extends ConsumerState<SavingsGoalScreen> {
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       appBar: AdaptiveAppBar(
         title: 'Objectif d\'Épargne',
       ),

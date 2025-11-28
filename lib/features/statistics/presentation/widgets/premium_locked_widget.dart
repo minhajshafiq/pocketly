@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,13 +7,17 @@ import 'package:pocketly/core/constants/app_colors.dart';
 import 'package:pocketly/core/constants/app_dimensions.dart';
 import 'package:pocketly/core/constants/app_icons.dart';
 import 'package:pocketly/core/constants/app_typography.dart';
-import 'package:pocketly/core/widgets/app_card.dart';
+import 'package:pocketly/features/notifications/notifications.dart';
+import 'package:pocketly/features/subscription/domain/entities/subscription_status_entity.dart';
+import 'package:pocketly/features/subscription/presentation/providers/subscription_providers.dart';
 import 'package:pocketly/generated/l10n/app_localizations.dart';
 import 'package:pocketly/features/user/user.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
-/// Widget affiché quand l'utilisateur n'a pas accès aux fonctionnalités premium
-class PremiumLockedWidget extends ConsumerWidget {
-  const PremiumLockedWidget({super.key});
+/// Overlay affiché quand l'utilisateur n'a pas accès aux fonctionnalités premium
+class PremiumLockedOverlay extends ConsumerWidget {
+  const PremiumLockedOverlay({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,307 +25,191 @@ class PremiumLockedWidget extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final userAsync = ref.watch(currentUserProvider);
 
-    return Center(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.all(AppDimensions.paddingL),
+    return Positioned.fill(
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+          child: Container(
+            alignment: Alignment.center,
+            color: Colors.black.withOpacity(isDark ? 0.55 : 0.35),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppDimensions.paddingL),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
           children: [
-            // Icône de verrouillage avec animation
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.primary, AppColors.secondary],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.3),
-                    blurRadius: 20,
-                    spreadRadius: 5,
-                  ),
-                ],
-              ),
-              child: Icon(AppIcons.lock, size: 60, color: Colors.white),
-            ),
-
-            SizedBox(height: AppDimensions.paddingXL),
-
-            // Titre
             Text(
               l10n.premiumFeature,
               style: AppTypography.display.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
+                        color: Colors.white,
               ),
               textAlign: TextAlign.center,
             ),
-
-            SizedBox(height: AppDimensions.paddingM),
-
-            // Description
+                    SizedBox(height: AppDimensions.paddingS),
             Text(
-              l10n.premiumFeatureDescription,
+                      l10n.premiumFeatureOnlyMembers,
               style: AppTypography.body.copyWith(
-                color: isDark
-                    ? AppColors.textSecondaryOnDark
-                    : AppColors.textSecondary,
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
             ),
-
             SizedBox(height: AppDimensions.paddingXL),
-
-            // Carte des avantages
-            AppCard(
-              padding: EdgeInsets.all(AppDimensions.paddingL),
-              child: Column(
-                children: [
-                  Text(
-                    l10n.premiumBenefits,
-                    style: AppTypography.heading.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: isDark
-                          ? AppColors.textOnDark
-                          : AppColors.textPrimary,
+                    userAsync.when(
+                      data: (_) => _buildUpsellCard(context, l10n, ref),
+                      loading: () => Padding(
+                        padding: EdgeInsets.all(AppDimensions.paddingM),
+                        child: const CircularProgressIndicator(),
+                      ),
+                      error: (error, stack) => const SizedBox.shrink(),
                     ),
-                  ),
-                  SizedBox(height: AppDimensions.paddingM),
-                  _buildBenefit(
-                    context,
-                    AppIcons.barChart,
-                    l10n.detailedStatistics,
-                    isDark,
-                  ),
-                  SizedBox(height: AppDimensions.paddingS),
-                  _buildBenefit(
-                    context,
-                    AppIcons.showChart,
-                    l10n.advancedCharts,
-                    isDark,
-                  ),
-                  SizedBox(height: AppDimensions.paddingS),
-                  _buildBenefit(
-                    context,
-                    AppIcons.insights,
-                    l10n.financialInsights,
-                    isDark,
-                  ),
-                  SizedBox(height: AppDimensions.paddingS),
-                  _buildBenefit(
-                    context,
-                    AppIcons.history,
-                    l10n.unlimitedHistory,
-                    isDark,
-                  ),
-                ],
+          ],
+                ),
               ),
             ),
-
-            SizedBox(height: AppDimensions.paddingXL),
-
-            // Boutons d'action
-            userAsync.when(
-              data: (user) {
-                if (user == null) {
-                  return const SizedBox.shrink();
-                }
-
-                // Vérifier si l'utilisateur a déjà utilisé le trial
-                final hasUsedTrial = user.premiumTrialStart != null;
-
-                return Column(
-                  children: [
-                    // Bouton Trial (seulement si pas encore utilisé)
-                    if (!hasUsedTrial) ...[
-                      _buildActionButton(
-                        context,
-                        label: l10n.startFreeTrial,
-                        icon: AppIcons.rocketLaunch,
-                        isPrimary: true,
-                        onPressed: () =>
-                            _handleStartTrial(context, ref, user.id),
-                      ),
-                      SizedBox(height: AppDimensions.paddingM),
-                    ],
-
-                    // Bouton Premium
-                    _buildActionButton(
-                      context,
-                      label: l10n.upgradeToPremium,
-                      icon: AppIcons.starRounded,
-                      isPrimary: hasUsedTrial,
-                      onPressed: () => _handleUpgradePremium(context, ref),
-                    ),
-                  ],
-                );
-              },
-              loading: () => const CircularProgressIndicator(),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  /// Construit un élément de la liste des avantages
-  Widget _buildBenefit(
+  Widget _buildUpsellCard(
     BuildContext context,
-    IconData icon,
-    String text,
-    bool isDark,
+    AppLocalizations l10n,
+    WidgetRef ref,
   ) {
-    return Row(
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-          ),
-          child: Icon(icon, color: AppColors.primary, size: 24),
-        ),
-        SizedBox(width: AppDimensions.paddingM),
-        Expanded(
-          child: Text(
-            text,
-            style: AppTypography.body.copyWith(
-              color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
-            ),
-          ),
-        ),
-        Icon(AppIcons.checkCircle, color: AppColors.success, size: 20),
-      ],
-    );
-  }
+    final openPaywall = () => _handleUpgradePremium(context, ref);
 
-  /// Construit un bouton d'action
-  Widget _buildActionButton(
-    BuildContext context, {
-    required String label,
-    required IconData icon,
-    required bool isPrimary,
-    required VoidCallback onPressed,
-  }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    if (Platform.isIOS) {
-      return CupertinoButton(
-        onPressed: onPressed,
-        padding: EdgeInsets.zero,
+    return Semantics(
+      button: true,
+      label: l10n.upgradeToPremium,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: openPaywall,
         child: Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: AppDimensions.paddingM),
+          padding: EdgeInsets.all(AppDimensions.paddingL),
           decoration: BoxDecoration(
-            gradient: isPrimary
-                ? LinearGradient(
-                    colors: [AppColors.primary, AppColors.secondary],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
-                : null,
-            color: isPrimary
-                ? null
-                : (isDark ? AppColors.surfaceDark : AppColors.surface),
-            borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-            border: isPrimary
-                ? null
-                : Border.all(
-                    color: isDark
-                        ? AppColors.borderDark
-                        : AppColors.borderLight,
-                  ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                color: isPrimary
-                    ? Colors.white
-                    : (isDark ? AppColors.textOnDark : AppColors.textPrimary),
+            gradient: LinearGradient(
+              colors: [
+                AppColors.primary,
+                AppColors.secondary,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withValues(alpha: 0.25),
+                blurRadius: 30,
+                offset: const Offset(0, 18),
               ),
-              SizedBox(width: AppDimensions.paddingS),
-              Text(
-                label,
-                style: AppTypography.body.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: isPrimary
-                      ? Colors.white
-                      : (isDark ? AppColors.textOnDark : AppColors.textPrimary),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          l10n.subscriptionUnlockFeatures,
+                          style: AppTypography.heading.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        if (l10n.premiumUnlockDescription.isNotEmpty) ...[
+                          SizedBox(height: AppDimensions.paddingS),
+                          Text(
+                            l10n.premiumUnlockDescription,
+                            style: AppTypography.body.copyWith(
+                              color: Colors.white.withValues(alpha: 0.85),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: AppDimensions.paddingM),
+                  _buildBrandBadge(),
+                ],
+              ),
+              SizedBox(height: AppDimensions.paddingL),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppDimensions.paddingM,
+                  vertical: AppDimensions.paddingS,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.18),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusL),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.35),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      AppIcons.starRounded,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: AppDimensions.paddingS),
+                    Text(
+                      l10n.upgradeToPremium,
+                      style: AppTypography.body.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
-      );
-    }
+      ),
+    );
+  }
 
-    // Android Material Design
-    return isPrimary
-        ? Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.primary, AppColors.secondary],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-            ),
-            child: ElevatedButton(
-              onPressed: onPressed,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                padding: EdgeInsets.symmetric(vertical: AppDimensions.paddingM),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(icon, color: Colors.white),
-                  SizedBox(width: AppDimensions.paddingS),
-                  Text(
-                    label,
-                    style: AppTypography.body.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        : OutlinedButton(
-            onPressed: onPressed,
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: AppDimensions.paddingM),
-              shape: RoundedRectangleBorder(
+  Widget _buildBrandBadge() {
+    const logoUrl =
+        'https://bwdqbfromrqpcphcydoq.supabase.co/storage/v1/object/public/Pocketly-files/icon.png';
+    return SizedBox(
+      width: 56,
+      height: 56,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+        child: Image.network(
+          logoUrl,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              decoration: BoxDecoration(
+                gradient: AppColors.primaryGradient,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusM),
               ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon),
-                SizedBox(width: AppDimensions.paddingS),
-                Text(
-                  label,
-                  style: AppTypography.body.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              child: Center(
+                child: Icon(
+                  AppIcons.wallet,
+                  color: Colors.white,
                 ),
-              ],
-            ),
-          );
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   /// Gère le démarrage du trial
@@ -345,15 +234,95 @@ class PremiumLockedWidget extends ConsumerWidget {
     }
   }
 
-  /// Gère l'upgrade vers premium
+  /// Gère l'upgrade vers premium avec le paywall natif RevenueCat
   Future<void> _handleUpgradePremium(
     BuildContext context,
     WidgetRef ref,
   ) async {
-    // TODO: Implémenter la logique d'achat in-app
-    // Pour l'instant, afficher un message
-    final l10n = AppLocalizations.of(context)!;
-    _showInfoMessage(context, l10n.comingSoon);
+    try {
+      // Afficher le paywall natif RevenueCat
+      final paywallResult = await RevenueCatUI.presentPaywall();
+
+      // Si achat ou restauration réussi, synchroniser avec Supabase
+      if (paywallResult == PaywallResult.purchased ||
+          paywallResult == PaywallResult.restored) {
+
+        // 1. Récupérer les infos actualisées de RevenueCat
+        final customerInfo = await Purchases.getCustomerInfo();
+
+        // 2. Vérifier si l'utilisateur a un abonnement actif
+        final hasActiveSubscription = customerInfo.entitlements.active.isNotEmpty;
+
+        if (hasActiveSubscription) {
+          // 3. Synchroniser avec Supabase via le repository
+          await ref
+              .read(subscriptionRepositoryProvider)
+              .syncSubscriptionToBackend(
+                _parseCustomerInfoToStatus(customerInfo),
+              );
+        }
+
+        // 4. Invalider les providers pour rafraîchir l'UI instantanément
+        ref.invalidate(currentUserProvider);
+        ref.invalidate(canAccessPremiumProvider);
+
+        if (context.mounted) {
+          final l10n = AppLocalizations.of(context)!;
+          InAppNotificationService.showSuccess(
+            context,
+            title: l10n.success,
+            message: paywallResult == PaywallResult.purchased
+                ? l10n.subscriptionPurchaseSuccess
+                : l10n.subscriptionRestoreSuccess,
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        InAppNotificationService.showError(
+          context,
+          title: l10n.error,
+          message: l10n.subscriptionPurchaseError(e.toString()),
+        );
+      }
+    }
+  }
+
+  /// Parse les informations RevenueCat en SubscriptionStatusEntity
+  SubscriptionStatusEntity _parseCustomerInfoToStatus(CustomerInfo customerInfo) {
+    final entitlements = customerInfo.entitlements.active;
+
+    if (entitlements.isEmpty) {
+      return const SubscriptionStatusEntity(
+        status: SubscriptionStatus.free,
+        isPremium: false,
+        expirationDate: null,
+      );
+    }
+
+    // Récupérer le premier entitlement actif
+    final entitlement = entitlements.values.first;
+
+    // Déterminer le type d'abonnement à partir du productIdentifier
+    final productId = entitlement.productIdentifier;
+    String? subscriptionType;
+
+    if (productId.contains('monthly')) {
+      subscriptionType = 'monthly';
+    } else if (productId.contains('yearly') || productId.contains('annual')) {
+      subscriptionType = 'yearly';
+    }
+
+    return SubscriptionStatusEntity(
+      status: SubscriptionStatus.premium,
+      isPremium: true,
+      expirationDate: entitlement.expirationDate != null
+          ? DateTime.parse(entitlement.expirationDate!)
+          : null,
+      activeSubscriptionType: subscriptionType,
+      willRenew: entitlement.willRenew,
+    );
   }
 
   /// Affiche un message de succès
@@ -415,38 +384,6 @@ class PremiumLockedWidget extends ConsumerWidget {
             ],
           ),
           backgroundColor: AppColors.error,
-        ),
-      );
-    }
-  }
-
-  /// Affiche un message d'information
-  void _showInfoMessage(BuildContext context, String message) {
-    if (Platform.isIOS) {
-      showCupertinoDialog(
-        context: context,
-        builder: (context) => CupertinoAlertDialog(
-          title: Icon(AppIcons.info, color: Colors.blue, size: 48),
-          content: Text(message),
-          actions: [
-            CupertinoDialogAction(
-              child: const Text('OK'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(AppIcons.info, color: Colors.white),
-              SizedBox(width: AppDimensions.paddingS),
-              Expanded(child: Text(message)),
-            ],
-          ),
-          backgroundColor: AppColors.info,
         ),
       );
     }

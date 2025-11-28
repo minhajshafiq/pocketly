@@ -8,9 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pocketly/core/core.dart';
 import 'package:pocketly/core/widgets/animated_page_header.dart';
+import 'package:pocketly/generated/l10n/app_localizations.dart';
 import 'package:pocketly/features/onboarding/onboarding.dart';
-import 'package:pocketly/features/category/category.dart';
-import 'package:pocketly/features/transactions/transactions.dart';
 import 'package:pocketly/features/user/user.dart';
 
 /// Écran d'onboarding - Étape 1 : Découvrons votre budget
@@ -47,6 +46,7 @@ class _OnboardingStep1ScreenState
     final isIOS = Platform.isIOS;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false,
@@ -98,7 +98,7 @@ class _OnboardingStep1ScreenState
               left: 0,
               right: 0,
               child: AnimatedPageHeader(
-                title: 'Étape 1/$_totalSteps',
+                title: AppLocalizations.of(context)!.onboardingStepProgress(1, _totalSteps),
                 scrollController: _scrollController,
                 showBackButton: false,
                 actionButton: _buildSkipButton(isDark, isIOS),
@@ -151,11 +151,12 @@ class _OnboardingStep1ScreenState
   }
 
   Widget _buildProgressIndicator(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Étape 1/$_totalSteps',
+          l10n.onboardingStepProgress(1, _totalSteps),
           style: AppTypography.caption.copyWith(
             color: isDark
                 ? AppColors.textSecondaryOnDark
@@ -178,8 +179,9 @@ class _OnboardingStep1ScreenState
   }
 
   Widget _buildTitle(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Quel est votre revenu mensuel ?',
+      l10n.onboardingStep1IncomeTitle,
       style: AppTypography.heading.copyWith(
         color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
         fontWeight: FontWeight.bold,
@@ -191,8 +193,9 @@ class _OnboardingStep1ScreenState
   }
 
   Widget _buildSubtitle(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Cela nous permet de personnaliser automatiquement votre budget.',
+      l10n.onboardingStep1IncomeSubtitle,
       style: AppTypography.body.copyWith(
         color: isDark
             ? AppColors.textSecondaryOnDark
@@ -218,7 +221,7 @@ class _OnboardingStep1ScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Montant',
+            AppLocalizations.of(context)!.onboardingStep1IncomeAmountLabel,
             style: AppTypography.title.copyWith(
               color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
               fontWeight: FontWeight.w600,
@@ -279,7 +282,7 @@ class _OnboardingStep1ScreenState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Fréquence',
+          AppLocalizations.of(context)!.onboardingStep1FrequencyLabel,
           style: AppTypography.title.copyWith(
             color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
             fontWeight: FontWeight.w600,
@@ -290,7 +293,7 @@ class _OnboardingStep1ScreenState
           children: [
             Expanded(
               child: _buildFrequencyButton(
-                label: 'Mensuel',
+                label: AppLocalizations.of(context)!.onboardingStep1FrequencyMonthly,
                 frequency: IncomeFrequency.monthly,
                 isDark: isDark,
               ),
@@ -298,7 +301,7 @@ class _OnboardingStep1ScreenState
             SizedBox(width: AppDimensions.paddingS),
             Expanded(
               child: _buildFrequencyButton(
-                label: 'Hebdo',
+                label: AppLocalizations.of(context)!.onboardingStep1FrequencyWeekly,
                 frequency: IncomeFrequency.weekly,
                 isDark: isDark,
               ),
@@ -306,7 +309,7 @@ class _OnboardingStep1ScreenState
             SizedBox(width: AppDimensions.paddingS),
             Expanded(
               child: _buildFrequencyButton(
-                label: 'Autre',
+                label: AppLocalizations.of(context)!.onboardingStep1FrequencyOther,
                 frequency: IncomeFrequency.other,
                 isDark: isDark,
               ),
@@ -372,7 +375,7 @@ class _OnboardingStep1ScreenState
         SizedBox(width: AppDimensions.paddingXS),
         Expanded(
           child: Text(
-            'Vous pourrez modifier ce montant à tout moment.',
+            AppLocalizations.of(context)!.onboardingStep1IncomeHelper,
             style: AppTypography.caption.copyWith(
               color: isDark
                   ? AppColors.textSecondaryOnDark
@@ -388,8 +391,9 @@ class _OnboardingStep1ScreenState
   }
 
   Widget _buildErrorMessage() {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Veuillez saisir un montant valide',
+      l10n.onboardingStep1IncomeError,
       style: AppTypography.caption.copyWith(
         color: AppColors.error,
         fontWeight: FontWeight.w600,
@@ -398,11 +402,12 @@ class _OnboardingStep1ScreenState
   }
 
   Widget _buildBottomActions(BuildContext context, bool isIOS) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         AppButton(
-          text: 'Continuer',
+          text: l10n.onboardingContinue,
           icon: AppIcons.arrowRight,
           iconPosition: IconPosition.right,
           style: AppButtonStyle.gradient,
@@ -437,7 +442,7 @@ class _OnboardingStep1ScreenState
               const CircularProgressIndicator(),
               SizedBox(height: AppDimensions.paddingL),
               Text(
-                'Personnalisation de votre budget...',
+                AppLocalizations.of(context)!.onboardingStep1Personalizing,
                 style: AppTypography.body.copyWith(
                   color:
                       isDark ? AppColors.textOnDark : AppColors.textPrimary,
@@ -467,114 +472,48 @@ class _OnboardingStep1ScreenState
 
     HapticFeedback.mediumImpact();
 
-    // Sauvegarder dans le provider
-    ref.read(onboardingProvider.notifier).setMonthlyIncome(income);
-    ref
-        .read(onboardingProvider.notifier)
-        .setIncomeFrequency(_selectedFrequency);
+    // S'assurer que le provider est initialisé avant de l'utiliser
+    ref.read(loggerProvider).d('[Step1] Initialisation du provider onboarding...');
+    try {
+      // Attendre que le provider soit chargé (force l'initialisation de SharedPreferences)
+      await ref.read(onboardingProvider.future);
+      ref.read(loggerProvider).d('[Step1] Provider initialisé');
+    } catch (e) {
+      ref.read(loggerProvider).w('[Step1] Provider déjà initialisé ou en cours: $e');
+    }
 
-    // Debug: Vérifier que la sauvegarde a fonctionné
-    ref.read(loggerProvider).d('Sauvegarde: montant=$income, fréquence=$_selectedFrequency');
+    // Sauvegarder dans le provider en une seule opération (évite les race conditions)
+    ref.read(loggerProvider).d('[Step1] AVANT setIncomeData: montant=$income, fréquence=$_selectedFrequency');
+    await ref.read(onboardingProvider.notifier).setIncomeData(income, _selectedFrequency);
+    ref.read(loggerProvider).d('[Step1] APRÈS setIncomeData');
+
+    // Attendre un petit délai pour que l'état se propage
+    await Future.delayed(const Duration(milliseconds: 100));
 
     // Vérifier immédiatement l'état du provider
     final savedIncome = ref.read(convertedMonthlyIncomeProvider);
-    ref.read(loggerProvider).d('Vérifié dans le provider: $savedIncome');
+    ref.read(loggerProvider).d('[Step1] Vérifié dans le provider: $savedIncome');
 
-    // Afficher l'animation de chargement
-    setState(() => _isLoading = true);
+    // Vérifier directement l'état complet
+    final fullState = await ref.read(onboardingProvider.future);
+    ref.read(loggerProvider).d('[Step1] État complet: monthlyIncome=${fullState.monthlyIncome}, frequency=${fullState.incomeFrequency}, converted=${fullState.convertedMonthlyIncome}');
 
+    // Activer le trial dès la première étape (pour que même en skippant, l'utilisateur l'ait)
     try {
-      ref.read(loggerProvider).i('Création de la transaction de revenu dans la DB...');
-
-      // Récupérer l'utilisateur actuel
       final currentUser = await ref.read(currentUserProvider.future);
-      if (currentUser == null) {
-        throw Exception('Utilisateur non connecté');
+      if (currentUser != null && !currentUser.isTrialActive && !currentUser.isPremium) {
+        ref.read(loggerProvider).i('Activation du trial gratuit...');
+        await ref.read(currentUserProvider.notifier).activateTrial(currentUser.id);
+        ref.read(loggerProvider).i('Trial activé avec succès');
       }
-
-      // Récupérer les catégories de type income
-      final categories = await ref.read(categoryProvider.future);
-      final incomeCategories = categories.where((c) => c.type == CategoryType.income).toList();
-
-      if (incomeCategories.isEmpty) {
-        throw Exception('Aucune catégorie de revenu disponible');
-      }
-
-      // Prendre la première catégorie de revenu (généralement "Salaire")
-      final incomeCategory = incomeCategories.first;
-
-      ref.read(loggerProvider).i('Catégorie de revenu: ${incomeCategory.name} (id: ${incomeCategory.id})');
-
-      // Sauvegarder dans la base de données via le notifier (mise à jour optimiste + invalidation auto)
-      await ref.read(transactionProvider.notifier).createTransaction(
-        name: _getIncomeLabel(_selectedFrequency),
-        amount: income,
-        date: DateTime.now(),
-        categoryId: incomeCategory.id!,
-        type: TransactionType.income,
-        userId: currentUser.id,
-        notes: 'Transaction créée lors de l\'onboarding',
-      );
-
-      ref.read(loggerProvider).i('Transaction de revenu créée avec succès');
-
-      if (!mounted) return;
-
-      // Naviguer vers l'étape 2
-      setState(() => _isLoading = false);
-      context.push(AppRoutePaths.step2);
     } catch (e) {
-      ref.read(loggerProvider).e('Erreur lors de la création de la transaction', error: e);
-
-      if (!mounted) return;
-      setState(() => _isLoading = false);
-
-      // Afficher un message d'erreur mais continuer quand même
-      if (Platform.isIOS) {
-        showCupertinoDialog(
-          context: context,
-          builder: (context) => CupertinoAlertDialog(
-            title: const Text('Attention'),
-            content: Text('Une erreur est survenue lors de la sauvegarde de votre revenu. Vous pourrez le modifier plus tard.\n\nErreur: $e'),
-            actions: [
-              CupertinoDialogAction(
-                child: const Text('Continuer'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  context.push(AppRoutePaths.step2);
-                },
-              ),
-            ],
-          ),
-        );
-      } else {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Attention'),
-            content: Text('Une erreur est survenue lors de la sauvegarde de votre revenu. Vous pourrez le modifier plus tard.\n\nErreur: $e'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  context.push(AppRoutePaths.step2);
-                },
-                child: const Text('Continuer'),
-              ),
-            ],
-          ),
-        );
-      }
+      // Ne pas bloquer l'onboarding si le trial ne peut pas être activé
+      ref.read(loggerProvider).w('Erreur lors de l\'activation du trial: $e');
     }
-  }
 
-  /// Obtient le label de la transaction de revenu selon la fréquence
-  String _getIncomeLabel(IncomeFrequency frequency) {
-    return switch (frequency) {
-      IncomeFrequency.monthly => 'Revenu mensuel',
-      IncomeFrequency.weekly => 'Revenu hebdomadaire',
-      IncomeFrequency.other => 'Revenu',
-    };
+    // Naviguer vers l'étape 2 (la transaction sera créée à la fin de l'onboarding)
+    if (!mounted) return;
+                  context.push(AppRoutePaths.step2);
   }
 
   void _handleInvalidTap() {

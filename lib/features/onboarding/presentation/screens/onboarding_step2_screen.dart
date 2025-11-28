@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pocketly/core/core.dart';
 import 'package:pocketly/core/widgets/animated_page_header.dart';
+import 'package:pocketly/generated/l10n/app_localizations.dart';
 import 'package:pocketly/features/currency/currency.dart';
 import 'package:pocketly/features/onboarding/presentation/providers/onboarding_providers.dart';
 import 'package:pocketly/features/pockets/pockets.dart';
@@ -39,10 +40,18 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final isIOS = Platform.isIOS;
+
+    ref.read(loggerProvider).d('[Step2] BUILD appelé');
+
+    // Récupérer l'état complet pour debug
+    final onboardingAsync = ref.watch(onboardingProvider);
+    ref.read(loggerProvider).d('[Step2] onboardingProvider status: ${onboardingAsync.isLoading ? "loading" : onboardingAsync.hasError ? "error" : "data"}');
+
+    // Récupérer le revenu depuis le provider
     final monthlyIncome = ref.watch(convertedMonthlyIncomeProvider) ?? 0;
 
     // Debug: Vérifier le montant récupéré
-    ref.read(loggerProvider).d('Revenu mensuel récupéré: $monthlyIncome');
+    ref.read(loggerProvider).d('[Step2] Revenu mensuel récupéré: $monthlyIncome');
 
     // Calculer les montants selon la règle 50/30/20
     final needsAmount = monthlyIncome * 0.5;
@@ -53,6 +62,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
     ref.read(loggerProvider).d('Besoins: $needsAmount, Envies: $wantsAmount, Épargne: $savingsAmount');
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false,
@@ -106,7 +116,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
               left: 0,
               right: 0,
               child: AnimatedPageHeader(
-                title: 'Étape 2/$_totalSteps',
+                title: AppLocalizations.of(context)!.onboardingStepProgress(2, _totalSteps),
                 scrollController: _scrollController,
                 showBackButton: true,
                 actionButton: _buildSkipButton(isDark, isIOS),
@@ -156,11 +166,12 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
   }
 
   Widget _buildProgressIndicator(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Étape 2/$_totalSteps',
+          l10n.onboardingStepProgress(2, _totalSteps),
           style: AppTypography.caption.copyWith(
             color: isDark
                 ? AppColors.textSecondaryOnDark
@@ -183,8 +194,9 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
   }
 
   Widget _buildTitle(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Votre budget réparti automatiquement',
+      l10n.onboardingStep2Title,
       style: AppTypography.heading.copyWith(
         color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
         fontWeight: FontWeight.bold,
@@ -196,8 +208,9 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
   }
 
   Widget _buildSubtitle(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Nous utilisons la règle 50/30/20 pour optimiser votre budget.',
+      l10n.onboardingStep2Subtitle,
       style: AppTypography.body.copyWith(
         color: isDark
             ? AppColors.textSecondaryOnDark
@@ -217,6 +230,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
     double savings,
     bool isDark,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final needsColor = _categoryColor(PocketCategory.needs);
     final wantsColor = _categoryColor(PocketCategory.wants);
     final savingsColor = _categoryColor(PocketCategory.savings);
@@ -274,7 +288,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Total',
+                      l10n.onboardingStep2Total,
                       style: AppTypography.caption.copyWith(
                         color: isDark
                             ? AppColors.textSecondaryOnDark
@@ -308,6 +322,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
                   needsColor: needsColor,
                   wantsColor: wantsColor,
                   savingsColor: savingsColor,
+                  l10n: l10n,
                     ),
               ],
             ),
@@ -334,12 +349,13 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
     required Color wantsColor,
     required Color savingsColor,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildLegendItem('Besoins', needsColor, '50%', isDark),
-        _buildLegendItem('Envies', wantsColor, '30%', isDark),
-        _buildLegendItem('Épargne', savingsColor, '20%', isDark),
+        _buildLegendItem(l10n.pocketCategoryNeeds, needsColor, '50%', isDark),
+        _buildLegendItem(l10n.pocketCategoryWants, wantsColor, '30%', isDark),
+        _buildLegendItem(l10n.pocketCategorySavings, savingsColor, '20%', isDark),
       ],
     );
   }
@@ -394,6 +410,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
     required Color needsColor,
     required Color wantsColor,
     required Color savingsColor,
+    required AppLocalizations l10n,
   }) {
     const double needsPercentage = 0.5;
     const double wantsPercentage = 0.3;
@@ -420,7 +437,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
       Transform.translate(
         offset: offsetForAngle(needsMidAngle),
         child: _buildChartAmountTag(
-          label: 'Besoins',
+          label: l10n.pocketCategoryNeeds,
           amount: needs,
           color: needsColor,
           isDark: isDark,
@@ -430,7 +447,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
       Transform.translate(
         offset: offsetForAngle(wantsMidAngle),
         child: _buildChartAmountTag(
-          label: 'Envies',
+          label: l10n.pocketCategoryWants,
           amount: wants,
           color: wantsColor,
           isDark: isDark,
@@ -440,7 +457,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
       Transform.translate(
         offset: offsetForAngle(savingsMidAngle),
         child: _buildChartAmountTag(
-          label: 'Épargne',
+          label: l10n.pocketCategorySavings,
           amount: savings,
           color: savingsColor,
           isDark: isDark,

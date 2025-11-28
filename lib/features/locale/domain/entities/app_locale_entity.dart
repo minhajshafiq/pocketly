@@ -87,11 +87,71 @@ class SupportedLocales {
   /// Récupérer la locale par défaut
   static AppLocaleEntity get defaultLocale => english;
 
-  /// Récupérer la locale du système
+  /// Liste des codes pays francophones (ISO 3166-1 alpha-2)
+  /// Inclut la France, le Canada, la Belgique, la Suisse, et autres pays francophones
+  static const Set<String> francophoneCountries = {
+    'FR', // France
+    'CA', // Canada
+    'BE', // Belgique
+    'CH', // Suisse
+    'LU', // Luxembourg
+    'MC', // Monaco
+    'AD', // Andorre
+    'CD', // République démocratique du Congo
+    'CG', // République du Congo
+    'CI', // Côte d'Ivoire
+    'CM', // Cameroun
+    'SN', // Sénégal
+    'BF', // Burkina Faso
+    'ML', // Mali
+    'NE', // Niger
+    'TD', // Tchad
+    'GN', // Guinée
+    'BJ', // Bénin
+    'TG', // Togo
+    'CF', // République centrafricaine
+    'GA', // Gabon
+    'GQ', // Guinée équatoriale
+    'DJ', // Djibouti
+    'KM', // Comores
+    'MG', // Madagascar
+    'MU', // Maurice
+    'SC', // Seychelles
+    'RW', // Rwanda
+    'BI', // Burundi
+    'HT', // Haïti
+    'MQ', // Martinique
+    'GP', // Guadeloupe
+    'GF', // Guyane française
+    'RE', // La Réunion
+    'PM', // Saint-Pierre-et-Miquelon
+    'YT', // Mayotte
+    'NC', // Nouvelle-Calédonie
+    'PF', // Polynésie française
+    'WF', // Wallis-et-Futuna
+    'BL', // Saint-Barthélemy
+    'MF', // Saint-Martin
+    'VA', // Vatican (officiellement bilingue)
+  };
+
+  /// Récupérer la locale du système en fonction de la langue et du pays
+  /// 
+  /// Détecte automatiquement :
+  /// - Français si la langue est 'fr' OU si le pays est francophone
+  /// - Anglais pour le reste
   static AppLocaleEntity getSystemLocale(Locale systemLocale) {
-    return all.firstWhere(
-      (locale) => locale.languageCode == systemLocale.languageCode,
-      orElse: () => english,
-    );
+    // Si la langue est déjà français, retourner français
+    if (systemLocale.languageCode == 'fr') {
+      return french;
+    }
+
+    // Si le pays est francophone, retourner français
+    if (systemLocale.countryCode != null &&
+        francophoneCountries.contains(systemLocale.countryCode!.toUpperCase())) {
+      return french;
+    }
+
+    // Par défaut, retourner anglais
+    return english;
   }
 }

@@ -87,6 +87,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     final isExpense = widget.transactionType == TransactionType.expense;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: false,

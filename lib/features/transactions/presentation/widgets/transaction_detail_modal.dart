@@ -21,7 +21,7 @@ import 'package:pocketly/features/currency/currency.dart';
 
 /// Provider pour récupérer les occurrences d'une transaction
 final transactionOccurrencesProvider = Provider.autoDispose
-    .family<List<TransactionEntity>, int>((ref, transactionId) {
+    .family<List<TransactionEntity>, String>((ref, transactionId) {
       // Lire l'état actuel des transactions (sans déclencher de chargement)
       final transactionState = ref.watch(transactionProvider);
       final allTransactions = transactionState.allTransactions;
@@ -64,7 +64,7 @@ final transactionOccurrencesProvider = Provider.autoDispose
 
 /// Modal de détails d'une transaction avec design amélioré
 class TransactionDetailModal extends ConsumerWidget {
-  final int transactionId;
+  final String transactionId;
 
   const TransactionDetailModal({required this.transactionId, super.key});
 
@@ -1108,7 +1108,7 @@ class TransactionDetailModal extends ConsumerWidget {
 }
 
 /// Helper function pour ouvrir la modal de détails de transaction
-void showTransactionDetailModal(BuildContext context, int transactionId) {
+void showTransactionDetailModal(BuildContext context, String transactionId) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,

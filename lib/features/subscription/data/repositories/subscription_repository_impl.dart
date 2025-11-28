@@ -121,10 +121,11 @@ class SubscriptionRepositoryImpl implements SubscriptionRepository {
       await _supabase.from('users').update({
         'is_premium': status.isPremium,
         'premium_expires_at': status.expirationDate?.toIso8601String(),
+        'active_subscription_type': status.activeSubscriptionType,
         'updated_at': DateTime.now().toIso8601String(),
       }).eq('id', userId);
 
-      logger.i('[SubscriptionRepository] Synchronisation réussie');
+      logger.i('[SubscriptionRepository] Synchronisation réussie (premium: ${status.isPremium}, type: ${status.activeSubscriptionType})');
     } catch (e) {
       logger.e('[SubscriptionRepository] Erreur synchronisation: $e', error: e);
       rethrow;

@@ -13,7 +13,7 @@ class CreateTransactionUseCase {
     required String name,
     required double amount,
     required DateTime date,
-    required int categoryId,
+    required String categoryId,
     required TransactionType type,
     RecurrenceType recurrence = RecurrenceType.none,
     String? imageUrl,

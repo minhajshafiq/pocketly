@@ -412,6 +412,10 @@
   "@preferences": {
     "description": "Preferences section title"
   },
+  "subscription": "Subscription",
+  "@subscription": {
+    "description": "Subscription section title"
+  },
   "account": "Account",
   "@account": {
     "description": "Account section title"
@@ -680,6 +684,14 @@
   "@emailValidationInvalid": {
     "description": "Email validation invalid message"
   },
+  "emailAlreadyTaken": "This email is already in use. Sign in or use a different email.",
+  "@emailAlreadyTaken": {
+    "description": "Error message when email is already registered"
+  },
+  "emailAlreadyRegistered": "An account already exists with this email. Try signing in instead.",
+  "@emailAlreadyRegistered": {
+    "description": "Error message when email is already registered (alternative)"
+  },
   "passwordValidationRequired": "Please enter your password",
   "@passwordValidationRequired": {
     "description": "Password validation required message"
@@ -687,6 +699,18 @@
   "passwordValidationMinLength": "Password must be at least 12 characters",
   "@passwordValidationMinLength": {
     "description": "Password validation min length message"
+  },
+  "passwordTooWeak": "Password is too weak. Use at least 12 characters with letters, numbers, and symbols.",
+  "@passwordTooWeak": {
+    "description": "Error message when password is too weak"
+  },
+  "signupFailed": "Unable to create account. Please try again.",
+  "@signupFailed": {
+    "description": "Generic signup error message"
+  },
+  "signupNetworkError": "Connection error. Check your internet connection and try again.",
+  "@signupNetworkError": {
+    "description": "Network error during signup"
   },
   "tooManyAttempts": "Too many login attempts",
   "@tooManyAttempts": {
@@ -793,6 +817,59 @@
   "@statusFree": {
     "description": "Free account status"
   },
+  "subscriptionPlan": "Plan",
+  "@subscriptionPlan": {
+    "description": "Subscription plan type label"
+  },
+  "trialEnd": "Trial end",
+  "@trialEnd": {
+    "description": "Trial end date label"
+  },
+  "renewal": "Renewal",
+  "@renewal": {
+    "description": "Subscription renewal date label"
+  },
+  "unknown": "Unknown",
+  "@unknown": {
+    "description": "Unknown value placeholder"
+  },
+  "daysRemaining": "Days remaining",
+  "@daysRemaining": {
+    "description": "Days remaining label"
+  },
+  "daysRemainingCount": "{count} days",
+  "@daysRemainingCount": {
+    "description": "Number of days remaining with placeholder",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "manageSubscription": "Manage subscription",
+  "@manageSubscription": {
+    "description": "Manage subscription button label"
+  },
+  "trialActive": "Free trial active",
+  "@trialActive": {
+    "description": "Active trial status text"
+  },
+  "subscriptionActive": "Active subscription",
+  "@subscriptionActive": {
+    "description": "Active subscription status text"
+  },
+  "freeAccount": "Free account",
+  "@freeAccount": {
+    "description": "Free account status text"
+  },
+  "cannotOpenManagementPage": "Cannot open management page",
+  "@cannotOpenManagementPage": {
+    "description": "Error message when subscription management page cannot be opened"
+  },
+  "errorOpeningSubscriptionManagement": "Error opening subscription management",
+  "@errorOpeningSubscriptionManagement": {
+    "description": "Error message when subscription management fails"
+  },
   "today": "Today",
   "@today": {
     "description": "Today label"
@@ -873,6 +950,14 @@
   "@premiumFeatureDescription": {
     "description": "Premium feature description"
   },
+  "premiumFeatureOnlyMembers": "Only available for Premium members",
+  "@premiumFeatureOnlyMembers": {
+    "description": "Premium overlay - only premium members note"
+  },
+  "premiumUnlockDescription": "",
+  "@premiumUnlockDescription": {
+    "description": "Description below unlock card without mentioning a trial"
+  },
   "premiumBenefits": "Premium Benefits",
   "@premiumBenefits": {
     "description": "Premium benefits title"
@@ -910,6 +995,48 @@
     "description": "Error activating trial message"
   },
   "comingSoon": "Coming soon! In-app purchases will be available shortly.",
+  "featureComingSoon": "This feature will be available soon!",
+  "onboardingStep3Title": "Add your first expense",
+  "onboardingStep3Subtitle": "To better understand how Pocketly works.",
+  "onboardingExpenseNameLabel": "Expense name",
+  "onboardingExpenseNameHint": "e.g. Groceries",
+  "onboardingExpenseAmountLabel": "Amount",
+  "onboardingCategoryLabel": "Category",
+  "onboardingCategoryNeedsDescription": "Rent, groceries, bills...",
+  "onboardingCategoryWantsDescription": "Entertainment, outings, shopping...",
+  "onboardingCategorySavingsDescription": "Savings, investments...",
+  "onboardingQuickSuggestions": "Quick suggestions",
+  "onboardingSuggestionGroceries": "Groceries",
+  "onboardingSuggestionTransport": "Transport",
+  "onboardingSuggestionSnacks": "Snacks",
+  "onboardingExpenseHelper": "This expense will be added to your budget.",
+  "onboardingExpenseValidationError": "Please enter a valid name and amount",
+  "onboardingCreating": "Creating...",
+  "onboardingStep1IncomeTitle": "What is your monthly income?",
+  "onboardingStep1IncomeSubtitle": "This allows us to automatically personalize your budget.",
+  "onboardingStep1IncomeAmountLabel": "Amount",
+  "onboardingStep1FrequencyLabel": "Frequency",
+  "onboardingStep1FrequencyMonthly": "Monthly",
+  "onboardingStep1FrequencyWeekly": "Weekly",
+  "onboardingStep1FrequencyOther": "Other",
+  "onboardingStep1IncomeHelper": "You can modify this amount at any time.",
+  "onboardingStep1IncomeError": "Please enter a valid amount",
+  "onboardingStep1Personalizing": "Personalizing your budget...",
+  "onboardingStep2Title": "Your budget automatically allocated",
+  "onboardingStep2Subtitle": "We use the 50/30/20 rule to optimize your budget.",
+  "onboardingStep2Total": "Total",
+  "onboardingStep4Title": "Congratulations! 🎉",
+  "onboardingStep4Subtitle": "You're ready to master your budget!\nEnjoy 14 days of free trial.",
+  "onboardingStep4PremiumActivated": "Premium activated",
+  "onboardingStep4TrialDays": "14 days free trial",
+  "onboardingStep4FeatureUnlimitedBudgets": "Unlimited budgets",
+  "onboardingStep4FeatureUnlimitedBudgetsDesc": "Create as many pockets as you want",
+  "onboardingStep4FeatureDetailedAnalytics": "Detailed analytics",
+  "onboardingStep4FeatureDetailedAnalyticsDesc": "Track your expenses in real time",
+  "onboardingStep4FeatureSmartNotifications": "Smart notifications",
+  "onboardingStep4FeatureSmartNotificationsDesc": "Stay informed about your finances",
+  "onboardingStep4Activating": "Activating...",
+  "onboardingStep4Start": "Start",
   "@comingSoon": {
     "description": "Coming soon message"
   },
@@ -1753,13 +1880,25 @@
   "@deleteAccountConfirmTitle": {
     "description": "Title for delete account confirmation dialog"
   },
-  "deleteAccountConfirmMessage": "This will permanently delete your account and ALL associated data:\n\n• All transactions\n• All custom categories\n• All pockets\n• All settings\n\nThis action CANNOT be undone.",
+  "deleteAccountConfirmMessage": "You're going to delete your account. Are you sure?",
   "@deleteAccountConfirmMessage": {
     "description": "Message for delete account confirmation dialog"
   },
-  "deleteAccountConfirmButton": "Yes, Delete Everything",
+  "deleteAccountConfirmButton": "Yes, Delete It!",
   "@deleteAccountConfirmButton": {
     "description": "Confirm button text for delete account dialog"
+  },
+  "deleteAccountCancel": "No, Keep it.",
+  "@deleteAccountCancel": {
+    "description": "Cancel button for account deletion"
+  },
+  "deleteAccountDataTransactions": "All transactions",
+  "deleteAccountDataCategories": "All custom categories",
+  "deleteAccountDataPockets": "All pockets",
+  "deleteAccountDataSettings": "All settings",
+  "deleteAccountIrreversible": "This action is IRREVERSIBLE.",
+  "@deleteAccountIrreversible": {
+    "description": "Warning message that deletion is irreversible"
   },
   "cancel": "Cancel",
   "@cancel": {
@@ -1847,5 +1986,25 @@
   "errorSaveFailed": "Save failed",
   "errorLoadFailed": "Load failed",
   "errorDeleteFailed": "Delete failed",
-  "errorInitializationFailed": "Initialization failed"
+  "errorInitializationFailed": "Initialization failed",
+  "onboardingErrorTitle": "Warning",
+  "@onboardingErrorTitle": {
+    "description": "Error dialog title during onboarding"
+  },
+  "onboardingErrorIncomeSave": "An error occurred while saving your income. You can modify it later.",
+  "@onboardingErrorIncomeSave": {
+    "description": "Error message when saving income during onboarding"
+  },
+  "onboardingErrorPocketsCreate": "An error occurred while creating your pockets. You can create them later.",
+  "@onboardingErrorPocketsCreate": {
+    "description": "Error message when creating pockets during onboarding"
+  },
+  "onboardingErrorFinalization": "An error occurred while finalizing onboarding.",
+  "@onboardingErrorFinalization": {
+    "description": "Error message when finalizing onboarding"
+  },
+  "onboardingErrorGeneric": "An error occurred",
+  "@onboardingErrorGeneric": {
+    "description": "Generic error message in onboarding"
+  }
 }

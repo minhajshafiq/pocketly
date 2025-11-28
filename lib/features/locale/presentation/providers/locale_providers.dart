@@ -50,8 +50,10 @@ class CurrentLocale extends _$CurrentLocale {
       return appLocale.toLocale();
     }
 
-    // Sinon, utiliser la locale par défaut
-    return SupportedLocales.defaultLocale.toLocale();
+    // Sinon, détecter automatiquement la locale du système
+    final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
+    final appLocale = SupportedLocales.getSystemLocale(systemLocale);
+    return appLocale.toLocale();
   }
 
   /// Change la locale de l'application

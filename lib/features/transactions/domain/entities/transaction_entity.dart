@@ -38,11 +38,11 @@ enum TransactionType {
 @freezed
 sealed class TransactionEntity with _$TransactionEntity {
   const factory TransactionEntity({
-    int? id,
+    String? id,
     required String name,
     required double amount,
     required DateTime date,
-    @JsonKey(name: 'category_id') required int categoryId,
+    @JsonKey(name: 'category_id') required String categoryId,
     required TransactionType type,
     @Default(RecurrenceType.none) RecurrenceType recurrence,
     @JsonKey(name: 'image_url') String? imageUrl,
@@ -65,7 +65,7 @@ sealed class TransactionEntity with _$TransactionEntity {
     required String name,
     required double amount,
     required DateTime date,
-    required int categoryId,
+    required String categoryId,
     required TransactionType type,
     String? imageUrl,
     String? notes,
@@ -92,7 +92,7 @@ sealed class TransactionEntity with _$TransactionEntity {
     required String name,
     required double amount,
     required DateTime startDate,
-    required int categoryId,
+    required String categoryId,
     required TransactionType type,
     required RecurrenceType recurrence,
     DateTime? endDate,

@@ -56,6 +56,7 @@ class _EditPocketScreenState extends ConsumerState<EditPocketScreen> {
     final pocketAsync = ref.watch(pocketByIdProvider(widget.pocketId));
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
       body: PlatformSafeArea(
         top: true,
         bottom: null, // Auto: true sur Android, false sur iOS

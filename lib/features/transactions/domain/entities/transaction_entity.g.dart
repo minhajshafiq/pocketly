@@ -8,11 +8,11 @@ part of 'transaction_entity.dart';
 
 _TransactionEntity _$TransactionEntityFromJson(Map<String, dynamic> json) =>
     _TransactionEntity(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'] as String?,
       name: json['name'] as String,
       amount: (json['amount'] as num).toDouble(),
       date: DateTime.parse(json['date'] as String),
-      categoryId: (json['category_id'] as num).toInt(),
+      categoryId: json['category_id'] as String,
       type: $enumDecode(_$TransactionTypeEnumMap, json['type']),
       recurrence:
           $enumDecodeNullable(_$RecurrenceTypeEnumMap, json['recurrence']) ??

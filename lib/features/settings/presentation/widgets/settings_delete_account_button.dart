@@ -1,10 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:pocketly/core/core.dart';
 import 'package:pocketly/generated/l10n/app_localizations.dart';
 import 'package:pocketly/features/settings/presentation/widgets/settings_button_tile.dart';
-import 'package:pocketly/core/widgets/app_card.dart';
 import 'package:pocketly/features/user/user.dart';
 
 /// Bouton pour supprimer le compte utilisateur et toutes ses données
@@ -33,6 +32,8 @@ class SettingsDeleteAccountButton extends ConsumerWidget {
   void _showDeleteConfirmation(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final currentUserAsync = ref.read(currentUserProvider);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     final userId = currentUserAsync.value?.id;
     if (userId == null) {
@@ -44,49 +45,114 @@ class SettingsDeleteAccountButton extends ConsumerWidget {
 
     showDialog(
       context: context,
-      useRootNavigator: true, // Passe au-dessus de la bottom nav
-      builder: (context) => AlertDialog(
-        title: Text(
-          l10n.deleteAccountConfirmTitle,
-          style: AppTypography.heading.copyWith(
-            color: AppColors.error,
+      useRootNavigator: true,
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: AppCard(
+          padding: EdgeInsets.zero,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 320),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icône d'avertissement
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: AppDimensions.paddingXL,
+                    left: AppDimensions.paddingXL,
+                    right: AppDimensions.paddingXL,
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(AppDimensions.paddingM),
+                    decoration: BoxDecoration(
+                      color: AppColors.error.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      AppIcons.warningOutline,
+                      color: AppColors.error,
+                      size: 32,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: AppDimensions.paddingL),
+
+                // Titre
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL),
+                  child: Text(
+                    l10n.deleteAccountConfirmTitle,
+                    style: AppTypography.heading.copyWith(
+                      color: isDark ? AppColors.textOnDark : AppColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
+                SizedBox(height: AppDimensions.paddingM),
+
+                // Message
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppDimensions.paddingXL),
+                  child: Text(
+                    l10n.deleteAccountConfirmMessage,
+                    style: AppTypography.body.copyWith(
+                      color: isDark
+                          ? AppColors.textSecondaryOnDark
+                          : AppColors.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
+                SizedBox(height: AppDimensions.paddingXL),
+
+                // Boutons
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: AppDimensions.paddingXL,
+                    right: AppDimensions.paddingXL,
+                    bottom: AppDimensions.paddingXL,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AppButton(
+                        text: l10n.deleteAccountCancel,
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: AppButtonStyle.outline,
+                        size: AppButtonSize.medium,
+                        isFullWidth: true,
+                      ),
+                      SizedBox(height: AppDimensions.paddingM),
+                      AppButton(
+                        text: l10n.deleteAccountConfirmButton,
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          await _deleteAccount(context, ref, userId);
+                        },
+                        style: AppButtonStyle.error,
+                        size: AppButtonSize.medium,
+                        isFullWidth: true,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        content: Text(
-          l10n.deleteAccountConfirmMessage,
-          style: AppTypography.body,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              l10n.cancel,
-              style: AppTypography.body.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-              await _deleteAccount(context, ref, userId);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              foregroundColor: Colors.white,
-            ),
-            child: Text(
-              l10n.deleteAccountConfirmButton,
-              style: AppTypography.body.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
+
 
   /// Supprime le compte utilisateur
   Future<void> _deleteAccount(
@@ -96,12 +162,19 @@ class SettingsDeleteAccountButton extends ConsumerWidget {
   ) async {
     if (!context.mounted) return;
 
+    final l10n = AppLocalizations.of(context)!;
+    final logger = ref.read(loggerProvider);
+
+    // Capturer le BuildContext avant les opérations async
+    final navigator = Navigator.of(context, rootNavigator: true);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     // Afficher un indicateur de chargement
     showDialog(
       context: context,
-      useRootNavigator: true, // Passe au-dessus de la bottom nav
+      useRootNavigator: true,
       barrierDismissible: false,
-      builder: (context) => PopScope(
+      builder: (dialogContext) => PopScope(
         canPop: false,
         child: const Center(
           child: CircularProgressIndicator(),
@@ -110,30 +183,68 @@ class SettingsDeleteAccountButton extends ConsumerWidget {
     );
 
     try {
-      // Supprimer le compte avec timeout de 10 secondes max
+      // Supprimer le compte avec timeout
       await ref.read(currentUserProvider.notifier).deleteAccount(userId).timeout(
-        const Duration(seconds: 10),
+        const Duration(seconds: 15),
         onTimeout: () {
-          // Si timeout après 10 secondes, considérer que c'est OK (les données sont supprimées)
-          return;
+          if (kDebugMode) {
+            logger.d('[DeleteAccount] Timeout - considéré comme réussi');
+          }
         },
       );
+      if (kDebugMode) {
+        logger.i('[DeleteAccount] Suppression terminée');
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        logger.w('[DeleteAccount] Erreur (ignorée): $e', stackTrace: stackTrace);
+      }
+    }
+
+    // Fermer le dialog de chargement
+    try {
+      navigator.pop();
+      if (kDebugMode) {
+        logger.d('[DeleteAccount] Dialog fermé');
+      }
     } catch (e) {
-      // Ignorer les erreurs - les données sont déjà supprimées en base
-      debugPrint('Erreur suppression (ignorée): $e');
+      if (kDebugMode) {
+        logger.w('[DeleteAccount] Erreur fermeture dialog: $e');
+    }
     }
 
-    // Toujours fermer le dialog et rediriger, même en cas d'erreur
-    if (context.mounted) {
-      Navigator.of(context).pop(); // Fermer le loading
-    }
-
-    // Attendre un peu avant de rediriger
+    // Attendre un court instant pour que le dialog se ferme complètement
     await Future.delayed(const Duration(milliseconds: 300));
 
-    // Rediriger vers welcome TOUJOURS
-    if (context.mounted) {
-      context.go('/welcome');
+    // Afficher le message de succès
+    try {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.accountDeleted,
+            style: AppTypography.body.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          backgroundColor: AppColors.success,
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      if (kDebugMode) {
+        logger.d('[DeleteAccount] Message de succès affiché');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        logger.w('[DeleteAccount] Erreur affichage snackbar: $e');
+      }
+    }
+
+    // Le router va automatiquement rediriger vers signin car l'utilisateur n'est plus authentifié
+    // Pas besoin de navigation manuelle - le redirect du router s'en charge
+    if (kDebugMode) {
+      logger.d('[DeleteAccount] Attente de la redirection automatique vers signin...');
     }
   }
 }
