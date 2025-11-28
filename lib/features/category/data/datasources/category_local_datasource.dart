@@ -157,7 +157,7 @@ class CategoryLocalDataSource {
   }
 
   /// Supprime une catégorie du cache local
-  Future<void> deleteCategory(int categoryId, {String? userId}) async {
+  Future<void> deleteCategory(String categoryId, {String? userId}) async {
     try {
       // IMPORTANT: Récupérer les catégories existantes avec le userId pour éviter de perdre les données
       final allCategories = await getAllCategories(currentUserId: userId);

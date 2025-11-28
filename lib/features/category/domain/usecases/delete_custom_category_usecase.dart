@@ -8,13 +8,13 @@ class DeleteCustomCategoryUseCase {
   DeleteCustomCategoryUseCase(this._repository);
 
   /// Exécute le use case pour supprimer une catégorie custom
-  Future<void> call(int categoryId) async {
+  Future<void> call(String categoryId) async {
     // Validation de l'ID
-    if (categoryId <= 0) {
-      throw ValidationError(
+    if (categoryId.trim().isEmpty) {
+      throw const ValidationError(
         field: 'categoryId',
-        userMessage: 'L\'ID de la catégorie doit être positif',
-        technicalMessage: 'Invalid category ID: $categoryId',
+        userMessage: 'L\'ID de la catégorie ne peut pas être vide',
+        technicalMessage: 'Category ID is required',
       );
     }
 

@@ -164,7 +164,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @override
-  Future<void> deleteCustomCategory(int categoryId) async {
+  Future<void> deleteCustomCategory(String categoryId) async {
     try {
       // Supprimer du serveur
       await _remoteDataSource.deleteCustomCategory(categoryId);
@@ -180,7 +180,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @override
-  Future<CategoryEntity?> getCategoryById(int id) async {
+  Future<CategoryEntity?> getCategoryById(String id) async {
     try {
       // Essayer le cache local d'abord
       final localCategories = await _localDataSource.getAllCategories();

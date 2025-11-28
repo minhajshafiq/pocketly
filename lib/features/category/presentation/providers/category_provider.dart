@@ -1,7 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pocketly/core/core.dart';
+import 'package:pocketly/features/user/user.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/repositories/category_repository.dart';
 import '../../domain/usecases/get_all_categories_usecase.dart';
@@ -9,43 +9,42 @@ import '../../domain/usecases/create_custom_category_usecase.dart';
 import '../../domain/usecases/delete_custom_category_usecase.dart';
 import '../../domain/errors/category_errors.dart';
 import '../../data/repositories/category_repository_impl.dart';
-import '../../../user/domain/entities/user_entity.dart';
-import '../../../user/presentation/providers/user_provider.dart';
 
 part 'category_provider.g.dart';
 
 /// Provider pour SupabaseClient
-final supabaseClientProvider = Provider<SupabaseClient>((ref) {
+@riverpod
+SupabaseClient supabaseClient(Ref ref) {
   return Supabase.instance.client;
-});
+}
 
 /// Provider pour CategoryRepository
-final categoryRepositoryProvider = Provider<CategoryRepository>((ref) {
+@riverpod
+CategoryRepository categoryRepository(Ref ref) {
   final supabase = ref.watch(supabaseClientProvider);
   final prefs = ref.watch(sharedPreferencesProvider);
 
   return CategoryRepositoryImpl(supabase: supabase, prefs: prefs);
-});
+}
 
 /// Provider pour les use cases
-final getAllCategoriesUseCaseProvider = Provider<GetAllCategoriesUseCase>((
-  ref,
-) {
+@riverpod
+GetAllCategoriesUseCase getAllCategoriesUseCase(Ref ref) {
   final repository = ref.watch(categoryRepositoryProvider);
   return GetAllCategoriesUseCase(repository);
-});
+}
 
-final createCustomCategoryUseCaseProvider =
-    Provider<CreateCustomCategoryUseCase>((ref) {
-      final repository = ref.watch(categoryRepositoryProvider);
-      return CreateCustomCategoryUseCase(repository);
-    });
+@riverpod
+CreateCustomCategoryUseCase createCustomCategoryUseCase(Ref ref) {
+  final repository = ref.watch(categoryRepositoryProvider);
+  return CreateCustomCategoryUseCase(repository);
+}
 
-final deleteCustomCategoryUseCaseProvider =
-    Provider<DeleteCustomCategoryUseCase>((ref) {
-      final repository = ref.watch(categoryRepositoryProvider);
-      return DeleteCustomCategoryUseCase(repository);
-    });
+@riverpod
+DeleteCustomCategoryUseCase deleteCustomCategoryUseCase(Ref ref) {
+  final repository = ref.watch(categoryRepositoryProvider);
+  return DeleteCustomCategoryUseCase(repository);
+}
 
 
 /// Notifier pour la gestion des catégories
@@ -205,7 +204,7 @@ class CategoryNotifier extends _$CategoryNotifier {
   }
 
   /// Supprime une catégorie custom
-  Future<void> deleteCustomCategory(int categoryId) async {
+  Future<void> deleteCustomCategory(String categoryId) async {
     try {
       final useCase = _deleteCustomCategoryUseCase;
       await useCase(categoryId);
@@ -230,7 +229,7 @@ class CategoryNotifier extends _$CategoryNotifier {
   /// - [ValidationError] si les données sont invalides
   /// - [NotFoundError] si la catégorie n'existe pas
   Future<void> updateCustomCategory({
-    required int categoryId,
+    required String categoryId,
     required String name,
     required String iconName,
     required String color,
@@ -317,68 +316,68 @@ class CategoryNotifier extends _$CategoryNotifier {
 // Utiliser: categoryProvider
 
 /// Provider pour les catégories filtrées par type
-final categoriesByTypeProvider =
-    Provider.family<List<CategoryEntity>, CategoryType>((ref, type) {
-      final categoryAsync = ref.watch(categoryProvider);
-      return categoryAsync.when(
-        data: (categories) =>
-            categories.where((cat) => cat.type == type).toList(),
-        loading: () => [],
-        error: (_, _) => [],
-      );
-    });
+@riverpod
+List<CategoryEntity> categoriesByType(Ref ref, CategoryType type) {
+  final categoryAsync = ref.watch(categoryProvider);
+  return categoryAsync.when(
+    data: (categories) =>
+        categories.where((cat) => cat.type == type).toList(),
+    loading: () => [],
+    error: (_, _) => [],
+  );
+}
 
 /// Provider AsyncValue pour les catégories filtrées par type
 /// Préserve les états de loading et error
-final categoriesByTypeAsyncProvider =
-    Provider.family<AsyncValue<List<CategoryEntity>>, CategoryType>((
-      ref,
-      type,
-    ) {
-      final categoryAsync = ref.watch(categoryProvider);
-      final logger = ref.read(loggerProvider);
+@riverpod
+AsyncValue<List<CategoryEntity>> categoriesByTypeAsync(
+  Ref ref,
+  CategoryType type,
+) {
+  final categoryAsync = ref.watch(categoryProvider);
+  final logger = ref.read(loggerProvider);
 
-      logger.d('Type recherché: $type');
-      logger.d('État du provider: ${categoryAsync.runtimeType}');
+  logger.d('Type recherché: $type');
+  logger.d('État du provider: ${categoryAsync.runtimeType}');
 
-      return categoryAsync.whenData((categories) {
-        logger.d('Total catégories reçues: ${categories.length}');
-        for (final cat in categories) {
-          logger.d('- ${cat.name}: type=${cat.type}, typeMatch=${cat.type == type}');
-        }
+  return categoryAsync.whenData((categories) {
+    logger.d('Total catégories reçues: ${categories.length}');
+    for (final cat in categories) {
+      logger.d('- ${cat.name}: type=${cat.type}, typeMatch=${cat.type == type}');
+    }
 
-        final filtered = categories.where((cat) => cat.type == type).toList();
-        logger.d('Catégories filtrées: ${filtered.length}');
+    final filtered = categories.where((cat) => cat.type == type).toList();
+    logger.d('Catégories filtrées: ${filtered.length}');
 
-        return filtered;
-      });
-    });
+    return filtered;
+  });
+}
 
 /// Provider pour les catégories custom
-final customCategoriesProvider = Provider<List<CategoryEntity>>((ref) {
+@riverpod
+List<CategoryEntity> customCategories(Ref ref) {
   final categoryAsync = ref.watch(categoryProvider);
   return categoryAsync.when(
     data: (categories) => categories.where((cat) => cat.isCustom).toList(),
     loading: () => [],
     error: (_, _) => [],
   );
-});
+}
 
 /// Provider pour les catégories par défaut
-final defaultCategoriesProvider = Provider<List<CategoryEntity>>((ref) {
+@riverpod
+List<CategoryEntity> defaultCategories(Ref ref) {
   final categoryAsync = ref.watch(categoryProvider);
   return categoryAsync.when(
     data: (categories) => categories.where((cat) => cat.isDefault).toList(),
     loading: () => [],
     error: (_, _) => [],
   );
-});
+}
 
 /// Provider pour récupérer une catégorie par son ID
-final categoryByIdProvider = Provider.family<CategoryEntity?, int>((
-  ref,
-  categoryId,
-) {
+@riverpod
+CategoryEntity? categoryById(Ref ref, String categoryId) {
   final categoryAsync = ref.watch(categoryProvider);
 
   return categoryAsync.when(
@@ -392,4 +391,4 @@ final categoryByIdProvider = Provider.family<CategoryEntity?, int>((
     loading: () => null,
     error: (_, __) => null,
   );
-});
+}

@@ -23,6 +23,10 @@ import 'package:pocketly/features/category/presentation/providers/category_provi
 import 'package:pocketly/generated/l10n/app_localizations.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pocketly/features/user/user.dart';
+import 'package:pocketly/features/subscription/domain/entities/subscription_status_entity.dart';
+import 'package:pocketly/features/subscription/presentation/providers/subscription_providers.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 /// Bouton de type individuel avec animation fluide
 /// Style harmonisé avec _PeriodButton et _FilterButton
@@ -114,6 +118,57 @@ class _CategoriesListScreenState extends ConsumerState<CategoriesListScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  /// Gère l'affichage du paywall et la synchronisation après achat
+  Future<void> _handleUpgradePremium() async {
+    try {
+      final paywallResult = await RevenueCatUI.presentPaywall();
+
+      if (paywallResult == PaywallResult.purchased ||
+          paywallResult == PaywallResult.restored) {
+
+        // Récupérer les infos actualisées
+        final customerInfo = await Purchases.getCustomerInfo();
+        final hasActiveSubscription = customerInfo.entitlements.active.isNotEmpty;
+
+        if (hasActiveSubscription) {
+          // Synchroniser avec Supabase
+          await ref
+              .read(subscriptionRepositoryProvider)
+              .syncSubscriptionToBackend(
+                _parseCustomerInfoToStatus(customerInfo),
+              );
+        }
+
+        // Rafraîchir l'UI
+        ref.invalidate(currentUserProvider);
+        ref.invalidate(canAccessPremiumProvider);
+      }
+    } catch (e) {
+      // Erreur silencieuse
+    }
+  }
+
+  SubscriptionStatusEntity _parseCustomerInfoToStatus(CustomerInfo customerInfo) {
+    final entitlements = customerInfo.entitlements.active;
+
+    if (entitlements.isEmpty) {
+      return const SubscriptionStatusEntity(
+        status: SubscriptionStatus.free,
+        isPremium: false,
+      );
+    }
+
+    final entitlement = entitlements.values.first;
+
+    return SubscriptionStatusEntity(
+      status: SubscriptionStatus.premium,
+      isPremium: true,
+      expirationDate: entitlement.expirationDate != null
+          ? DateTime.parse(entitlement.expirationDate!)
+          : null,
+    );
   }
 
   @override
@@ -572,7 +627,7 @@ class _CategoriesListScreenState extends ConsumerState<CategoriesListScreen> {
                 text: canAccessPremium
                     ? l10n.createFirstCategory
                     : l10n.upgradeToPremium,
-                onPressed: () {
+                onPressed: () async {
                   HapticFeedback.lightImpact();
                   if (canAccessPremium) {
                     context.push(
@@ -580,7 +635,7 @@ class _CategoriesListScreenState extends ConsumerState<CategoriesListScreen> {
                       extra: _selectedType,
                     );
                   } else {
-                    context.push(AppRoutePaths.paywall);
+                    await _handleUpgradePremium();
                   }
                 },
                 icon: canAccessPremium ? LucideIcons.plus : AppIcons.premium,
@@ -606,12 +661,12 @@ class _CategoriesListScreenState extends ConsumerState<CategoriesListScreen> {
           padding: EdgeInsets.all(AppDimensions.paddingM),
           borderRadius: BorderRadius.circular(28),
           color: AppColors.primary,
-          onPressed: () {
+          onPressed: () async {
             HapticFeedback.lightImpact();
             if (canAccessPremium) {
               context.push(AppRoutePaths.createCategory, extra: _selectedType);
             } else {
-              context.push(AppRoutePaths.paywall);
+              await _handleUpgradePremium();
             }
           },
           child: Icon(
@@ -626,12 +681,12 @@ class _CategoriesListScreenState extends ConsumerState<CategoriesListScreen> {
       label: canAccessPremium ? l10n.createCategory : l10n.premiumRequired,
       button: true,
       child: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           HapticFeedback.lightImpact();
           if (canAccessPremium) {
             context.push(AppRoutePaths.createCategory, extra: _selectedType);
           } else {
-            context.push(AppRoutePaths.paywall);
+            await _handleUpgradePremium();
           }
         },
         backgroundColor: AppColors.primary,

@@ -18,10 +18,10 @@ abstract class CategoryRepository {
   Future<CategoryEntity> updateCustomCategory(CategoryEntity category);
 
   /// Supprime une catégorie custom
-  Future<void> deleteCustomCategory(int categoryId);
+  Future<void> deleteCustomCategory(String categoryId);
 
   /// Récupère une catégorie par son ID
-  Future<CategoryEntity?> getCategoryById(int id);
+  Future<CategoryEntity?> getCategoryById(String id);
 
   /// Synchronise les catégories avec le serveur
   Future<void> syncCategories();

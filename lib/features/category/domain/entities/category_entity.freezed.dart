@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CategoryEntity {
 
- int? get id; String get name; CategoryType get type;@JsonKey(name: 'icon_name') String get iconName; String get color;@JsonKey(name: 'is_custom') bool get isCustom;@JsonKey(name: 'user_id') String? get userId;@JsonKey(name: 'created_at') DateTime? get createdAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;
+ String? get id; String get name; CategoryType get type;@JsonKey(name: 'icon_name') String get iconName; String get color;@JsonKey(name: 'is_custom') bool get isCustom;@JsonKey(name: 'user_id') String? get userId;@JsonKey(name: 'created_at') DateTime? get createdAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;
 /// Create a copy of CategoryEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $CategoryEntityCopyWith<$Res>  {
   factory $CategoryEntityCopyWith(CategoryEntity value, $Res Function(CategoryEntity) _then) = _$CategoryEntityCopyWithImpl;
 @useResult
 $Res call({
- int? id, String name, CategoryType type,@JsonKey(name: 'icon_name') String iconName, String color,@JsonKey(name: 'is_custom') bool isCustom,@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
+ String? id, String name, CategoryType type,@JsonKey(name: 'icon_name') String iconName, String color,@JsonKey(name: 'is_custom') bool isCustom,@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -68,7 +68,7 @@ class _$CategoryEntityCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? type = null,Object? iconName = null,Object? color = null,Object? isCustom = null,Object? userId = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as CategoryType,iconName: null == iconName ? _self.iconName : iconName // ignore: cast_nullable_to_non_nullable
 as String,color: null == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String name,  CategoryType type, @JsonKey(name: 'icon_name')  String iconName,  String color, @JsonKey(name: 'is_custom')  bool isCustom, @JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String name,  CategoryType type, @JsonKey(name: 'icon_name')  String iconName,  String color, @JsonKey(name: 'is_custom')  bool isCustom, @JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CategoryEntity() when $default != null:
 return $default(_that.id,_that.name,_that.type,_that.iconName,_that.color,_that.isCustom,_that.userId,_that.createdAt,_that.updatedAt);case _:
@@ -179,7 +179,7 @@ return $default(_that.id,_that.name,_that.type,_that.iconName,_that.color,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String name,  CategoryType type, @JsonKey(name: 'icon_name')  String iconName,  String color, @JsonKey(name: 'is_custom')  bool isCustom, @JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String name,  CategoryType type, @JsonKey(name: 'icon_name')  String iconName,  String color, @JsonKey(name: 'is_custom')  bool isCustom, @JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _CategoryEntity():
 return $default(_that.id,_that.name,_that.type,_that.iconName,_that.color,_that.isCustom,_that.userId,_that.createdAt,_that.updatedAt);}
@@ -196,7 +196,7 @@ return $default(_that.id,_that.name,_that.type,_that.iconName,_that.color,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String name,  CategoryType type, @JsonKey(name: 'icon_name')  String iconName,  String color, @JsonKey(name: 'is_custom')  bool isCustom, @JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String name,  CategoryType type, @JsonKey(name: 'icon_name')  String iconName,  String color, @JsonKey(name: 'is_custom')  bool isCustom, @JsonKey(name: 'user_id')  String? userId, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _CategoryEntity() when $default != null:
 return $default(_that.id,_that.name,_that.type,_that.iconName,_that.color,_that.isCustom,_that.userId,_that.createdAt,_that.updatedAt);case _:
@@ -214,7 +214,7 @@ class _CategoryEntity implements CategoryEntity {
   const _CategoryEntity({this.id, required this.name, required this.type, @JsonKey(name: 'icon_name') required this.iconName, required this.color, @JsonKey(name: 'is_custom') this.isCustom = false, @JsonKey(name: 'user_id') this.userId, @JsonKey(name: 'created_at') this.createdAt, @JsonKey(name: 'updated_at') this.updatedAt});
   factory _CategoryEntity.fromJson(Map<String, dynamic> json) => _$CategoryEntityFromJson(json);
 
-@override final  int? id;
+@override final  String? id;
 @override final  String name;
 @override final  CategoryType type;
 @override@JsonKey(name: 'icon_name') final  String iconName;
@@ -257,7 +257,7 @@ abstract mixin class _$CategoryEntityCopyWith<$Res> implements $CategoryEntityCo
   factory _$CategoryEntityCopyWith(_CategoryEntity value, $Res Function(_CategoryEntity) _then) = __$CategoryEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String name, CategoryType type,@JsonKey(name: 'icon_name') String iconName, String color,@JsonKey(name: 'is_custom') bool isCustom,@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
+ String? id, String name, CategoryType type,@JsonKey(name: 'icon_name') String iconName, String color,@JsonKey(name: 'is_custom') bool isCustom,@JsonKey(name: 'user_id') String? userId,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -277,7 +277,7 @@ class __$CategoryEntityCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = null,Object? type = null,Object? iconName = null,Object? color = null,Object? isCustom = null,Object? userId = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_CategoryEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as CategoryType,iconName: null == iconName ? _self.iconName : iconName // ignore: cast_nullable_to_non_nullable
 as String,color: null == color ? _self.color : color // ignore: cast_nullable_to_non_nullable

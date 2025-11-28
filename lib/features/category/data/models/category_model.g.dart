@@ -8,7 +8,7 @@ part of 'category_model.dart';
 
 _CategoryModel _$CategoryModelFromJson(Map<String, dynamic> json) =>
     _CategoryModel(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'] as String?,
       name: json['name'] as String,
       type: $enumDecode(_$CategoryTypeEnumMap, json['type']),
       iconName: json['icon_name'] as String,

@@ -26,7 +26,7 @@ class CategoryKeys {
 @freezed
 sealed class CategoryEntity with _$CategoryEntity {
   const factory CategoryEntity({
-    int? id,
+    String? id,
     required String name,
     required CategoryType type,
     @JsonKey(name: 'icon_name') required String iconName,
@@ -110,7 +110,7 @@ class CategoryEntityFactories {
   /// pour compatibilité mais ne devrait plus être utilisée.
   @Deprecated('Use Supabase to fetch default categories instead')
   static CategoryEntity createDefault({
-    required int id,
+    required String id,
     required String name,
     required CategoryType type,
     required String iconName,
@@ -163,7 +163,7 @@ extension CategoryListExtension on List<CategoryEntity> {
       where((cat) => cat.isDefault).toList();
 
   /// Trouve une catégorie par ID
-  CategoryEntity? findById(int id) {
+  CategoryEntity? findById(String id) {
     try {
       return firstWhere((cat) => cat.id == id);
     } catch (e) {

@@ -21,24 +21,42 @@ class CategoryRemoteDataSource {
       logger.d('[CategoryRemoteDataSource] Utilisateur connecté: ${currentUser?.id}');
       logger.d('[CategoryRemoteDataSource] Email: ${currentUser?.email}');
 
-      // Utiliser la vue sécurisée user_categories qui filtre automatiquement par utilisateur
-      logger.d('[CategoryRemoteDataSource] Requête sur user_categories...');
-      final response = await _supabase
-          .from('user_categories')
+      // Récupérer les catégories par défaut (is_custom = false)
+      logger.d('[CategoryRemoteDataSource] Récupération des catégories par défaut...');
+      final defaultResponse = await _supabase
+          .from('categories')
           .select('*')
-          .order('is_custom', ascending: true)
+          .eq('is_custom', false)
           .order('type', ascending: true)
-          .order('id', ascending: true);
+          .order('name', ascending: true);
 
-      logger.d('[CategoryRemoteDataSource] Réponse brute: ${response.length} éléments');
+      logger.d('[CategoryRemoteDataSource] Catégories par défaut: ${defaultResponse.length}');
+
+      // Récupérer les catégories custom de l'utilisateur (is_custom = true AND user_id = current_user_id)
+      List<dynamic> customResponse = [];
+      if (currentUser != null) {
+        logger.d('[CategoryRemoteDataSource] Récupération des catégories custom...');
+        customResponse = await _supabase
+            .from('categories')
+            .select('*')
+            .eq('is_custom', true)
+            .eq('user_id', currentUser.id)
+            .order('created_at', ascending: false);
+
+        logger.d('[CategoryRemoteDataSource] Catégories custom: ${customResponse.length}');
+      }
+
+      // Fusionner les deux listes
+      final allCategories = [...defaultResponse, ...customResponse];
+      logger.d('[CategoryRemoteDataSource] Total catégories: ${allCategories.length}');
 
       // Log détaillé de la réponse
-      for (int i = 0; i < response.length; i++) {
-        final item = response[i];
+      for (int i = 0; i < allCategories.length; i++) {
+        final item = allCategories[i];
         logger.d('[CategoryRemoteDataSource] [$i] ${item['name']} (${item['is_custom'] ? 'CUSTOM' : 'DEFAULT'}) - User: ${item['user_id']}');
       }
 
-      final categories = response
+      final categories = allCategories
           .map((json) => CategoryModel.fromJson(json))
           .toList();
 
@@ -97,7 +115,7 @@ class CategoryRemoteDataSource {
       final response = await _supabase
           .from('categories')
           .update(category.toJson())
-          .eq('id', category.id ?? 0)
+          .eq('id', category.id ?? '')
           .eq('is_custom', true)
           .eq('user_id', _supabase.auth.currentUser?.id ?? '')
           .select()
@@ -113,7 +131,7 @@ class CategoryRemoteDataSource {
   }
 
   /// Supprime une catégorie custom de Supabase
-  Future<void> deleteCustomCategory(int categoryId) async {
+  Future<void> deleteCustomCategory(String categoryId) async {
     try {
       await _supabase
           .from('categories')
@@ -130,7 +148,7 @@ class CategoryRemoteDataSource {
   }
 
   /// Récupère une catégorie par son ID depuis Supabase
-  Future<CategoryModel?> getCategoryById(int id) async {
+  Future<CategoryModel?> getCategoryById(String id) async {
     try {
       final response = await _supabase
           .from('categories')

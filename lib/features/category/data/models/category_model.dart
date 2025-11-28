@@ -8,7 +8,7 @@ part 'category_model.g.dart';
 @freezed
 sealed class CategoryModel with _$CategoryModel {
   const factory CategoryModel({
-    int? id,
+    String? id,
     required String name,
     required CategoryType type,
     @JsonKey(name: 'icon_name') required String iconName,
