@@ -23,9 +23,17 @@ PODS:
   - purchases_flutter (9.9.3):
     - Flutter
     - PurchasesHybridCommon (= 17.15.1)
+  - purchases_ui_flutter (9.9.3):
+    - Flutter
+    - PurchasesHybridCommonUI (= 17.15.1)
   - PurchasesHybridCommon (17.15.1):
     - RevenueCat (= 5.46.0)
+  - PurchasesHybridCommonUI (17.15.1):
+    - PurchasesHybridCommon (= 17.15.1)
+    - RevenueCatUI (= 5.46.0)
   - RevenueCat (5.46.0)
+  - RevenueCatUI (5.46.0):
+    - RevenueCat (= 5.46.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -44,13 +52,16 @@ DEPENDENCIES:
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
+  - purchases_ui_flutter (from `.symlinks/plugins/purchases_ui_flutter/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
     - PurchasesHybridCommon
+    - PurchasesHybridCommonUI
     - RevenueCat
+    - RevenueCatUI
 
 EXTERNAL SOURCES:
   app_links:
@@ -75,6 +86,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   purchases_flutter:
     :path: ".symlinks/plugins/purchases_flutter/ios"
+  purchases_ui_flutter:
+    :path: ".symlinks/plugins/purchases_ui_flutter/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   url_launcher_ios:
@@ -92,8 +105,11 @@ SPEC CHECKSUMS:
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   purchases_flutter: 5898004c116c6bbd59f2dc163b69fbb102e41140
+  purchases_ui_flutter: 3d90264844f84a562e98e6b43161d607c879c709
   PurchasesHybridCommon: b1313c42e226555618514daa35c3ff1f582cb10d
+  PurchasesHybridCommonUI: 8c51820617f642361c20fce46a59f57591aebe6e
   RevenueCat: 0423a85e1f2ef06f1002b18cae53fe856f60ea53
+  RevenueCatUI: f197f39f88c7cd9e9ce9c7ea1a15a66357e5ec41
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
