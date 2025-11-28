@@ -270,6 +270,9 @@ class AppIcons {
   /// Icône de catégorie
   static IconData get category => LucideIcons.folder;
 
+  /// Icône de tag/étiquette
+  static IconData get tag => LucideIcons.tag;
+
   /// Icône de répétition/récurrence
   static IconData get repeat => LucideIcons.repeat;
 

@@ -85,7 +85,7 @@ class _AnimatedPageHeaderState extends State<AnimatedPageHeader> {
     final iconSize = _interpolate(22.0, 20.0, _scrollProgress);
 
     return Container(
-      color: theme.scaffoldBackgroundColor,
+      color: isDark ? AppColors.backgroundDark : AppColors.background,
       padding: EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingM,
         vertical: AppDimensions.paddingS,

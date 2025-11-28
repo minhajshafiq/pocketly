@@ -26,7 +26,6 @@ import 'package:pocketly/features/settings/settings.dart';
 import 'package:pocketly/features/home/home.dart';
 import 'package:pocketly/features/statistics/statistics.dart';
 import 'package:pocketly/features/pockets/pockets.dart';
-import 'package:pocketly/features/subscription/subscription.dart';
 import 'package:pocketly/features/user/presentation/screens/profile_edit_screen.dart';
 import 'package:pocketly/features/notifications/presentation/screens/notifications_center_screen.dart';
 import 'package:pocketly/features/notifications/presentation/screens/notification_preferences_screen.dart';
@@ -210,17 +209,6 @@ final routerProvider = Provider<GoRouter>((ref) {
               key: state.pageKey,
               name: state.name,
               child: const TransactionHistoryScreen(),
-            ),
-          ),
-
-          // Route Paywall (abonnement Premium)
-          GoRoute(
-            path: AppRoutePaths.paywall,
-            name: 'paywall',
-            pageBuilder: (context, state) => AppPage.adaptive(
-              key: state.pageKey,
-              name: state.name,
-              child: const PaywallScreen(),
             ),
           ),
 

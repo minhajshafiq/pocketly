@@ -25,6 +25,7 @@ export 'errors/errors.dart';
 export 'services/auth_rate_limiter.dart';
 export 'services/auth_service.dart';
 export 'services/logger_service.dart';
+export 'services/local_data_service.dart';
 
 // ==================== ROUTER ====================
 export 'router/app_route_paths.dart';

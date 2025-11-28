@@ -45,9 +45,6 @@ class AppRoutePaths {
   /// Route de l'écran des statistiques
   static const String statistics = '/statistics';
 
-  /// Route de l'écran du paywall (abonnement Premium)
-  static const String paywall = '/paywall';
-
   /// Route de l'écran des pockets
   static const String pockets = '/pockets';
 
