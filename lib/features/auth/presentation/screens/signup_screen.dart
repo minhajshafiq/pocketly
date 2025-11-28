@@ -119,11 +119,45 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   /// Gère les erreurs d'inscription
   void _handleSignupError(Object error, AppLocalizations l10n) {
     String message;
+    String? field;
 
-    if (error is AuthenticationError ||
-        error is NetworkError ||
-        error is ValidationError) {
-      message = (error as dynamic).userMessage as String;
+    // Gérer les différents types d'erreurs avec des messages spécifiques traduits
+    if (error is ValidationError) {
+      field = error.field;
+      final technicalMessage = error.technicalMessage.toLowerCase();
+      
+      // Détecter le type d'erreur spécifique et utiliser la traduction appropriée
+      if (field == 'email') {
+        if (technicalMessage.contains('already registered') ||
+            technicalMessage.contains('already exists')) {
+          message = l10n.emailAlreadyTaken;
+        } else if (technicalMessage.contains('invalid email') ||
+                   technicalMessage.contains('email format')) {
+          message = l10n.emailValidationInvalid;
+        } else {
+          message = l10n.emailValidationInvalid;
+        }
+      } else if (field == 'password') {
+        if (technicalMessage.contains('weak') || 
+            technicalMessage.contains('too short')) {
+          message = l10n.passwordTooWeak;
+        } else {
+          message = l10n.passwordValidationMinLength;
+        }
+      } else {
+        message = error.userMessage;
+      }
+      
+      // Si c'est une erreur de champ, forcer la validation pour afficher l'erreur dans le champ
+      if (field == 'email' || field == 'password') {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _formKey.currentState?.validate();
+        });
+      }
+    } else if (error is AuthenticationError) {
+      message = l10n.signupFailed;
+    } else if (error is NetworkError) {
+      message = l10n.signupNetworkError;
     } else {
       message = l10n.unexpectedError;
     }
@@ -327,51 +361,45 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     AsyncValue<AuthState> authState,
   ) {
     return PlatformSafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppDimensions.paddingL),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: AppDimensions.paddingL),
-                _buildBackButton(colors),
-                SizedBox(height: AppDimensions.paddingL),
-                _buildWelcomeSection(colors),
-                SizedBox(height: AppDimensions.paddingL),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Form(
-                      key: _formKey,
-                      autovalidateMode: _hasInteracted
-                          ? AutovalidateMode.onUserInteraction
-                          : AutovalidateMode.disabled,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _buildEmailField(colors),
-                          SizedBox(height: AppDimensions.paddingM),
-                          _buildPasswordField(colors),
-                          SizedBox(height: AppDimensions.paddingM),
-                          _buildConfirmPasswordField(colors),
-                          SizedBox(height: AppDimensions.paddingM),
-                          _buildSignupButton(colors, authState),
-                          SizedBox(height: AppDimensions.paddingM),
-                          _buildLoginLink(colors),
-                          SizedBox(height: AppDimensions.paddingM),
-                          _buildDivider(colors),
-                          SizedBox(height: AppDimensions.paddingM),
-                          _buildSocialLoginButtons(colors),
-                          SizedBox(height: AppDimensions.paddingL),
-                        ],
-                      ),
-                    ),
-                  ),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppDimensions.paddingL),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(height: AppDimensions.paddingL),
+              _buildBackButton(colors),
+              SizedBox(height: AppDimensions.paddingL),
+              _buildWelcomeSection(colors),
+              SizedBox(height: AppDimensions.paddingL),
+              Form(
+                key: _formKey,
+                autovalidateMode: _hasInteracted
+                    ? AutovalidateMode.onUserInteraction
+                    : AutovalidateMode.disabled,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildEmailField(colors),
+                    SizedBox(height: AppDimensions.paddingM),
+                    _buildPasswordField(colors),
+                    SizedBox(height: AppDimensions.paddingM),
+                    _buildConfirmPasswordField(colors),
+                    SizedBox(height: AppDimensions.paddingM),
+                    _buildSignupButton(colors, authState),
+                    SizedBox(height: AppDimensions.paddingM),
+                    _buildLoginLink(colors),
+                    SizedBox(height: AppDimensions.paddingM),
+                    _buildDivider(colors),
+                    SizedBox(height: AppDimensions.paddingM),
+                    _buildSocialLoginButtons(colors),
+                    SizedBox(height: AppDimensions.paddingL),
+                  ],
                 ),
-              ],
-            ),
-          );
-        },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -402,7 +430,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(28),
-                  onTap: () => GoRouter.of(context).pop(),
+                  onTap: () {
+                    final router = GoRouter.of(context);
+                    if (router.canPop()) {
+                      router.pop();
+                    } else {
+                      context.go(AppRoutePaths.welcome);
+                    }
+                  },
                   child: Icon(
                     AppIcons.back,
                     color: AppColors.primary,
@@ -608,7 +643,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     return AppButton(
       text: l10n.google,
       onPressed: () {
-        // TODO: Implement Google sign up
+        InAppNotificationService.showInfo(
+          context,
+          message: l10n.featureComingSoon,
+        );
       },
       style: AppButtonStyle.outline,
       size: AppButtonSize.large,
@@ -626,7 +664,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     return AppButton(
       text: l10n.apple,
       onPressed: () {
-        // TODO: Implement Apple sign up
+        InAppNotificationService.showInfo(
+          context,
+          message: l10n.featureComingSoon,
+        );
       },
       style: AppButtonStyle.primary,
       size: AppButtonSize.large,

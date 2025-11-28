@@ -74,21 +74,52 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return AuthSessionModel.fromSupabaseSession(response.session!);
     } on AuthException catch (e) {
       logger.e('[SignUp] AuthException: ${e.message}', error: e);
-      if (e.message.contains('already registered')) {
+      
+      // Détecter différents types d'erreurs Supabase
+      final errorMessage = e.message.toLowerCase();
+      
+      if (errorMessage.contains('already registered') ||
+          errorMessage.contains('user already registered') ||
+          errorMessage.contains('email already exists') ||
+          errorMessage.contains('already exists')) {
         throw ValidationError(
           field: 'email',
-          technicalMessage: 'Email already registered',
+          technicalMessage: 'Email already registered: ${e.message}',
+          // userMessage sera traduit dans l'UI
           originalError: e,
         );
       }
+      
+      if (errorMessage.contains('invalid email') ||
+          errorMessage.contains('email format')) {
+        throw ValidationError(
+          field: 'email',
+          technicalMessage: 'Invalid email format: ${e.message}',
+          // userMessage sera traduit dans l'UI
+          originalError: e,
+        );
+      }
+      
+      if (errorMessage.contains('password') && 
+          (errorMessage.contains('weak') || errorMessage.contains('too short'))) {
+        throw ValidationError(
+          field: 'password',
+          technicalMessage: 'Password too weak: ${e.message}',
+          // userMessage sera traduit dans l'UI
+          originalError: e,
+        );
+      }
+      
       throw AuthenticationError(
         technicalMessage: 'Sign up failed: ${e.message}',
+        // userMessage sera traduit dans l'UI
         originalError: e,
       );
     } catch (e, stackTrace) {
       logger.e('[SignUp] Erreur inattendue: $e', error: e, stackTrace: stackTrace);
       throw NetworkError(
         technicalMessage: 'Network error during sign up: $e',
+        // userMessage sera traduit dans l'UI
         originalError: e,
       );
     }

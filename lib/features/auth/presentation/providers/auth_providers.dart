@@ -178,8 +178,31 @@ class AuthNotifier extends _$AuthNotifier {
   Future<void> signOut() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
+      // Récupérer l'ID utilisateur avant la déconnexion pour nettoyer les données locales
+      String? userId;
+      try {
+        final currentUserAsync = ref.read(currentUserProvider);
+        currentUserAsync.when(
+          data: (user) => userId = user?.id,
+          loading: () => userId = null,
+          error: (_, _) => userId = null,
+        );
+      } catch (e) {
+        // Ignorer si l'utilisateur n'est pas disponible
+        userId = null;
+      }
+
       final signOutUseCase = ref.read(signOutUseCaseProvider);
       await signOutUseCase();
+
+      // Nettoyer toutes les données locales
+      try {
+        final localDataService = LocalDataService(ref);
+        await localDataService.clearAllLocalData(userId: userId);
+      } catch (e) {
+        // Logger l'erreur mais continuer la déconnexion
+        ref.read(loggerProvider).w('Erreur lors du nettoyage des données locales: $e');
+      }
 
       // Invalider le provider user
       ref.invalidate(currentUserProvider);

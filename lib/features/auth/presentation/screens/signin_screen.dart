@@ -186,17 +186,19 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
 
   /// Connexion avec Google
   Future<void> _handleGoogleSignin() async {
-    await _handleAuthentication(
-      authAction: () => ref.read(authProvider.notifier).signInWithGoogle(),
-      errorMessage: AppLocalizations.of(context)!.googleSignInCancelled,
+    final l10n = AppLocalizations.of(context)!;
+    InAppNotificationService.showInfo(
+      context,
+      message: l10n.featureComingSoon,
     );
   }
 
   /// Connexion avec Apple
   Future<void> _handleAppleSignin() async {
-    await _handleAuthentication(
-      authAction: () => ref.read(authProvider.notifier).signInWithApple(),
-      errorMessage: AppLocalizations.of(context)!.appleSignInCancelled,
+    final l10n = AppLocalizations.of(context)!;
+    InAppNotificationService.showInfo(
+      context,
+      message: l10n.featureComingSoon,
     );
   }
 
@@ -302,7 +304,14 @@ class _SigninScreenState extends ConsumerState<SigninScreen> {
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(28),
-                  onTap: () => GoRouter.of(context).pop(),
+                  onTap: () {
+                    final router = GoRouter.of(context);
+                    if (router.canPop()) {
+                      router.pop();
+                    } else {
+                      context.go(AppRoutePaths.welcome);
+                    }
+                  },
                   child: Icon(
                     AppIcons.back,
                     color: AppColors.primary,
